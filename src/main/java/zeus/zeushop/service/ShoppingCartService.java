@@ -1,7 +1,6 @@
 package zeus.zeushop.service;
 
 import zeus.zeushop.model.Listing;
-import zeus.zeushop.model.CartItem;
 
 import java.util.List;
 
