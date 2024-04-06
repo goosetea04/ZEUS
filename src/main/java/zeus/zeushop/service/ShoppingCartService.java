@@ -1,4 +1,5 @@
 package zeus.zeushop.service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import zeus.zeushop.model.Listing;
 import zeus.zeushop.repository.ListingRepository;
@@ -6,6 +7,7 @@ import java.util.*;
 
 @Service
 public class ShoppingCartService {
+    @Autowired
     private ListingRepository listingRepository;
     private ShoppingCart shoppingCart;
 
