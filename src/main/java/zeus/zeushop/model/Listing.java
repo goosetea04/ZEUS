@@ -6,6 +6,8 @@ import lombok.Setter;
 public class Listing {
     private String listingID;
     private String listingName;
-    private int listingQuantity;
+    private String listingDescription;
+    private int listingStock;
+
     private int listingPrice;
 }
