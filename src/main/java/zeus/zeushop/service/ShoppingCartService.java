@@ -1,31 +1,11 @@
 package zeus.zeushop.service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
 import zeus.zeushop.model.Listing;
-import zeus.zeushop.repository.ListingRepository;
-import java.util.*;
 
-@Service
-public class ShoppingCartService {
-    @Autowired
-    private ListingRepository listingRepository;
-    private ShoppingCart shoppingCart;
+import java.util.List;
 
-    public ShoppingCartService() {
-        this.shoppingCart = new ShoppingCart();
-    }
-
-    public void addListingToCart(Listing listing, int quantity) {
-        shoppingCart.addItem(listing, quantity);
-    }
-    public List<Listing> getAllListings() {
-        List<Listing> listings = new ArrayList<>();
-        Iterator<Listing> iterator = listingRepository.findAll();
-        while (iterator.hasNext()) {
-            listings.add(iterator.next());
-        }
-        return listings;
-    }
-
-    // Other methods for managing the shopping cart
+public interface ShoppingCartService {
+    void addListingToCart(Listing listing, int quantity);
+    List<Listing> getAllListings();
+    // Add other methods for managing the shopping cart
 }
