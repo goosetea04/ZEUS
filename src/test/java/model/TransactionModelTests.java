@@ -30,5 +30,4 @@ public class TransactionModelTests {
         assertEquals(now, transaction.getUpdatedAt());
     }
 
-    // Additional tests can be added here as needed
 }
