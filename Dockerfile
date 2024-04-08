@@ -1,12 +1,12 @@
 FROM docker.io/library/eclipse-temurin:21-jdk-alpine AS builder
 
-WORKDIR /src/zeus
+WORKDIR /src/zeushop
 COPY . .
 RUN ./gradlew clean bootJar
 
 FROM docker.io/library/eclipse-temurin:21-jre-alpine AS runner
 
-ARG USER_NAME=zeus
+ARG USER_NAME=zeushop
 ARG USER_UID=1000
 ARG USER_GID=${USER_UID}
 
