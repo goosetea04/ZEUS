@@ -11,11 +11,11 @@ ARG USER_UID=1000
 ARG USER_GID=${USER_UID}
 
 RUN addgroup -g ${USER_GID} ${USER_NAME} \
-    && adduser -h /opt/advshop -D -u ${USER_UID} -G ${USER_NAME} ${USER_NAME}
+    && adduser -h /opt/zeushop -D -u ${USER_UID} -G ${USER_NAME} ${USER_NAME}
 
 USER ${USER_NAME}
-WORKDIR /opt/advshop
-COPY --from=builder --chown=${USER_UID}:${USER_GID} /src/advshop/build/libs/*.jar app.jar
+WORKDIR /opt/zeushop
+COPY --from=builder --chown=${USER_UID}:${USER_GID} /src/zeushop/build/libs/*.jar app.jar
 
 EXPOSE 8080
 
