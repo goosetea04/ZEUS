@@ -12,6 +12,20 @@ import zeus.zeushop.service.ShoppingCartService;
 @Controller
 public class ListingController {
 
+    // Singleton instance
+    private static ListingController instance;
+
+    // Private constructor to prevent instantiation from outside
+    private ListingController() {}
+
+    // Public static method to get the instance
+    public static ListingController getInstance() {
+        if (instance == null) {
+            instance = new ListingController();
+        }
+        return instance;
+    }
+
     @Autowired
     private ShoppingCartService shoppingCartService;
 
