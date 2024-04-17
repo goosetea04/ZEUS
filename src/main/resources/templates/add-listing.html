@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Listing</title>
+</head>
+<body>
+<h1>Add New Listing</h1>
+<form action="/save-listing" method="post">
+  <label for="listingName">Listing Name:</label><br>
+  <input type="text" id="listingName" name="listingName" required><br>
+
+  <label for="listingStock">Stock:</label><br>
+  <input type="number" id="listingStock" name="listingStock" required><br>
+
+  <label for="listingDescription">Description:</label><br>
+  <textarea id="listingDescription" name="listingDescription" rows="4" cols="50" required></textarea><br>
+
+  <label for="listingPrice">Price:</label><br>
+  <input type="number" id="listingPrice" name="listingPrice" required><br>
+
+  <button type="submit">Add Listing</button>
+</form>
+</body>
+</html>
