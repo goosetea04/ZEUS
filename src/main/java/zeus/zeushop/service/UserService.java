@@ -1,10 +1,7 @@
 package zeus.zeushop.service;
 import zeus.zeushop.model.User;
-
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
-
 
 public interface UserService {
     public User createUser(User user);
