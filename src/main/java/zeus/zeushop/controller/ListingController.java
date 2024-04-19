@@ -46,4 +46,8 @@ public class ListingController {
         // Assuming there is logic to save the listing to the repository
         return "redirect:/listings";
     }
+    @GetMapping("/cart")
+    public String showCart() {
+        return "cart";
+    }
 }
