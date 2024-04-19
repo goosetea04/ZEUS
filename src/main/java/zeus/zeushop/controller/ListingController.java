@@ -10,6 +10,7 @@ import zeus.zeushop.model.CartItem;
 import zeus.zeushop.service.ShoppingCartService;
 import zeus.zeushop.service.ShoppingCartServiceFactory;
 import zeus.zeushop.repository.ListingRepository;
+import zeus.zeushop.model.Listing;
 
 @Controller
 public class ListingController {
@@ -38,5 +39,11 @@ public class ListingController {
     @GetMapping("/add-listing")
     public String showAddListingForm() {
         return "add-listing";
+    }
+    @PostMapping("/save-listing")
+    public String saveListing() {
+        // listingRepository.save(listing);
+        // Assuming there is logic to save the listing to the repository
+        return "redirect:/listings";
     }
 }
