@@ -11,12 +11,10 @@ public class Listing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer product_id;
-
     private String product_name;
-
     private Integer product_quantity;
-
     private Float product_price;
-
     private Boolean feature;
+    private String listingDescription;
+    private String SellerID;
 }

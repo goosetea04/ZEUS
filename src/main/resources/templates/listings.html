@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Listings</title>
+</head>
+<body>
+<h1>Listings</h1>
+
+<!-- Button to add new listing -->
+<a href="/add-listing">Add New Listing</a>
+
+<!-- Display listings -->
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Add to Cart</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Loop through listings -->
+    <tr th:each="listing : ${listings}">
+        <td th:text="${listing.listingID}"></td>
+        <td th:text="${listing.listingName}"></td>
+        <td th:text="${listing.listingStock}"></td>
+        <td th:text="${listing.listingDescription}"></td>
+        <td th:text="${listing.listingPrice}"></td>
+        <!-- Form to add listing to cart -->
+        <td>
+            <form action="/add-to-cart" method="post">
+                <input type="hidden" name="listingId" th:value="${listing.listingID}" />
+                <input type="number" name="quantity" value="1" />
+                <button type="submit">Add to Cart</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
