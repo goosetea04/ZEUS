@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Setter @Getter
 @Entity
 @Table(name = "listing", schema = "public")
@@ -18,5 +21,10 @@ public class Listing {
 
     private Float product_price;
 
-    private Boolean feature;
+    private LocalDateTime endDate;
+
+    @Transient
+    public Boolean isFeatured() {
+        return LocalDateTime.now().isBefore(endDate);
+    }
 }

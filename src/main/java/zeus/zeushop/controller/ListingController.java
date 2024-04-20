@@ -23,17 +23,22 @@ public class ListingController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Listing> getListingById(@PathVariable String id) {
+    public Optional<Listing> getListingById(@PathVariable Long id) {
         return listingService.getListingById(id);
     }
 
     @PutMapping("/{id}")
-    public Listing updateListing(@PathVariable String id, @RequestBody Listing listingDetails) {
+    public Listing updateListing(@PathVariable Long id, @RequestBody Listing listingDetails) {
         return listingService.updateListing(id, listingDetails);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteListing(@PathVariable String id) {
+    public void deleteListing(@PathVariable Long id) {
         listingService.deleteListing(id);
+    }
+
+    @GetMapping("/featured")
+    public List<Listing> getAllFeatured() {
+        return listingService.getAllFeatured();
     }
 }
