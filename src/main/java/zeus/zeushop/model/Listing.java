@@ -12,7 +12,7 @@ import java.util.Date;
 @Table(name = "listing", schema = "public")
 public class Listing {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer product_id;
 
     private String product_name;
@@ -20,6 +20,8 @@ public class Listing {
     private Integer product_quantity;
 
     private Float product_price;
+    private String seller_id;
+    private String product_description;
 
     private LocalDateTime endDate;
 

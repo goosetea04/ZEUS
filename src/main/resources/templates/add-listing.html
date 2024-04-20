@@ -56,28 +56,20 @@
 <div class="container">
   <h1>Add New Listing</h1>
   <form id="addListingForm" action="/save-listing" method="post">
-    <label for="listingName">Listing Name:</label>
-    <input type="text" id="listingName" name="listingName" required>
+    <label for="product_name">Listing Name:</label>
+    <input type="text" id="product_name" name="product_name" required>
 
-    <label for="listingStock">Stock:</label>
-    <input type="number" id="listingStock" name="listingStock" required>
+    <label for="product_quantity">Stock:</label>
+    <input type="number" id="product_quantity" name="product_quantity" required>
 
-    <label for="listingDescription">Description:</label>
-    <textarea id="listingDescription" name="listingDescription" rows="4" cols="50" required></textarea>
+    <label for="product_description">Description:</label>
+    <textarea id="product_description" name="product_description" rows="4" cols="50" required></textarea>
 
-    <label for="listingPrice">Price:</label>
-    <input type="number" id="listingPrice" name="listingPrice" required>
+    <label for="product_price">Price:</label>
+    <input type="number" id="product_price" name="product_price" required>
 
     <button type="submit">Add Listing</button>
   </form>
 </div>
-<script>
-  document.getElementById('addListingForm').addEventListener('submit', function(event) {
-    // Prevent the default form submission behavior
-    event.preventDefault();
-    // Redirect to the listings page
-    window.location.href = "/listings";
-  });
-</script>
 </body>
 </html>

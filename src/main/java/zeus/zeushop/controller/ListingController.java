@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import zeus.zeushop.model.*;
 import zeus.zeushop.service.ShoppingCartService;
 import zeus.zeushop.service.ListingService;
+import java.time.LocalDateTime;
 import zeus.zeushop.service.ShoppingCartServiceFactory;
 import zeus.zeushop.repository.ListingRepository;
 
@@ -43,13 +44,12 @@ public class ListingController {
     }
 
     @GetMapping("/add-listing")
-    public String showAddListingForm() {
+    public String showAddListingForm(Model model) {
+        model.addAttribute("listing", new Listing());
         return "add-listing";
     }
     @PostMapping("/save-listing")
     public String saveListing(@ModelAttribute Listing listing) {
-        // listingRepository.save(listing);
-        // Assuming there is logic to save the listing to the repository
         listingService.createListing(listing);
         return "redirect:/listings";
     }
