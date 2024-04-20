@@ -6,11 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import zeus.zeushop.model.CartItem;
+import zeus.zeushop.model.*;
 import zeus.zeushop.service.ShoppingCartService;
+import zeus.zeushop.service.ListingService;
 import zeus.zeushop.service.ShoppingCartServiceFactory;
 import zeus.zeushop.repository.ListingRepository;
-import zeus.zeushop.model.Listing;
+
 
 @Controller
 public class ListingController {
@@ -18,6 +19,11 @@ public class ListingController {
     @Autowired
     private ShoppingCartService shoppingCartService;
 
+    private final ListingService listingService;
+    @Autowired
+    public ListingController(ListingService listingService) {
+        this.listingService = listingService;
+    }
     @Autowired
     private ListingRepository listingRepository;
 
@@ -41,9 +47,10 @@ public class ListingController {
         return "add-listing";
     }
     @PostMapping("/save-listing")
-    public String saveListing() {
+    public String saveListing(@ModelAttribute Listing listing) {
         // listingRepository.save(listing);
         // Assuming there is logic to save the listing to the repository
+        listingService.createListing(listing);
         return "redirect:/listings";
     }
     @GetMapping("/cart")
