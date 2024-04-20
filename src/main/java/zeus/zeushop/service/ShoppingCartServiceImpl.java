@@ -37,13 +37,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public List<Listing> getAllListings() {
-        List<Listing> listings = new ArrayList<>();
-        // Assuming you have a method in your listing repository to retrieve all listings
-        Iterator<Listing> iterator = listingRepository.findAll();
-        while (iterator.hasNext()) {
-            listings.add(iterator.next());
-        }
-        return listings;
+        return listingRepository.findAll();
     }
     // Implement other methods for managing the shopping cart
 }

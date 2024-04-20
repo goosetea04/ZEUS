@@ -6,10 +6,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import zeus.zeushop.model.CartItem;
+import zeus.zeushop.model.*;
 import zeus.zeushop.service.ShoppingCartService;
+import zeus.zeushop.service.ListingService;
+import java.time.LocalDateTime;
 import zeus.zeushop.service.ShoppingCartServiceFactory;
 import zeus.zeushop.repository.ListingRepository;
+
 
 @Controller
 public class ListingController {
@@ -17,6 +20,11 @@ public class ListingController {
     @Autowired
     private ShoppingCartService shoppingCartService;
 
+    private final ListingService listingService;
+    @Autowired
+    public ListingController(ListingService listingService) {
+        this.listingService = listingService;
+    }
     @Autowired
     private ListingRepository listingRepository;
 
@@ -36,7 +44,17 @@ public class ListingController {
     }
 
     @GetMapping("/add-listing")
-    public String showAddListingForm() {
+    public String showAddListingForm(Model model) {
+        model.addAttribute("listing", new Listing());
         return "add-listing";
+    }
+    @PostMapping("/save-listing")
+    public String saveListing(@ModelAttribute Listing listing) {
+        listingService.createListing(listing);
+        return "redirect:/listings";
+    }
+    @GetMapping("/cart")
+    public String showCart() {
+        return "cart";
     }
 }

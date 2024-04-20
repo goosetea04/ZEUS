@@ -1,14 +1,32 @@
 package zeus.zeushop.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-@Getter @Setter
-public class Listing {
-    private String listingID;
-    private String listingName;
-    private String listingDescription;
-    private String SellerID;
-    private int listingStock;
 
-    private int listingPrice;
+import java.time.LocalDateTime;
+import java.util.Date;
+
+@Setter @Getter
+@Entity
+@Table(name = "listing", schema = "public")
+public class Listing {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer product_id;
+
+    private String product_name;
+
+    private Integer product_quantity;
+
+    private Float product_price;
+    private String seller_id;
+    private String product_description;
+
+    private LocalDateTime endDate;
+
+    @Transient
+    public Boolean isFeatured() {
+        return LocalDateTime.now().isBefore(endDate);
+    }
 }

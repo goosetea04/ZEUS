@@ -4,23 +4,72 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add New Listing</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-bottom: 5px;
+    }
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button[type="submit"] {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-<h1>Add New Listing</h1>
-<form action="/save-listing" method="post">
-  <label for="listingName">Listing Name:</label><br>
-  <input type="text" id="listingName" name="listingName" required><br>
+<div class="container">
+  <h1>Add New Listing</h1>
+  <form id="addListingForm" action="/save-listing" method="post">
+    <label for="product_name">Listing Name:</label>
+    <input type="text" id="product_name" name="product_name" required>
 
-  <label for="listingStock">Stock:</label><br>
-  <input type="number" id="listingStock" name="listingStock" required><br>
+    <label for="product_quantity">Stock:</label>
+    <input type="number" id="product_quantity" name="product_quantity" required>
 
-  <label for="listingDescription">Description:</label><br>
-  <textarea id="listingDescription" name="listingDescription" rows="4" cols="50" required></textarea><br>
+    <label for="product_description">Description:</label>
+    <textarea id="product_description" name="product_description" rows="4" cols="50" required></textarea>
 
-  <label for="listingPrice">Price:</label><br>
-  <input type="number" id="listingPrice" name="listingPrice" required><br>
+    <label for="product_price">Price:</label>
+    <input type="number" id="product_price" name="product_price" required>
 
-  <button type="submit">Add Listing</button>
-</form>
+    <button type="submit">Add Listing</button>
+  </form>
+</div>
 </body>
 </html>
