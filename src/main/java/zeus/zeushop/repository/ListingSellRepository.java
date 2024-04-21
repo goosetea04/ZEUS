@@ -18,4 +18,18 @@ public class ListingSellRepository {
     public Iterator<ListingSell> findAll() {
         return listingData.iterator();
     }
+
+    public void deleteListingSell(ListingSell listingSell) {
+        listingData.remove(listingSell);
+    }
+
+    public void editListingSell(ListingSell listingSell) {
+        for (int i=0; i < listingData.size(); i++) {
+            ListingSell addListing = listingData.get(i);
+            if (addListing.getId().equals(listingSell.getId())) {
+                listingData.set(i, listingSell);
+                return;
+            }
+        }
+    }
 }
