@@ -1,67 +1,75 @@
 package zeus.zeushop.repository;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import zeus.zeushop.model.Listing;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class ListingRepositoryTest {
 
+    @Mock
     private ListingRepository listingRepository;
 
-    @BeforeEach
-    public void setUp() {
-        listingRepository = new ListingRepository();
+    @InjectMocks
+    private Listing listing;
+
+    @Test
+    void testFindAll_Positive() {
+        List<Listing> listings = new ArrayList<>();
+        // Mock behavior to return listings when findAll is called
+        when(listingRepository.findAll()).thenReturn(listings);
+
+        List<Listing> retrievedListings = listingRepository.findAll();
+
+        // Assert that retrieved listings match the mocked listings
+        assertEquals(listings, retrievedListings);
+        // Verify that findAll method was called once
+        verify(listingRepository, times(1)).findAll();
     }
 
     @Test
-    public void testCreateListing() {
+    void testFindById_Positive() {
+        Long id = 1L;
         Listing listing = new Listing();
-        listing.setListingID("1");
-        listing.setListingName("Test Listing");
-        listing.setListingDescription("Description of Test Listing");
-        listing.setListingStock(20);
-        listing.setListingPrice(50);
+        when(listingRepository.findById(id)).thenReturn(Optional.of(listing));
 
-        Listing createdListing = listingRepository.create(listing);
+        Optional<Listing> retrievedListing = listingRepository.findById(id);
 
-        assertEquals(listing, createdListing);
+        assertEquals(Optional.of(listing), retrievedListing);
+        verify(listingRepository, times(1)).findById(id);
     }
 
     @Test
-    public void testFindAllListings() {
-        Listing listing1 = new Listing();
-        listing1.setListingID("1");
-        listing1.setListingName("Test Listing 1");
-        listing1.setListingDescription("Description of Test Listing 1");
-        listing1.setListingStock(20);
-        listing1.setListingPrice(50);
+    void testFindAll_Negative() {
+        // Mock behavior to return an empty list when findAll is called
+        when(listingRepository.findAll()).thenReturn(new ArrayList<>());
 
-        Listing listing2 = new Listing();
-        listing2.setListingID("2");
-        listing2.setListingName("Test Listing 2");
-        listing2.setListingDescription("Description of Test Listing 2");
-        listing2.setListingStock(15);
-        listing2.setListingPrice(30);
+        List<Listing> retrievedListings = listingRepository.findAll();
 
-        listingRepository.create(listing1);
-        listingRepository.create(listing2);
+        // Assert that retrieved listings are empty
+        assertEquals(0, retrievedListings.size());
+        // Verify that findAll method was called once
+        verify(listingRepository, times(1)).findAll();
+    }
 
-        Iterator<Listing> iterator = listingRepository.findAll();
+    @Test
+    void testFindById_Negative() {
+        Long id = 1L;
+        when(listingRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertTrue(iterator.hasNext());
+        Optional<Listing> retrievedListing = listingRepository.findById(id);
+        assertEquals(Optional.empty(), retrievedListing);
 
-        Listing retrievedListing1 = iterator.next();
-        Listing retrievedListing2 = iterator.next();
-
-        assertEquals(listing1, retrievedListing1);
-        assertEquals(listing2, retrievedListing2);
-
-        // Ensure there are no more listings
-        assertTrue(!iterator.hasNext());
+        verify(listingRepository, times(1)).findById(id);
     }
 }

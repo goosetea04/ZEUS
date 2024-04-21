@@ -25,8 +25,17 @@ public class Listing {
 
     private LocalDateTime endDate;
 
+    public Listing() {
+        // Default constructor required by JPA
+    }
+
+    public Listing(String productName, LocalDateTime endDate) {
+        this.product_name = productName;
+        this.endDate = endDate;
+    }
+
     @Transient
     public Boolean isFeatured() {
-        return LocalDateTime.now().isBefore(endDate);
+        return endDate != null && LocalDateTime.now().isBefore(endDate);
     }
 }
