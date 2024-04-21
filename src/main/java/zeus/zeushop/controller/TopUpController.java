@@ -21,35 +21,30 @@ public class TopUpController {
         this.topUpService = topUpService;
     }
 
-    // Display form for new top-up
     @GetMapping("/new")
     public String showTopUpForm() {
         return "top-up-form";
     }
 
-    // Create a new top-up
     @PostMapping
     public String createTopUp(@ModelAttribute TopUp topUp) {
         topUpService.createTopUp(topUp);
-        return "redirect:/topups"; // Redirect back to the form
+        return "redirect:/topups";
     }
 
-    // Display all top-ups
     @GetMapping
     public String getAllTopUps(Model model) {
         List<TopUp> allTopUps = topUpService.getAllTopUps();
         model.addAttribute("topUps", allTopUps);
-        return "user-top-ups"; // This should match the name of your Thymeleaf template
+        return "user-top-ups";
     }
 
-    // Retrieve all top-ups made by a specific user
     @GetMapping("/{userId}")
     public String getUserTopUps(@PathVariable String userId, Model model) {
         model.addAttribute("topUps", topUpService.getUserTopUps(userId));
-        return "user-top-ups"; // Assuming you have a user-top-ups.html Thymeleaf template
+        return "user-top-ups";
     }
 
-    // Delete a top-up history entry
     @PostMapping("/{topUpId}/delete")
     public String deleteTopUp(@PathVariable String topUpId, RedirectAttributes redirectAttributes) {
         boolean deleted = topUpService.deleteTopUp(topUpId);

@@ -23,7 +23,7 @@ public class TopUpRepository {
                 result.add(topUp);
             }
         }
-        return result; // return an empty list if no transactions match the userId
+        return result;
     }
     public boolean deleteTopUp(String topUpId) {
         return topUps.removeIf(t -> t.getTopUpId().equals(topUpId));
