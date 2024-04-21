@@ -6,4 +6,7 @@ import java.util.List;
 public interface ListingSellService {
     public ListingSell create(ListingSell listing);
     public List<ListingSell> findAll();
+    ListingSell findById(String id);
+    void deleteListingSell(ListingSell listingSell);
+    ListingSell editListingSell(ListingSell listingSell);
 }

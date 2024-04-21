@@ -28,4 +28,31 @@ public class ListingSellServiceImpl implements ListingSellService {
         listingSellIterator.forEachRemaining(allListingSell::add);
         return allListingSell;
     }
+
+    @Override
+    public ListingSell findById(String id) {
+        ListingSell listing = null;
+        Iterator<ListingSell> listings = listingSellRepository.findAll();
+        while (listings.hasNext()) {
+            ListingSell nextListing = listings.next();
+            if (nextListing.getId().equals(id)) {
+                listing = nextListing;
+                break;
+            }
+        }
+        return listing;
+    }
+
+    @Override
+    public void deleteListingSell(ListingSell listingSell) {
+        if (listingSell != null) {
+            listingSellRepository.deleteListingSell(listingSell);
+        }
+    }
+
+    @Override
+    public ListingSell editListingSell(ListingSell listingSell) {
+        ListingSellRepository.editListingSell(listingSell);
+        return listingSell;
+    }
 }
