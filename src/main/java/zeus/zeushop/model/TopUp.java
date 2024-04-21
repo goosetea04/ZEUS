@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class TopUp {
     private String topUpId;
     private String userId;
-    private double amount;
+    private int amount;
     private String status; // for values like PENDING, APPROVED, CANCELLED
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
