@@ -34,4 +34,24 @@ public class ListingSellController {
         model.addAttribute ("name", allListingSell);
         return "listingSell";
     }
+
+    @GetMapping("/delete/{id}")
+    public String deleteListingSell(@PathVariable String id) {
+        ListingSell listing = service.findById(id);
+        service.deleteListingSell(listing);
+        return "redirect:/product/list";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editPage(Model model, @PathVariable String id) {
+        ListingSell listing = service.findById(id);
+        model.addAttribute("product", listing);
+        return "EditProduct";
+    }
+
+    @PostMapping("/edit")
+    public String editListingSell(@ModelAttribute ListingSell listingSell) {
+        service.editListingSell(listingSell);
+        return "redirect:list";
+    }
 }
