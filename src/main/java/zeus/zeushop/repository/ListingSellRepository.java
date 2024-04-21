@@ -19,6 +19,15 @@ public class ListingSellRepository {
         return listingData.iterator();
     }
 
+    public ListingSell findById(String id) {
+        for (ListingSell listingSell : listingData) {
+            if (listingSell.getId().equals(id)) {
+                return listingSell;
+            }
+        }
+        return null;
+    }
+
     public void deleteListingSell(ListingSell listingSell) {
         listingData.remove(listingSell);
     }
