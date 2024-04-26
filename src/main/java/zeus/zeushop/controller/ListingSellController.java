@@ -14,44 +14,49 @@ import java.util.List;
 public class ListingSellController {
     @Autowired
     private ListingSellService service;
+    private final String listingSellRedirect;
+
+    public ListingSellController(ListingSellService service) {
+        this.service = service;
+        this.listingSellRedirect = "redirect:/sell/list";
+    }
 
     @GetMapping("/create")
     public String createListingSellPage(Model model) {
         ListingSell listingSell = new ListingSell();
-        model.addAttribute("name", listingSell);
+        model.addAttribute("listing", listingSell);
         return "createListingSell";
     }
 
     @PostMapping("/create")
     public String createListingSellPost(@ModelAttribute ListingSell listingSell, Model model) {
         service.create(listingSell);
-        return "redirect:list";
+        return listingSellRedirect;
     }
 
     @GetMapping("/list")
     public String listingSellPage(Model model) {
         List<ListingSell> allListingSell = service.findAll();
-        model.addAttribute ("name", allListingSell);
-        return "listingSell";
+        model.addAttribute ("listing", allListingSell);
+        return "Lists";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteListingSell(@PathVariable String id) {
-        ListingSell listing = service.findById(id);
-        service.deleteListingSell(listing);
-        return "redirect:/product/list";
+        service.deleteListingSell(id);
+        return listingSellRedirect;
     }
 
     @GetMapping("/edit/{id}")
-    public String editPage(Model model, @PathVariable String id) {
+    public String editGet(@PathVariable String id, Model model) {
         ListingSell listing = service.findById(id);
-        model.addAttribute("product", listing);
-        return "editListingSell";
+        model.addAttribute("listing", listing);
+        return "ListingSellEdit";
     }
 
     @PostMapping("/edit")
-    public String editListingSell(@ModelAttribute ListingSell listingSell) {
+    public String editPut(@ModelAttribute ListingSell listingSell) {
         service.editListingSell(listingSell);
-        return "redirect:list";
+        return listingSellRedirect;
     }
 }
