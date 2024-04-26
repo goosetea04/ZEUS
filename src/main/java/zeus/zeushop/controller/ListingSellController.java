@@ -46,7 +46,7 @@ public class ListingSellController {
     public String editPage(Model model, @PathVariable String id) {
         ListingSell listing = service.findById(id);
         model.addAttribute("product", listing);
-        return "EditProduct";
+        return "editListingSell";
     }
 
     @PostMapping("/edit")
