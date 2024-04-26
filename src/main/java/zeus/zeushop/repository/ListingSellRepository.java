@@ -20,25 +20,34 @@ public class ListingSellRepository {
     }
 
     public ListingSell findById(String id) {
-        for (ListingSell listingSell : listingData) {
-            if (listingSell.getId().equals(id)) {
-                return listingSell;
+        for (ListingSell list : listingData) {
+            if (list.getId().equals(id)) {
+                return list;
             }
         }
         return null;
     }
 
-    public void deleteListingSell(ListingSell listingSell) {
-        listingData.remove(listingSell);
-    }
-
-    public void editListingSell(ListingSell listingSell) {
-        for (int i=0; i < listingData.size(); i++) {
-            ListingSell addListing = listingData.get(i);
-            if (addListing.getId().equals(listingSell.getId())) {
-                listingData.set(i, listingSell);
-                return;
+    public ListingSell deleteListingSell(String id) {
+        for (ListingSell list : listingData) {
+            if (list.getId().equals(id)) {
+                listingData.remove(list);
+                return list;
             }
         }
+        return null;
+    }
+
+    public ListingSell editListingSell(ListingSell editedListingSell) {
+        for (ListingSell list : listingData) {
+        if (list.getId().equals(editedListingSell.getId())) {
+            list.setName(editedListingSell.getName());
+            list.setDescription(editedListingSell.getDescription());
+            list.setStock(Math.max(0, editedListingSell.getStock()));
+            list.setPrice(Math.max(0, editedListingSell.getPrice()));
+            return list;
+            }
+        }
+        return null;
     }
 }

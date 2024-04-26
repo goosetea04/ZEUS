@@ -30,29 +30,17 @@ public class ListingSellServiceImpl implements ListingSellService {
     }
 
     @Override
-    public ListingSell findById(String id) {
-        ListingSell listing = null;
-        Iterator<ListingSell> listings = listingSellRepository.findAll();
-        while (listings.hasNext()) {
-            ListingSell nextListing = listings.next();
-            if (nextListing.getId().equals(id)) {
-                listing = nextListing;
-                break;
-            }
-        }
-        return listing;
-    }
-
-    @Override
-    public void deleteListingSell(ListingSell listingSell) {
-        if (listingSell != null) {
-            listingSellRepository.deleteListingSell(listingSell);
-        }
+    public ListingSell findById(String Id) {
+        return listingSellRepository.findById(Id);
     }
 
     @Override
     public ListingSell editListingSell(ListingSell listingSell) {
-        ListingSellRepository.editListingSell(listingSell);
-        return listingSell;
+        return listingSellRepository.editListingSell(listingSell);
+    }
+
+    @Override
+    public ListingSell deleteListingSell(String id) {
+        return listingSellRepository.deleteListingSell(id);
     }
 }

@@ -10,4 +10,5 @@ public class ListingSell {
     private String description;
     private int stock;
     private int price;
+
 }
