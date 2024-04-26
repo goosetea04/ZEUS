@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Listing</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERd`knLPMO" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container">
+    <h3>Create New Listing</h3>
+
+    <form th:action="@{/list/create}" th:object="${list}" method="post">
+        <div class="form-group">
+            <label for="nameInput">Name</label>
+            <input th:field="*{name}" type="text" class="form-control mb-4 col-4" id="nameInput" placeholder="Enter list' name">
+        </div>
+        <div class="form-group">
+            <label for="descriptionInput">Description</label>
+            <input th:field="*{description}" type="text" class="form-control" id="descriptionInput" rows="3" placeholder="Enter list' description">
+        </div>
+        <div class="form-group">
+            <label for="stockInput">Stock</label>
+            <input th:field="*{stock}" type="text" class="form-control mb-4 col-4" id="stockInput" placeholder="Enter list' stock">
+        </div>
+        <div class="form-group">
+            <label for="priceInput">Quantity</label>
+            <input th:field="*{price}" type="text" class="form-control mb-4 col-4" id="priceInput" placeholder="Enter list' price">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
+</html>
