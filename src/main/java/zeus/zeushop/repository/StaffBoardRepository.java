@@ -7,25 +7,21 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-import java.util.Spliterators;
+
 
 @Repository
 public class StaffBoardRepository {
 
     private final TopUpRepository topUpRepository;
 
-    // Constructor to inject the TopUpRepository dependency
     public StaffBoardRepository(TopUpRepository topUpRepository) {
         this.topUpRepository = topUpRepository;
     }
 
-    // Method to get all top-ups
     public List<TopUp> findAllTopUps() {
         return toList(topUpRepository.findAll());
     }
 
-    // Method to find all top-ups by status
     public List<TopUp> findAllTopUpsByStatus(String status) {
         List<TopUp> allTopUps = findAllTopUps();
         return allTopUps.stream()
@@ -33,7 +29,6 @@ public class StaffBoardRepository {
                 .collect(Collectors.toList());
     }
 
-    // Method to approve a pending top-up
     public boolean approveTopUp(String topUpId) {
         List<TopUp> allTopUps = findAllTopUps();
         for (TopUp topUp : allTopUps) {
@@ -42,10 +37,9 @@ public class StaffBoardRepository {
                 return true;
             }
         }
-        return false; // Top-up not found or not pending
+        return false;
     }
 
-    // Utility method to convert Iterator to List
     private List<TopUp> toList(Iterator<TopUp> iterator) {
         List<TopUp> list = new ArrayList<>();
         iterator.forEachRemaining(list::add);
