@@ -38,7 +38,7 @@ public class ListingSellController {
     public String listingSellPage(Model model) {
         List<ListingSell> allListingSell = service.findAll();
         model.addAttribute ("listing", allListingSell);
-        return "Lists";
+        return "sell";
     }
 
     @GetMapping("/delete/{id}")
@@ -51,7 +51,7 @@ public class ListingSellController {
     public String editGet(@PathVariable String id, Model model) {
         ListingSell listing = service.findById(id);
         model.addAttribute("listing", listing);
-        return "ListingSellEdit";
+        return "EditListingSell";
     }
 
     @PostMapping("/edit")
