@@ -94,8 +94,8 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Loop through listings -->
         <tr th:each="listing : ${listings}">
+            <!-- Display listing information -->
             <td th:text="${listing.product_id}"></td>
             <td th:text="${listing.product_name}"></td>
             <td th:text="${listing.product_quantity}"></td>
@@ -105,13 +105,44 @@
             <td>
                 <form action="/add-to-cart" method="post">
                     <input type="hidden" name="listingId" th:value="${listing.product_id}" />
+                    <input type="hidden" name="maxQuantity" th:value="${listing.product_quantity}" />
                     <input type="number" name="quantity" value="1" />
-                    <button type="submit">Add to Cart</button>
+                    <button type="button" onclick="addToCart(this)">Add to Cart</button>
                 </form>
             </td>
         </tr>
+
         </tbody>
     </table>
 </div>
+<script>
+    function addToCart(button) {
+        var row = button.closest('tr'); // Get the parent row of the button
+        var form = row.querySelector('form'); // Get the form element within the row
+
+        if (!form) {
+            console.error('Form element not found.');
+            return; // Exit the function if form element is not found
+        }
+
+        var quantity = parseInt(row.querySelector('input[name="quantity"]').value);
+        var maxQuantity = parseInt(row.querySelector('input[name="maxQuantity"]').value);
+        console.log("Quantity:", quantity); // Print quantity to console
+        console.log("Max Quantity:", maxQuantity); // Print maxQuantity to console
+        if (isNaN(quantity) || quantity <= 0) {
+            alert("Please enter a valid quantity greater than zero.");
+            return; // Exit the function if quantity is invalid
+        }
+
+        if (quantity > maxQuantity) {
+            alert("Quantity exceeds available stock.");
+            return; // Exit the function if quantity exceeds maxQuantity
+        }
+
+        // If validation passes, submit the form
+        form.submit();
+    }
+</script>
+
 </body>
 </html>
