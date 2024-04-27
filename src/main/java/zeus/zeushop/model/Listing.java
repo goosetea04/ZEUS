@@ -38,4 +38,7 @@ public class Listing {
     public Boolean isFeatured() {
         return endDate != null && LocalDateTime.now().isBefore(endDate);
     }
+    public Integer getId() {
+        return product_id;
+    }
 }

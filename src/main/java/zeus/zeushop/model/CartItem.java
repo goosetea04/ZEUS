@@ -1,21 +1,42 @@
 package zeus.zeushop.model;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
+@Entity
+@Table(name = "cart_item")
 public class CartItem {
-    private Listing listing; // Represents the listing associated with this cart item
-    private int quantity;    // Represents the quantity of the listing added to the cart
 
-    // Constructor
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "listing_id")
+    private Listing listing;
+
+    private int quantity;
+
+    // Constructors
     public CartItem() {
-        // Initialize with default values or leave them null/0
-        this.listing = null;
-        this.quantity = 0;
+        // Default constructor required by JPA
     }
+
     public CartItem(Listing listing, int quantity) {
         this.listing = listing;
         this.quantity = quantity;
     }
 
-    // Getter and setter methods
+    // Getters and setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Listing getListing() {
         return listing;
     }

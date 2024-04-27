@@ -11,6 +11,7 @@ import zeus.zeushop.service.ShoppingCartService;
 import zeus.zeushop.service.ListingService;
 import java.time.LocalDateTime;
 import zeus.zeushop.service.ShoppingCartServiceFactory;
+import zeus.zeushop.repository.CartItemRepository;
 import zeus.zeushop.repository.ListingRepository;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,9 +31,12 @@ public class ListingController {
     @Autowired
     private ListingRepository listingRepository;
 
+    @Autowired
+    private CartItemRepository cartItemRepository;
+
     @GetMapping("/listings")
     public String getAllListings(Model model) {
-        ShoppingCartService shoppingCartService = ShoppingCartServiceFactory.createShoppingCartService(listingRepository);
+        ShoppingCartService shoppingCartService = ShoppingCartServiceFactory.createShoppingCartService(cartItemRepository, listingRepository);
         model.addAttribute("listings", shoppingCartService.getAllListings());
         model.addAttribute("cartItem", new CartItem()); // For adding listings to cart
         return "listings";
