@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -11,9 +11,9 @@
 <body>
 <main>
     <h1>PROFILE</h1>
-    <p>Name: </p>
-    <p>Username: </p>
-    <p>Email: </p>
+    <p th:text="'Name: ' + ${name}"></p>
+    <p th:text="'Username: ' + ${username}"></p>
+    <p th:text="'Email: ' + ${email}"></p>
     <a href="editprofile.html"><button>Edit Profile</button></a>
 
 </main>
