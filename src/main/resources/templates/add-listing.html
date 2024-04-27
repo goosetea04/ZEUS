@@ -80,8 +80,14 @@
     var quantity = document.getElementById("product_quantity").value;
     var price = document.getElementById("product_price").value;
 
-    if (quantity < 0 || price < 0) {
-      alert("Stock and price cannot be negative.");
+    if (quantity <= 0 & price <= 0) {
+      alert("Stock and price must be a positive number.");
+      return false;
+    } else if (quantity <= 0) {
+      alert("please enter a suitable positive quantity number");
+      return false;
+    } else if (price <= 0 ) {
+      alert("please enter a suitable positive price number");
       return false;
     }
     return true;
