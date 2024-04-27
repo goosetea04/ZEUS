@@ -72,6 +72,11 @@
 <div class="container">
     <h1>Listings</h1>
 
+    <!-- Display error message -->
+    <div th:if="${error}" class="error-message">
+        <p th:text="${error}" style="color: red;"></p>
+    </div>
+
     <!-- Button to add new listing -->
     <a href="/add-listing" class="button">Add New Listing</a>
     <a href="/cart" class="button">Cart</a>

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface ListingRepository extends JpaRepository<Listing, Long> {
+public interface ListingRepository extends JpaRepository<Listing, Integer> {
     // No need to implement these methods manually, JpaRepository provides them
 
     // Custom method to find listings by a specific attribute, for example:

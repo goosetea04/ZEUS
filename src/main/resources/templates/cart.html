@@ -7,6 +7,24 @@
 </head>
 <body>
 <h1>Cart</h1>
-<!-- Display cart items here -->
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Quantity</th>
+    <th>Price</th>
+  </tr>
+  </thead>
+  <tbody>
+  <!-- Loop through cart items -->
+  <tr th:each="cartItem : ${cartItems}">
+    <td th:text="${cartItem.listing.product_id}"></td>
+    <td th:text="${cartItem.listing.product_name}"></td>
+    <td th:text="${cartItem.quantity}"></td>
+    <td th:text="${cartItem.listing.product_price}"></td>
+  </tr>
+  </tbody>
+</table>
 </body>
 </html>

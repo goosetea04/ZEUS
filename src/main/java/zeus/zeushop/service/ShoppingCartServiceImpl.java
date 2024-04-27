@@ -39,5 +39,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public List<Listing> getAllListings() {
         return listingRepository.findAll();
     }
+
+    @Override
+    public List<CartItem> getAllCartItems() {
+        return cartItems;
+    }
     // Implement other methods for managing the shopping cart
 }
