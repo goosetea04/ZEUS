@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create New Listing</title>
+    <title>Edit New Listing</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <style>
         body {
@@ -34,9 +34,9 @@
 <body>
 
 <div class="container">
-    <h3>Create New Listing</h3>
+    <h3>Edit New Listing</h3>
 
-    <form th:action="@{/sell/edit/{id}(id=${list.id})}" th:object="${list}" method="post">
+    <form th:action="@{/sell/edit/{id}(id=${listingSell.id})}" th:object="${listingSell}" method="post">
         <div class="form-group">
             <label for="nameInput">Name</label>
             <input th:field="*{name}" type="text" class="form-control" id="nameInput" placeholder="Enter list name">

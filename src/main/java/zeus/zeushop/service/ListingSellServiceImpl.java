@@ -11,9 +11,11 @@ import java.util.List;
 
 @Service
 public class ListingSellServiceImpl implements ListingSellService {
+    private final ListingSellRepository listingSellRepository;
 
-    @Autowired
-    private ListingSellRepository listingSellRepository;
+    public ListingSellServiceImpl(ListingSellRepository listingSellRepository) {
+        this.listingSellRepository = listingSellRepository;
+    }
 
     @Override
     public ListingSell create(ListingSell listingSell) {

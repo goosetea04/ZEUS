@@ -12,7 +12,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/sell")
 public class ListingSellController {
-    @Autowired
     private ListingSellService service;
     private final String listingSellRedirect;
 
@@ -41,21 +40,21 @@ public class ListingSellController {
         return "sell";
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteListingSell(@PathVariable String id) {
         service.deleteListingSell(id);
         return listingSellRedirect;
     }
 
     @GetMapping("/edit/{id}")
-    public String editGet(@PathVariable String id, Model model) {
-        ListingSell listing = service.findById(id);
-        model.addAttribute("list", listing);
+    public String editListingSellPage(@PathVariable String id, Model model) {
+        ListingSell listingSell = service.findById(id);
+        model.addAttribute("listingSell", listingSell);
         return "editListingSell";
     }
 
-    @PostMapping("/edit")
-    public String editPut(@PathVariable String id, @ModelAttribute ListingSell listingSell) {
+    @PostMapping("/edit/{id}")
+    public String editListingSellPost(@PathVariable String id, @ModelAttribute ListingSell listingSell) {
         listingSell.setId(id);
         service.editListingSell(listingSell);
         return listingSellRedirect;

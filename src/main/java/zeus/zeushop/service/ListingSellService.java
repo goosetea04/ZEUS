@@ -8,5 +8,5 @@ public interface ListingSellService {
     public List<ListingSell> findAll();
     public ListingSell findById(String id);
     public ListingSell deleteListingSell(String id);
-    public ListingSell editListingSell(ListingSell editedListingSell);
+    public ListingSell editListingSell(ListingSell listing);
 }
