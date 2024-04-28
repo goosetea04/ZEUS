@@ -2,64 +2,83 @@ package zeus.zeushop.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import zeus.zeushop.model.TopUp;
-
-import java.time.LocalDateTime;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import zeus.zeushop.model.TopUp;
 
 public class TopUpRepositoryTest {
 
     private TopUpRepository topUpRepository;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         topUpRepository = new TopUpRepository();
     }
 
     @Test
-    public void testCreateTopUp() {
+    void testCreate() {
         TopUp topUp = new TopUp();
-        topUp.setTopUpId("topUp1");
-        topUp.setUserId("user1");
-        topUp.setAmount(100.0);
-        topUp.setStatus("PENDING");
-        topUp.setCreatedAt(LocalDateTime.now());
-        topUp.setUpdatedAt(LocalDateTime.now());
+        topUp.setTopUpId("T001");
+        topUp.setUserId("U123");
+        topUp.setAmount(100);
 
-        TopUp createdTopUp = topUpRepository.create(topUp);
+        TopUp savedTopUp = topUpRepository.create(topUp);
 
-        assertEquals(topUp, createdTopUp);
+        assertNotNull(savedTopUp);
+        assertEquals("T001", savedTopUp.getTopUpId());
+        assertEquals("U123", savedTopUp.getUserId());
+        assertEquals(100, savedTopUp.getAmount());
     }
 
     @Test
-    public void testFindAllTopUps() {
+    void testFindAll() {
+        TopUp topUp = new TopUp();
+        topUpRepository.create(topUp);
+
+        Iterator<TopUp> topUps = topUpRepository.findAll();
+
+        assertTrue(topUps.hasNext());
+        assertEquals(topUp, topUps.next());
+    }
+
+    @Test
+    void testFindByUserId() {
         TopUp topUp1 = new TopUp();
-        topUp1.setTopUpId("topUp1");
-        topUp1.setUserId("user1");
-        topUp1.setAmount(100.0);
-        topUp1.setStatus("PENDING");
-        topUp1.setCreatedAt(LocalDateTime.now());
-        topUp1.setUpdatedAt(LocalDateTime.now());
-
+        topUp1.setUserId("U123");
         TopUp topUp2 = new TopUp();
-        topUp2.setTopUpId("topUp2");
-        topUp2.setUserId("user2");
-        topUp2.setAmount(200.0);
-        topUp2.setStatus("PENDING");
-        topUp2.setCreatedAt(LocalDateTime.now());
-        topUp2.setUpdatedAt(LocalDateTime.now());
-
+        topUp2.setUserId("U456");
         topUpRepository.create(topUp1);
         topUpRepository.create(topUp2);
 
-        Iterator<TopUp> iterator = topUpRepository.findAll();
+        List<TopUp> result = topUpRepository.findByUserId("U123");
 
-        assertTrue(iterator.hasNext());
-        assertEquals(topUp1, iterator.next());
-        assertEquals(topUp2, iterator.next());
-        assertTrue(!iterator.hasNext());
+        assertEquals(1, result.size());
+        assertEquals("U123", result.get(0).getUserId());
+    }
+
+    @Test
+    void testDeleteTopUp_Positive() {
+        TopUp topUp = new TopUp();
+        topUp.setTopUpId("T001");
+        topUpRepository.create(topUp);
+
+        boolean isDeleted = topUpRepository.deleteTopUp("T001");
+
+        assertTrue(isDeleted);
+        assertFalse(topUpRepository.findAll().hasNext());
+    }
+
+    @Test
+    void testDeleteTopUp_Negative() {
+        TopUp topUp = new TopUp();
+        topUp.setTopUpId("T002");
+        topUpRepository.create(topUp);
+
+        boolean isDeleted = topUpRepository.deleteTopUp("T003");
+
+        assertFalse(isDeleted);
+        assertTrue(topUpRepository.findAll().hasNext());
     }
 }
