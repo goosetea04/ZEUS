@@ -2,6 +2,7 @@ package zeus.zeushop.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import java.util.UUID;
 
 @Getter @Setter
 public class ListingSell {
@@ -11,4 +12,7 @@ public class ListingSell {
     private int stock;
     private int price;
 
+    public ListingSell() {
+        id = UUID.randomUUID().toString();
+    }
 }
