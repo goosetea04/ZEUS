@@ -3,43 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <title>Listings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        a.button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a.button:hover {
+            background-color: #0056b3;
+        }
+        input[type="number"] {
+            width: 50px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        button[type="submit"] {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-<h1>Listings</h1>
+<div class="container">
+    <h1>Listings</h1>
 
-<!-- Button to add new listing -->
-<a href="/add-listing">Add New Listing</a>
+    <!-- Display error message -->
+    <div th:if="${error}" class="error-message">
+        <p th:text="${error}" style="color: red;"></p>
+    </div>
 
-<!-- Display listings -->
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Quantity</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Add to Cart</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Loop through listings -->
-    <tr th:each="listing : ${listings}">
-        <td th:text="${listing.listingID}"></td>
-        <td th:text="${listing.listingName}"></td>
-        <td th:text="${listing.listingStock}"></td>
-        <td th:text="${listing.listingDescription}"></td>
-        <td th:text="${listing.listingPrice}"></td>
-        <!-- Form to add listing to cart -->
-        <td>
-            <form action="/add-to-cart" method="post">
-                <input type="hidden" name="listingId" th:value="${listing.listingID}" />
-                <input type="number" name="quantity" value="1" />
-                <button type="submit">Add to Cart</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <!-- Button to add new listing -->
+    <a href="/add-listing" class="button">Add New Listing</a>
+    <a href="/cart" class="button">Cart</a>
+
+    <!-- Display listings -->
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Add to Cart</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="listing : ${listings}">
+            <!-- Display listing information -->
+            <td th:text="${listing.product_id}"></td>
+            <td th:text="${listing.product_name}"></td>
+            <td th:text="${listing.product_quantity}"></td>
+            <td th:text="${listing.product_description}"></td>
+            <td th:text="${listing.product_price}"></td>
+            <!-- Form to add listing to cart -->
+            <td>
+                <form action="/add-to-cart" method="post">
+                    <input type="hidden" name="listingId" th:value="${listing.product_id}" />
+                    <input type="hidden" name="maxQuantity" th:value="${listing.product_quantity}" />
+                    <input type="number" name="quantity" value="1" />
+                    <button type="button" onclick="addToCart(this)">Add to Cart</button>
+                </form>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<script>
+    function addToCart(button) {
+        var row = button.closest('tr'); // Get the parent row of the button
+        var form = row.querySelector('form'); // Get the form element within the row
+
+        if (!form) {
+            console.error('Form element not found.');
+            return; // Exit the function if form element is not found
+        }
+
+        var quantity = parseInt(row.querySelector('input[name="quantity"]').value);
+        var maxQuantity = parseInt(row.querySelector('input[name="maxQuantity"]').value);
+        console.log("Quantity:", quantity); // Print quantity to console
+        console.log("Max Quantity:", maxQuantity); // Print maxQuantity to console
+        if (isNaN(quantity) || quantity <= 0) {
+            alert("Please enter a valid quantity greater than zero.");
+            return; // Exit the function if quantity is invalid
+        }
+
+        if (quantity > maxQuantity) {
+            alert("Quantity exceeds available stock.");
+            return; // Exit the function if quantity exceeds maxQuantity
+        }
+
+        // If validation passes, submit the form
+        form.submit();
+    }
+</script>
+
 </body>
 </html>
