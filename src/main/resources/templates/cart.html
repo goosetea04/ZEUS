@@ -49,6 +49,12 @@
     <td th:text="${cartItem.listing.product_name}"></td>
     <td th:text="${cartItem.quantity}"></td>
     <td th:text="${cartItem.listing.product_price}"></td>
+    <td>
+      <form action="/remove-from-cart" method="post">
+        <input type="hidden" name="cartItemId" th:value="${cartItem.id}" />
+        <button type="submit">Delete</button>
+      </form>
+    </td>
   </tr>
   </tbody>
 </table>
