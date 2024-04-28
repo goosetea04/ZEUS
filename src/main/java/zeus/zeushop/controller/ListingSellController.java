@@ -24,7 +24,7 @@ public class ListingSellController {
     @GetMapping("/create")
     public String createListingSellPage(Model model) {
         ListingSell listingSell = new ListingSell();
-        model.addAttribute("listing", listingSell);
+        model.addAttribute("list", listingSell);
         return "createListingSell";
     }
 
@@ -37,7 +37,7 @@ public class ListingSellController {
     @GetMapping("/list")
     public String listingSellPage(Model model) {
         List<ListingSell> allListingSell = service.findAll();
-        model.addAttribute ("listing", allListingSell);
+        model.addAttribute ("lists", allListingSell);
         return "sell";
     }
 
@@ -50,12 +50,13 @@ public class ListingSellController {
     @GetMapping("/edit/{id}")
     public String editGet(@PathVariable String id, Model model) {
         ListingSell listing = service.findById(id);
-        model.addAttribute("listing", listing);
-        return "EditListingSell";
+        model.addAttribute("list", listing);
+        return "editListingSell";
     }
 
     @PostMapping("/edit")
-    public String editPut(@ModelAttribute ListingSell listingSell) {
+    public String editPut(@PathVariable String id, @ModelAttribute ListingSell listingSell) {
+        listingSell.setId(id);
         service.editListingSell(listingSell);
         return listingSellRedirect;
     }
