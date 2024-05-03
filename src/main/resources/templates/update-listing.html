@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Listing</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Update Listing</h1>
+  <!-- Update Listing Form -->
+  <form id="updateListingForm" action="/update-listing" method="post">
+    <input type="hidden" id="productId" name="id" th:value="${listing.id}" />
+    <label for="productName">Name:</label>
+    <input type="text" id="productName" name="product_name" th:value="${listing.product_name}" required>
+
+    <label for="productQuantity">Quantity:</label>
+    <input type="number" id="productQuantity" name="product_quantity" th:value="${listing.product_quantity}" required>
+
+    <label for="productDescription">Description:</label>
+    <textarea id="productDescription" name="product_description" rows="4" cols="50" required th:text="${listing.product_description}"></textarea>
+
+    <label for="productPrice">Price:</label>
+    <input type="number" id="productPrice" name="product_price" th:value="${listing.product_price}" required>
+
+    <button type="submit">Update Listing</button>
+  </form>
+</div>
+</body>
+</html>

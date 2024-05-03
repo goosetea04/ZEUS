@@ -14,7 +14,7 @@ public class Listing {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer product_id;
-
+    private boolean visible;
     private String product_name;
 
     private Integer product_quantity;
@@ -40,5 +40,13 @@ public class Listing {
     }
     public Integer getId() {
         return product_id;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible){
+        this.visible = visible;
     }
 }

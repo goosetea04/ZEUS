@@ -14,4 +14,5 @@ public interface ListingRepository extends JpaRepository<Listing, Integer> {
     // Custom method to find listings by a specific attribute, for example:
     // List<Listing> findByCategory(String category);
     List<Listing> findByEndDateGreaterThanEqual(LocalDateTime endDate); //ok thanks
+    List<Listing> findByVisibleIsTrue();
 }
