@@ -138,5 +138,18 @@ public class ListingController {
 
         return "redirect:/listings";
     }
+
+    @GetMapping("/manage-listings")
+    public String manageListings(Model model) {
+        List<Listing> allListings = listingService.getAllListings();
+        model.addAttribute("listings", allListings);
+        return "manage-listings";
+    }
+
+    @PostMapping("/delete-listing")
+    public String deleteListing(@RequestParam("id") Long id) {
+        listingService.deleteListing(id);
+        return "redirect:/manage-listings"; // Redirect to the manage-listings page after deletion
+    }
 }
 
