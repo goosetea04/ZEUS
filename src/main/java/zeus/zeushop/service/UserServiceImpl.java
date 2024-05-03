@@ -1,4 +1,5 @@
 package zeus.zeushop.service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import zeus.zeushop.model.User;
 import zeus.zeushop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public User createUser(User user) {
-        return userRepository.save(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        System.out.println(user);
+        userRepository.save(user);
+        return user;
     }
 
     public List<User> getAllUsers() {
