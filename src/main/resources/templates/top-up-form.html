@@ -48,10 +48,13 @@
 <body>
 <h1>Top Up Your Balance</h1>
 <form action="/topups" method="post">
+    <input type="hidden" id="userId" name="userId" value="123"> <!-- Replace "123" with actual userId -->
+
     <label for="amount">Amount:</label><br>
     <input type="number" id="amount" name="amount" required><br>
 
     <button type="submit">Submit Top Up</button>
 </form>
 </body>
+
 </html>

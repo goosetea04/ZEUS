@@ -21,30 +21,41 @@ public class TopUpController {
         this.topUpService = topUpService;
     }
 
+    // Display the form for new top-up
     @GetMapping("/new")
-    public String showTopUpForm() {
+    public String showTopUpForm(Model model) {
+        model.addAttribute("topUp", new TopUp()); // Add a new topUp to the model for form binding
         return "top-up-form";
     }
 
+    // Handle the form submission and create a new top-up
     @PostMapping
-    public String createTopUp(@ModelAttribute TopUp topUp) {
+    public String createTopUp(@ModelAttribute TopUp topUp, RedirectAttributes redirectAttributes) {
+        // Set default status or perform logic to determine status
+        topUp.setStatus("PENDING");
+
         topUpService.createTopUp(topUp);
+        redirectAttributes.addFlashAttribute("message", "Top-up created successfully!");
         return "redirect:/topups";
     }
 
+    // List all top-ups
     @GetMapping
     public String getAllTopUps(Model model) {
         List<TopUp> allTopUps = topUpService.getAllTopUps();
         model.addAttribute("topUps", allTopUps);
-        return "user-top-ups";
+        return "user-top-ups"; // Assuming 'all-top-ups' is the view for listing all top-ups
     }
 
+    // Get top-ups by user ID
     @GetMapping("/{userId}")
     public String getUserTopUps(@PathVariable String userId, Model model) {
-        model.addAttribute("topUps", topUpService.getUserTopUps(userId));
-        return "user-top-ups";
+        List<TopUp> userTopUps = topUpService.getUserTopUps(userId);
+        model.addAttribute("topUps", userTopUps);
+        return "user-top-ups"; // View for displaying top-ups of a specific user
     }
 
+    // Delete a top-up and handle the redirection with a message
     @PostMapping("/{topUpId}/delete")
     public String deleteTopUp(@PathVariable String topUpId, RedirectAttributes redirectAttributes) {
         boolean deleted = topUpService.deleteTopUp(topUpId);
@@ -55,5 +66,4 @@ public class TopUpController {
         }
         return "redirect:/topups";
     }
-
 }

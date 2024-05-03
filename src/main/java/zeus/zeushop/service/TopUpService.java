@@ -1,7 +1,6 @@
 package zeus.zeushop.service;
 
 import zeus.zeushop.model.TopUp;
-
 import java.util.List;
 
 public interface TopUpService {
