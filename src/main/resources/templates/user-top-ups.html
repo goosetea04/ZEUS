@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Top-Up History</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 40px;
+            background: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            color: #444;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #5fba7d;
+            color: white;
+        }
+        a.button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #5fba7d;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+        a.button:hover {
+            background-color: #4cae6b;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #ff5c5c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background-color: #e60000;
+        }
+    </style>
+</head>
+<body>
+<h1>Top-Up History</h1>
+
+
+<a href="/topups/new" class="button">Add New Top-Up</a>
+
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Date Created</th>
+        <th>Update</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="topUp : ${topUps}">
+        <td th:text="${topUp.topUpId}"></td>
+        <td th:text="${topUp.amount}"></td>
+        <td th:text="${topUp.status}"></td>
+        <td th:text="${topUp.createdAt}"></td>
+        <td>
+            <form th:action="@{'/topups/' + ${topUp.topUpId} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
