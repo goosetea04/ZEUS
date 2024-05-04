@@ -1,15 +1,17 @@
 package zeus.zeushop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import zeus.zeushop.model.TopUp;
 import zeus.zeushop.service.StaffBoardService;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/staff")
+@Controller
+@RequestMapping("/staff")
 public class StaffBoardController {
 
     private final StaffBoardService staffBoardService;
@@ -20,30 +22,30 @@ public class StaffBoardController {
     }
 
     @PostMapping("/approve/{topUpId}")
-    public ResponseEntity<?> approveTopUp(@PathVariable String topUpId) {
+    public String approveTopUp(@PathVariable String topUpId, RedirectAttributes redirectAttributes) {
         boolean success = staffBoardService.approveTopUp(topUpId);
-        if (success) {
-            return ResponseEntity.ok("Top-up approved successfully.");
-        } else {
-            return ResponseEntity.badRequest().body("Failed to approve top-up. It may not exist or is not pending.");
-        }
+        redirectAttributes.addFlashAttribute("message", success ? "Top-up approved successfully." : "Failed to approve top-up. It may not exist or is not pending.");
+        return "redirect:staffdashboard";
     }
 
     @GetMapping("/top-ups/status/{status}")
-    public ResponseEntity<List<TopUp>> getTopUpsByStatus(@PathVariable String status) {
+    public String getTopUpsByStatus(@PathVariable String status, Model model) {
         List<TopUp> topUps = staffBoardService.getTopUpsByStatus(status);
-        return ResponseEntity.ok(topUps);
+        model.addAttribute("topUps", topUps); // Change attribute name to "topUps"
+        return "staffdashboard";
     }
 
     @GetMapping("/top-ups")
-    public ResponseEntity<List<TopUp>> getAllTopUps() {
+    public String getAllTopUps(Model model) {
         List<TopUp> topUps = staffBoardService.getAllTopUps();
-        return ResponseEntity.ok(topUps);
+        model.addAttribute("topUps", topUps); // Change attribute name to "topUps"
+        return "staffdashboard";
     }
 
     @GetMapping("/user/{userId}/top-ups")
-    public ResponseEntity<List<TopUp>> getUserTopUps(@PathVariable String userId) {
+    public String getUserTopUps(@PathVariable String userId, Model model) {
         List<TopUp> topUps = staffBoardService.getUserTopUps(userId);
-        return ResponseEntity.ok(topUps);
+        model.addAttribute("topUps", topUps); // Change attribute name to "topUps"
+        return "staffdashboard";
     }
 }
