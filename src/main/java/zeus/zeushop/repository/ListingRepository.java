@@ -1,20 +1,17 @@
 package zeus.zeushop.repository;
-import zeus.zeushop.model.Listing;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import zeus.zeushop.model.Listing;
+import java.time.LocalDateTime;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
 @Repository
-public class ListingRepository {
-    private List<Listing> listings = new ArrayList<>();
+public interface ListingRepository extends JpaRepository<Listing, Integer> {
+    // No need to implement these methods manually, JpaRepository provides them
 
-    public Listing create(Listing listing) {
-        listings.add(listing);
-        return listing;
-    }
-
-    public Iterator<Listing> findAll(){
-        return listings.iterator();
-    }
+    // Custom method to find listings by a specific attribute, for example:
+    // List<Listing> findByCategory(String category);
+    List<Listing> findByEndDateGreaterThanEqual(LocalDateTime endDate); //ok thanks
 }

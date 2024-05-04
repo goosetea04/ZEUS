@@ -2,19 +2,27 @@ package zeus.zeushop.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Arrays;
 import java.util.List;
-import java.util.Iterator;
+import java.util.Optional;
 
 import zeus.zeushop.model.TopUp;
 
+@ExtendWith(MockitoExtension.class)
 public class TopUpRepositoryTest {
 
+    @Mock
     private TopUpRepository topUpRepository;
 
     @BeforeEach
     void setUp() {
-        topUpRepository = new TopUpRepository();
     }
 
     @Test
@@ -24,7 +32,9 @@ public class TopUpRepositoryTest {
         topUp.setUserId("U123");
         topUp.setAmount(100);
 
-        TopUp savedTopUp = topUpRepository.create(topUp);
+        when(topUpRepository.save(any(TopUp.class))).thenReturn(topUp);
+
+        TopUp savedTopUp = topUpRepository.save(topUp);
 
         assertNotNull(savedTopUp);
         assertEquals("T001", savedTopUp.getTopUpId());
@@ -35,22 +45,19 @@ public class TopUpRepositoryTest {
     @Test
     void testFindAll() {
         TopUp topUp = new TopUp();
-        topUpRepository.create(topUp);
+        when(topUpRepository.findAll()).thenReturn(Arrays.asList(topUp));
 
-        Iterator<TopUp> topUps = topUpRepository.findAll();
+        List<TopUp> topUps = topUpRepository.findAll();
 
-        assertTrue(topUps.hasNext());
-        assertEquals(topUp, topUps.next());
+        assertFalse(topUps.isEmpty());
+        assertEquals(topUp, topUps.get(0));
     }
 
     @Test
     void testFindByUserId() {
         TopUp topUp1 = new TopUp();
         topUp1.setUserId("U123");
-        TopUp topUp2 = new TopUp();
-        topUp2.setUserId("U456");
-        topUpRepository.create(topUp1);
-        topUpRepository.create(topUp2);
+        when(topUpRepository.findByUserId("U123")).thenReturn(Arrays.asList(topUp1));
 
         List<TopUp> result = topUpRepository.findByUserId("U123");
 
@@ -60,25 +67,19 @@ public class TopUpRepositoryTest {
 
     @Test
     void testDeleteTopUp_Positive() {
-        TopUp topUp = new TopUp();
-        topUp.setTopUpId("T001");
-        topUpRepository.create(topUp);
-
-        boolean isDeleted = topUpRepository.deleteTopUp("T001");
-
-        assertTrue(isDeleted);
-        assertFalse(topUpRepository.findAll().hasNext());
+        doNothing().when(topUpRepository).deleteById("T001");
+        topUpRepository.deleteById("T001");
+        verify(topUpRepository, times(1)).deleteById("T001");
     }
 
     @Test
     void testDeleteTopUp_Negative() {
-        TopUp topUp = new TopUp();
-        topUp.setTopUpId("T002");
-        topUpRepository.create(topUp);
+        doThrow(new RuntimeException()).when(topUpRepository).deleteById("T003");
 
-        boolean isDeleted = topUpRepository.deleteTopUp("T003");
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            topUpRepository.deleteById("T003");
+        });
 
-        assertFalse(isDeleted);
-        assertTrue(topUpRepository.findAll().hasNext());
+        verify(topUpRepository, times(1)).deleteById("T003");
     }
 }

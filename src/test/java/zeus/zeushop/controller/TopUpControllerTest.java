@@ -42,9 +42,10 @@ public class TopUpControllerTest {
     @Test
     void testCreateTopUp() {
         TopUp topUp = new TopUp();
-        topUpController.createTopUp(topUp);
+        RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
+        String redirectUrl = topUpController.createTopUp(topUp, redirectAttributes);
         verify(topUpService).createTopUp(topUp);
-        assertEquals("redirect:/topups", topUpController.createTopUp(topUp));
+        assertEquals("redirect:/topups", redirectUrl);
     }
 
     @Test

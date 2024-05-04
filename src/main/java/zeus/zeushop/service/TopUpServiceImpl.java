@@ -1,15 +1,12 @@
 package zeus.zeushop.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import zeus.zeushop.model.TopUp;
 import zeus.zeushop.repository.TopUpRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 @Service
 public class TopUpServiceImpl implements TopUpService {
@@ -23,30 +20,26 @@ public class TopUpServiceImpl implements TopUpService {
 
     @Override
     public TopUp createTopUp(TopUp topUp) {
-        topUp.setTopUpId(UUID.randomUUID().toString());
-        topUp.setStatus("PENDING");
-        topUp.setCreatedAt(LocalDateTime.now());
-        topUp.setUpdatedAt(LocalDateTime.now());
-        return topUpRepository.create(topUp);
+        return topUpRepository.save(topUp); // Save handles both create and update
     }
 
     @Override
     public List<TopUp> getUserTopUps(String userId) {
-        return topUpRepository.findByUserId(userId);
+        return topUpRepository.findByUserId(userId); // Custom method defined in repository
     }
 
     @Override
     public boolean deleteTopUp(String topUpId) {
-        return topUpRepository.deleteTopUp(topUpId);
+        Optional<TopUp> topUp = topUpRepository.findById(topUpId);
+        if (topUp.isPresent()) {
+            topUpRepository.deleteById(topUpId);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public List<TopUp> getAllTopUps() {
-        List<TopUp> allTopUps = new ArrayList<>();
-        for (Iterator<TopUp> it = topUpRepository.findAll(); it.hasNext(); ) {
-            TopUp topUp = it.next();
-            allTopUps.add(topUp);
-        }
-        return allTopUps;
+        return topUpRepository.findAll(); // Built-in method from JpaRepository
     }
 }

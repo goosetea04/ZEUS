@@ -9,7 +9,6 @@ import zeus.zeushop.model.TopUp;
 import zeus.zeushop.repository.TopUpRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -40,7 +39,7 @@ public class TopUpServiceImplTest {
         savedTopUp.setCreatedAt(LocalDateTime.now());
         savedTopUp.setUpdatedAt(LocalDateTime.now());
 
-        when(topUpRepository.create(any(TopUp.class))).thenReturn(savedTopUp);
+        when(topUpRepository.save(any(TopUp.class))).thenReturn(savedTopUp);
 
         TopUp result = topUpService.createTopUp(topUp);
 
@@ -48,7 +47,7 @@ public class TopUpServiceImplTest {
         assertEquals("PENDING", result.getStatus());
         assertEquals(topUp.getUserId(), result.getUserId());
         assertEquals(topUp.getAmount(), result.getAmount());
-        verify(topUpRepository, times(1)).create(any(TopUp.class));
+        verify(topUpRepository, times(1)).save(any(TopUp.class));
     }
 
     @Test
@@ -65,32 +64,28 @@ public class TopUpServiceImplTest {
     @Test
     void testDeleteTopUp_Positive() {
         String topUpId = "T100";
-        when(topUpRepository.deleteTopUp(topUpId)).thenReturn(true);
+        doNothing().when(topUpRepository).deleteById(topUpId);
 
         boolean result = topUpService.deleteTopUp(topUpId);
 
         assertTrue(result);
-        verify(topUpRepository, times(1)).deleteTopUp(topUpId);
+        verify(topUpRepository, times(1)).deleteById(topUpId);
     }
 
     @Test
     void testDeleteTopUp_Negative() {
         String topUpId = "T101";
-        when(topUpRepository.deleteTopUp(topUpId)).thenReturn(false);
+        doThrow(new RuntimeException("not found")).when(topUpRepository).deleteById(topUpId);
 
-        boolean result = topUpService.deleteTopUp(topUpId);
-
-        assertFalse(result);
-        verify(topUpRepository, times(1)).deleteTopUp(topUpId);
+        Exception exception = assertThrows(RuntimeException.class, () -> topUpService.deleteTopUp(topUpId));
+        assertFalse(exception.getMessage().isEmpty());
+        verify(topUpRepository, times(1)).deleteById(topUpId);
     }
 
     @Test
     void testGetAllTopUps() {
-        List<TopUp> expectedTopUps = new ArrayList<>();
-        expectedTopUps.add(new TopUp());
-        expectedTopUps.add(new TopUp());
-
-        when(topUpRepository.findAll()).thenReturn(expectedTopUps.iterator());
+        List<TopUp> expectedTopUps = Arrays.asList(new TopUp(), new TopUp());
+        when(topUpRepository.findAll()).thenReturn(expectedTopUps);
 
         List<TopUp> actualTopUps = topUpService.getAllTopUps();
 
