@@ -133,6 +133,9 @@ public class ListingController {
         originalListing.setProduct_description(updatedListing.getProduct_description());
         originalListing.setProduct_price(updatedListing.getProduct_price());
 
+        System.out.println(updatedListing.getProduct_description());
+        System.out.println(updatedListing.getProduct_price());
+
         // Save the updated listing
         listingService.updateListing(id, originalListing);
 
