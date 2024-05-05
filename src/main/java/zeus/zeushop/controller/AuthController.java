@@ -16,22 +16,6 @@ public class AuthController {
     public AuthController(UserService userService) {
         this.userService = userService;
     }
-    /*
-    @GetMapping("/")
-    public String dashboard() {
-        return "Welcome to dashboard";
-    }
-
-    @GetMapping("/admin")
-    public String admin() {
-        return "You can view this only if you are admin";
-    }
-
-    @GetMapping("/user")
-    public String staff() {
-        return "If you are admin or user, you can access this page.";
-    }
-    */
 
     @GetMapping("/register")
     public String getRegisterPage(Model model) {
