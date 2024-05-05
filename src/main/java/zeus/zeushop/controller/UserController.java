@@ -10,10 +10,10 @@ import zeus.zeushop.model.User;
 import zeus.zeushop.service.UserService;
 
 @Controller
-public class AuthController {
+public class UserController {
     private final UserService userService;
     @Autowired
-    public AuthController(UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -27,6 +27,11 @@ public class AuthController {
     public String register(@ModelAttribute("user") User user) {
         User newUser = userService.createUser(user);
         return newUser != null ? "redirect:/login" : "register";
+    }
+
+    @GetMapping("/profile")
+    public String getProfilePage(Model model) {
+        return "profile";
     }
 
 }
