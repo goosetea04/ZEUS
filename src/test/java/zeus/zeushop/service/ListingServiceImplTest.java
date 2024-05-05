@@ -24,13 +24,13 @@ public class ListingServiceImplTest {
 
     @Test
     void testUpdateListing_Positive() {
-        Long id = 1L;
+        Integer id = 1;
         Listing listing = new Listing();
         listing.setProduct_name("Test Product");
         when(listingRepository.findById(id)).thenReturn(Optional.of(listing));
         when(listingRepository.save(listing)).thenReturn(listing);
 
-        Listing updatedListing = listingService.updateListing(id, listing);
+        Listing updatedListing = listingService.updateListing(id.longValue(), listing);
 
         assertEquals(listing, updatedListing);
         verify(listingRepository, times(1)).findById(id);
@@ -39,11 +39,11 @@ public class ListingServiceImplTest {
 
     @Test
     void testUpdateListing_Negative() {
-        Long id = 1L;
+        Integer id = 11;
         Listing listing = new Listing();
         when(listingRepository.findById(id)).thenReturn(Optional.empty());
 
-        Listing updatedListing = listingService.updateListing(id, listing);
+        Listing updatedListing = listingService.updateListing(id.longValue(), listing);
 
         assertNull(updatedListing);
         verify(listingRepository, times(1)).findById(id);
@@ -52,19 +52,19 @@ public class ListingServiceImplTest {
 
     @Test
     void testDeleteListing_Positive() {
-        Long id = 1L;
+        Integer id = 1;
         doNothing().when(listingRepository).deleteById(id);
 
-        assertDoesNotThrow(() -> listingService.deleteListing(id));
+        assertDoesNotThrow(() -> listingService.deleteListing(id.longValue()));
         verify(listingRepository, times(1)).deleteById(id);
     }
 
     @Test
     void testDeleteListing_Negative() {
-        Long id = 1L;
+        Integer id = 1;
         doThrow(RuntimeException.class).when(listingRepository).deleteById(id);
 
-        assertThrows(RuntimeException.class, () -> listingService.deleteListing(id));
+        assertThrows(RuntimeException.class, () -> listingService.deleteListing(id.longValue()));
         verify(listingRepository, times(1)).deleteById(id);
     }
 }
