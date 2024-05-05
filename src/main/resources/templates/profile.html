@@ -1,0 +1,10 @@
+<html xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<body>
+<div sec:authorize="isAuthenticated()">
+    Username <span sec:authentication="name"></span>
+    Password <span sec:authentication="principal.password"></span>
+    Role <span sec:authentication="authorities"></span>
+</div>
+</body>
+</html>
