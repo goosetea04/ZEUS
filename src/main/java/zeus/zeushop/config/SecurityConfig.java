@@ -1,5 +1,6 @@
 package zeus.zeushop.config;
 
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import zeus.zeushop.service.UserDetailsServiceImpl;
@@ -19,11 +20,13 @@ public class SecurityConfig {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
 
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.formLogin(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req->req
-                        .requestMatchers("/login/**").permitAll()
+                        .requestMatchers("/login/**", "/register/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAnyAuthority("ADMIN", "USER")
                         .anyRequest().authenticated())
