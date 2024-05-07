@@ -9,6 +9,7 @@ import zeus.zeushop.model.TopUp;
 import zeus.zeushop.service.StaffBoardService;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/staff")
@@ -22,16 +23,21 @@ public class StaffBoardController {
     }
 
     @PostMapping("/approve/{topUpId}")
-    public String approveTopUp(@PathVariable String topUpId, RedirectAttributes redirectAttributes) {
-        boolean success = staffBoardService.approveTopUp(topUpId);
-        redirectAttributes.addFlashAttribute("message", success ? "Top-up approved successfully." : "Failed to approve top-up. It may not exist or is not pending.");
-        return "redirect:staffdashboard";
+    public String approveTopUp(@PathVariable String topUpId) {
+        staffBoardService.approveTopUp(topUpId);
+        return "redirect:../top-ups";
     }
 
-    @GetMapping("/top-ups/status/{status}")
+    @GetMapping("/top-ups/{status}")
     public String getTopUpsByStatus(@PathVariable String status, Model model) {
-        List<TopUp> topUps = staffBoardService.getTopUpsByStatus(status);
-        model.addAttribute("topUps", topUps); // Change attribute name to "topUps"
+        List<TopUp> topUps;
+        if ("ALL".equals(status) || status == null) {
+            topUps = staffBoardService.getAllTopUps();
+        } else {
+            topUps = staffBoardService.getTopUpsByStatus(status);
+        }
+        model.addAttribute("topUps", topUps);
+        model.addAttribute("status", status);
         return "staffdashboard";
     }
 

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import zeus.zeushop.model.TopUp;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +23,7 @@ public class StaffBoardServiceImpl implements StaffBoardService {
         for (TopUp topUp : topUps) {
             if (topUp.getTopUpId().equals(topUpId) && "PENDING".equals(topUp.getStatus())) {
                 topUp.setStatus("APPROVED");
+                topUpService.deleteTopUp(topUpId);
                 topUpService.createTopUp(topUp);  // Assuming createTopUp updates top-ups; if not, adjust accordingly.
                 return true;
             }
