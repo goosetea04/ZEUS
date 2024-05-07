@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         if (user.isPresent()) {
             User existingUser = user.get();
             existingUser.setUsername(userDetails.getUsername());
-            existingUser.setPassword(userDetails.getPassword());
+            existingUser.setPassword(passwordEncoder.encode(userDetails.getPassword()));
             return userRepository.save(existingUser);
         }
         return null;
