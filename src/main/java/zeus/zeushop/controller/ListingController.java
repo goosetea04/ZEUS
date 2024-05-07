@@ -53,7 +53,9 @@ public class ListingController {
 
 
     @PostMapping("/add-to-cart")
-    public String addToCart(@ModelAttribute("cartItem") CartItem cartItem, @RequestParam("listingId") Integer listingId, Model model) {
+    public String addToCart(@ModelAttribute("cartItem") CartItem cartItem,
+                            @RequestParam("listingId") Integer listingId,
+                            Model model) {
         Listing listing = listingRepository.findById(listingId).orElse(null);
         if (listing == null) {
             // Handle case where listing is not found
@@ -66,6 +68,13 @@ public class ListingController {
             return "redirect:/listings";
         }
 
+        // Retrieve currently authenticated user's details
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userService.getUserByUsername(currentUsername);
+
+        // Set the buyerId to the ID of the currently authenticated user
+
         Listing storedListing = listingRepository.findById(listingId).orElse(null);
         if (storedListing != null && storedListing.getProduct_quantity() < quantity) {
             model.addAttribute("error", "Not enough stock available.");
@@ -77,10 +86,11 @@ public class ListingController {
         listingRepository.save(storedListing);
 
         // Add the listing to the cart
-        shoppingCartService.addListingToCart(listing, quantity);
+        shoppingCartService.addListingToCart(listing, quantity, currentUser.getId());
 
         return "redirect:/listings";
     }
+
 
 
 

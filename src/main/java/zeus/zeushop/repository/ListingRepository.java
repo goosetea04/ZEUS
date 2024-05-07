@@ -16,5 +16,5 @@ public interface ListingRepository extends JpaRepository<Listing, Integer> {
     // List<Listing> findByCategory(String category);
     List<Listing> findByEndDateGreaterThanEqual(LocalDateTime endDate); //ok thanks
     @Query("SELECT l FROM Listing l WHERE l.seller_id = :sellerId")
-    List<Listing> findBySeller_id(Integer sellerId);
+    List<Listing> findBySellerId(Integer sellerId);
 }

@@ -17,6 +17,8 @@ public class CartItem {
     private Listing listing;
 
     private int quantity;
+    @Column(name = "buyer_id")
+    private Integer buyerId;
 
     // Constructors
     public CartItem() {
@@ -51,6 +53,13 @@ public class CartItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public void setBuyerId(Integer buyer_id) {
+        this.buyerId = buyer_id;
+    }
+    public Integer getBuyerId() {
+        return buyerId;
     }
 
     // Other methods as needed
