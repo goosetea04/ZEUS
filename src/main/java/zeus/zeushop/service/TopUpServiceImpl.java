@@ -40,6 +40,6 @@ public class TopUpServiceImpl implements TopUpService {
 
     @Override
     public List<TopUp> getAllTopUps() {
-        return topUpRepository.findAll(); // Built-in method from JpaRepository
+        return topUpRepository.findAll();
     }
 }

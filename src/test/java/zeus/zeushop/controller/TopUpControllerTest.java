@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,59 +32,65 @@ public class TopUpControllerTest {
     @Mock
     private RedirectAttributes redirectAttributes;
 
+    @BeforeEach
+    void setUp() {
+        model = mock(Model.class);
+        redirectAttributes = mock(RedirectAttributes.class);
+    }
+
     @Test
     void testShowTopUpForm() {
-        String viewName = topUpController.showTopUpForm();
+        String viewName = topUpController.showTopUpForm(model);
         assertEquals("top-up-form", viewName);
+        verify(model).addAttribute(eq("topUp"), any(TopUp.class));
     }
 
     @Test
     void testCreateTopUp() {
         TopUp topUp = new TopUp();
-        RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
-        String redirectUrl = topUpController.createTopUp(topUp, redirectAttributes);
+        String redirect = topUpController.createTopUp(topUp, redirectAttributes);
+        assertEquals("redirect:/topups", redirect);
         verify(topUpService).createTopUp(topUp);
-        assertEquals("redirect:/topups", redirectUrl);
+        verify(redirectAttributes).addFlashAttribute(eq("message"), eq("Top-up created successfully!"));
     }
 
     @Test
     void testGetAllTopUps() {
-        List<TopUp> topUps = new ArrayList<>();
-        when(topUpService.getAllTopUps()).thenReturn(topUps);
+        List<TopUp> allTopUps = new ArrayList<>();
+        when(topUpService.getAllTopUps()).thenReturn(allTopUps);
 
         String viewName = topUpController.getAllTopUps(model);
-        verify(model).addAttribute("topUps", topUps);
         assertEquals("user-top-ups", viewName);
+        verify(model).addAttribute("topUps", allTopUps);
     }
 
     @Test
     void testGetUserTopUps() {
-        String userId = "U123";
         List<TopUp> userTopUps = new ArrayList<>();
-        when(topUpService.getUserTopUps(userId)).thenReturn(userTopUps);
+        when(topUpService.getUserTopUps("123")).thenReturn(userTopUps);
 
-        String viewName = topUpController.getUserTopUps(userId, model);
-        verify(model).addAttribute("topUps", userTopUps);
+        String viewName = topUpController.getUserTopUps("123", model);
         assertEquals("user-top-ups", viewName);
+        verify(model).addAttribute("topUps", userTopUps);
     }
 
     @Test
-    void testDeleteTopUp_Success() {
-        String topUpId = "T001";
-        when(topUpService.deleteTopUp(topUpId)).thenReturn(true);
+    void testDeleteTopUp() {
+        when(topUpService.deleteTopUp("1")).thenReturn(true);
 
-        String redirect = topUpController.deleteTopUp(topUpId, redirectAttributes);
-        verify(redirectAttributes).addFlashAttribute("message", "Top-up deleted successfully.");
+        String redirect = topUpController.deleteTopUp("1", redirectAttributes);
         assertEquals("redirect:/topups", redirect);
+        verify(redirectAttributes).addFlashAttribute("message", "Top-up deleted successfully.");
+        verify(topUpService).deleteTopUp("1");
     }
 
     @Test
     void testDeleteTopUp_Failure() {
-        String topUpId = "T002";
-        when(topUpService.deleteTopUp(topUpId)).thenReturn(false);
+        when(topUpService.deleteTopUp("1")).thenReturn(false);
 
-        String redirect = topUpController.deleteTopUp(topUpId, redirectAttributes);
-        verify(redirectAttributes).addFlashAttribute("error", "Top-up not found or could not be deleted.");
+        String redirect = topUpController.deleteTopUp("1", redirectAttributes);
         assertEquals("redirect:/topups", redirect);
+        verify(redirectAttributes).addFlashAttribute("error", "Top-up not found or could not be deleted.");
+        verify(topUpService).deleteTopUp("1");
     }
 }

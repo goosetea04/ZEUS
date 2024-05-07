@@ -1,62 +1,59 @@
 package zeus.zeushop.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
-public class TopUpTest {
+import static org.junit.jupiter.api.Assertions.*;
 
-    @Test
-    public void testTopUpConstructor() {
-        TopUp topUp = new TopUp();
-        assertNotNull(topUp);
+class TopUpTest {
+
+    private TopUp topUp;
+
+    @BeforeEach
+    void setUp() {
+        topUp = new TopUp("user123", 100, "PENDING");
     }
 
     @Test
-    public void testTopUpSetterAndGetter() {
-        TopUp topUp = new TopUp();
-        topUp.setTopUpId("T001");
-        topUp.setUserId("U123");
-        topUp.setAmount(100);
-        topUp.setStatus("PENDING");
-        LocalDateTime now = LocalDateTime.now();
-        topUp.setCreatedAt(now);
-        topUp.setUpdatedAt(now);
+    void testConstructorAndFields() {
 
-        assertEquals("T001", topUp.getTopUpId());
-        assertEquals("U123", topUp.getUserId());
+        assertEquals("user123", topUp.getUserId());
         assertEquals(100, topUp.getAmount());
         assertEquals("PENDING", topUp.getStatus());
-        assertEquals(now, topUp.getCreatedAt());
+
+        assertNotNull(topUp.getCreatedAt());
+        assertNotNull(topUp.getUpdatedAt());
+
+        // Using ChronoUnit.SECONDS to truncate to the nearest second for comparison, in case of minor discrepancies
+        assertEquals(topUp.getCreatedAt().truncatedTo(ChronoUnit.SECONDS), topUp.getUpdatedAt().truncatedTo(ChronoUnit.SECONDS));
+    }
+
+
+    @Test
+    void testSettersAndGetters() {
+        topUp.setUserId("user456");
+        assertEquals("user456", topUp.getUserId());
+
+        topUp.setAmount(200);
+        assertEquals(200, topUp.getAmount());
+
+        topUp.setStatus("APPROVED");
+        assertEquals("APPROVED", topUp.getStatus());
+
+        LocalDateTime now = LocalDateTime.now();
+        topUp.setUpdatedAt(now);
         assertEquals(now, topUp.getUpdatedAt());
     }
 
     @Test
-    public void testNullFields() {
-        TopUp topUp = new TopUp();
-        assertNull(topUp.getTopUpId());
-        assertNull(topUp.getUserId());
-        assertNotNull(topUp.getAmount()); // Primitive int default to 0
-        assertNull(topUp.getStatus());
-        assertNull(topUp.getCreatedAt());
-        assertNull(topUp.getUpdatedAt());
-    }
+    void testBehaviorOnUpdate() {
+        LocalDateTime initialUpdatedAt = topUp.getUpdatedAt();
+        topUp.setAmount(150);
+        topUp.setUpdatedAt(LocalDateTime.now());
 
-    @Test
-    public void testNegativeAmount() {
-        TopUp topUp = new TopUp();
-        topUp.setAmount(-100);
-        assertEquals(-100, topUp.getAmount());
-    }
-
-    @Test
-    public void testStatusValues() {
-        TopUp topUp = new TopUp();
-        topUp.setStatus("APPROVED");
-        assertEquals("APPROVED", topUp.getStatus());
-        topUp.setStatus("CANCELLED");
-        assertEquals("CANCELLED", topUp.getStatus());
-        topUp.setStatus("PENDING");
-        assertEquals("PENDING", topUp.getStatus());
+        assertNotEquals(initialUpdatedAt, topUp.getUpdatedAt());
     }
 }

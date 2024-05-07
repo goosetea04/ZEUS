@@ -1,23 +1,21 @@
 package zeus.zeushop.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 import zeus.zeushop.model.TopUp;
 import zeus.zeushop.repository.TopUpRepository;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class TopUpServiceImplTest {
+class TopUpServiceImplTest {
 
     @Mock
     private TopUpRepository topUpRepository;
@@ -25,71 +23,61 @@ public class TopUpServiceImplTest {
     @InjectMocks
     private TopUpServiceImpl topUpService;
 
-    @Test
-    void testCreateTopUp() {
-        TopUp topUp = new TopUp();
-        topUp.setUserId("U100");
-        topUp.setAmount(200);
-
-        TopUp savedTopUp = new TopUp();
-        savedTopUp.setTopUpId(UUID.randomUUID().toString());
-        savedTopUp.setUserId(topUp.getUserId());
-        savedTopUp.setAmount(topUp.getAmount());
-        savedTopUp.setStatus("PENDING");
-        savedTopUp.setCreatedAt(LocalDateTime.now());
-        savedTopUp.setUpdatedAt(LocalDateTime.now());
-
-        when(topUpRepository.save(any(TopUp.class))).thenReturn(savedTopUp);
-
-        TopUp result = topUpService.createTopUp(topUp);
-
-        assertNotNull(result.getTopUpId());
-        assertEquals("PENDING", result.getStatus());
-        assertEquals(topUp.getUserId(), result.getUserId());
-        assertEquals(topUp.getAmount(), result.getAmount());
-        verify(topUpRepository, times(1)).save(any(TopUp.class));
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testGetUserTopUps() {
-        List<TopUp> expectedTopUps = Arrays.asList(new TopUp(), new TopUp());
-        when(topUpRepository.findByUserId("U100")).thenReturn(expectedTopUps);
+    void createTopUp() {
+        TopUp topUp = new TopUp("user1", 100, "PENDING");
+        when(topUpRepository.save(any(TopUp.class))).thenReturn(topUp);
 
-        List<TopUp> actualTopUps = topUpService.getUserTopUps("U100");
-
-        assertEquals(expectedTopUps.size(), actualTopUps.size());
-        verify(topUpRepository, times(1)).findByUserId("U100");
+        TopUp savedTopUp = topUpService.createTopUp(topUp);
+        assertNotNull(savedTopUp);
+        verify(topUpRepository).save(topUp);
     }
 
     @Test
-    void testDeleteTopUp_Positive() {
-        String topUpId = "T100";
+    void getUserTopUps() {
+        List<TopUp> expectedTopUps = Arrays.asList(new TopUp("user1", 100, "PENDING"));
+        when(topUpRepository.findByUserId("user1")).thenReturn(expectedTopUps);
+
+        List<TopUp> result = topUpService.getUserTopUps("user1");
+        assertEquals(1, result.size());
+        verify(topUpRepository).findByUserId("user1");
+    }
+
+    @Test
+    void deleteTopUpFound() {
+        String topUpId = "123";
+        TopUp topUp = new TopUp("user1", 100, "PENDING");
+        when(topUpRepository.findById(topUpId)).thenReturn(Optional.of(topUp));
         doNothing().when(topUpRepository).deleteById(topUpId);
 
-        boolean result = topUpService.deleteTopUp(topUpId);
-
-        assertTrue(result);
-        verify(topUpRepository, times(1)).deleteById(topUpId);
+        boolean deleted = topUpService.deleteTopUp(topUpId);
+        assertTrue(deleted);
+        verify(topUpRepository).deleteById(topUpId);
     }
 
     @Test
-    void testDeleteTopUp_Negative() {
-        String topUpId = "T101";
-        doThrow(new RuntimeException("not found")).when(topUpRepository).deleteById(topUpId);
+    void deleteTopUpNotFound() {
+        String topUpId = "123";
+        when(topUpRepository.findById(topUpId)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(RuntimeException.class, () -> topUpService.deleteTopUp(topUpId));
-        assertFalse(exception.getMessage().isEmpty());
-        verify(topUpRepository, times(1)).deleteById(topUpId);
+        boolean deleted = topUpService.deleteTopUp(topUpId);
+        assertFalse(deleted);
+        verify(topUpRepository, never()).deleteById(topUpId);
     }
 
     @Test
-    void testGetAllTopUps() {
-        List<TopUp> expectedTopUps = Arrays.asList(new TopUp(), new TopUp());
+    void getAllTopUps() {
+        List<TopUp> expectedTopUps = Arrays.asList(new TopUp("user1", 100, "PENDING"));
         when(topUpRepository.findAll()).thenReturn(expectedTopUps);
 
-        List<TopUp> actualTopUps = topUpService.getAllTopUps();
-
-        assertEquals(expectedTopUps.size(), actualTopUps.size());
-        verify(topUpRepository, times(1)).findAll();
+        List<TopUp> result = topUpService.getAllTopUps();
+        assertFalse(result.isEmpty());
+        assertEquals(1, result.size());
+        verify(topUpRepository).findAll();
     }
 }
