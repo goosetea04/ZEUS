@@ -46,6 +46,4 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return cartItems;
     }
 
-
-    // Implement other methods for managing the shopping cart
 }

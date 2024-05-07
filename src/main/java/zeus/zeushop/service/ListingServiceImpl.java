@@ -51,4 +51,10 @@ public class ListingServiceImpl implements ListingService {
     public List<Listing> getAllFeatured() {
         return listingRepository.findByEndDateGreaterThanEqual(LocalDateTime.now());
     }
+
+    @Override
+    public List<Listing> getListingsBySellerId(Integer sellerId) {
+        return listingRepository.findBySeller_id(sellerId);
+    }
+
 }

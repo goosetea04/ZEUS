@@ -16,11 +16,9 @@ public class Listing {
     private Integer product_id;
     private boolean visible;
     private String product_name;
-
     private Integer product_quantity;
-
     private Float product_price;
-    private String seller_id;
+    private Integer seller_id;
     private String product_description;
 
     private LocalDateTime endDate;
@@ -44,6 +42,12 @@ public class Listing {
 
     public boolean isVisible() {
         return visible;
+    }
+    public void setSellerId(Integer seller_id) {
+        this.seller_id = seller_id;
+    }
+    public Integer getSellerId() {
+        return seller_id;
     }
 
     public void setVisible(boolean visible){
