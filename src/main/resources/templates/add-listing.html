@@ -55,7 +55,11 @@
 <body>
 <div class="container">
   <h1>Add New Listing</h1>
-  <form id="addListingForm" action="/save-listing" method="post">
+  <!-- Display error message -->
+  <div th:if="${error}" class="error-message">
+    <p th:text="${error}" style="color: red;"></p>
+  </div>
+  <form id="addListingForm" action="/save-listing" method="post" onsubmit="return validateForm()">
     <label for="product_name">Listing Name:</label>
     <input type="text" id="product_name" name="product_name" required>
 
@@ -71,5 +75,23 @@
     <button type="submit">Add Listing</button>
   </form>
 </div>
+<script>
+  function validateForm() {
+    var quantity = document.getElementById("product_quantity").value;
+    var price = document.getElementById("product_price").value;
+
+    if (quantity <= 0 & price <= 0) {
+      alert("Stock and price must be a positive number.");
+      return false;
+    } else if (quantity <= 0) {
+      alert("please enter a suitable positive quantity number");
+      return false;
+    } else if (price <= 0 ) {
+      alert("please enter a suitable positive price number");
+      return false;
+    }
+    return true;
+  }
+</script>
 </body>
 </html>

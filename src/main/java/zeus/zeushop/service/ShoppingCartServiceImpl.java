@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import zeus.zeushop.model.Listing;
 import zeus.zeushop.model.CartItem;
-import zeus.zeushop.repository.ListingRepository;
+import zeus.zeushop.repository.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,32 +12,40 @@ import java.util.List;
 
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
-
-    private final List<CartItem> cartItems;
+    private final CartItemRepository cartItemRepository;
     private final ListingRepository listingRepository;
 
+
     @Autowired
-    public ShoppingCartServiceImpl(ListingRepository listingRepository) {
-        this.cartItems = new ArrayList<>();
+    public ShoppingCartServiceImpl(CartItemRepository cartItemRepository, ListingRepository listingRepository) {
+        this.cartItemRepository = cartItemRepository;
         this.listingRepository = listingRepository;
     }
 
     @Override
     public void addListingToCart(Listing listing, int quantity) {
-        // Check if the item already exists in the cart
-        for (CartItem item : cartItems) {
-            if (item.getListing().equals(listing)) {
-                item.setQuantity(item.getQuantity() + quantity);
-                return;
-            }
+        if (listing != null) {
+            CartItem cartItem = new CartItem();
+            cartItem.setListing(listing);
+            cartItem.setQuantity(quantity);
+            cartItemRepository.save(cartItem);
+        } else {
+            throw new IllegalArgumentException("Listing cannot be null");
         }
-        // If not, add a new CartItem to the cart
-        cartItems.add(new CartItem(listing, quantity));
     }
 
     @Override
     public List<Listing> getAllListings() {
         return listingRepository.findAll();
     }
+    @Override
+    public List<CartItem> getAllCartItems() {
+        // Implement logic to retrieve all cart items from the repository
+        // This might involve fetching them from cartItemRepository
+        List<CartItem> cartItems = cartItemRepository.findAll();
+        return cartItems;
+    }
+
+
     // Implement other methods for managing the shopping cart
 }

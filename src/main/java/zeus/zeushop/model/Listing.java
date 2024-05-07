@@ -14,7 +14,7 @@ public class Listing {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer product_id;
-
+    private boolean visible;
     private String product_name;
 
     private Integer product_quantity;
@@ -25,8 +25,28 @@ public class Listing {
 
     private LocalDateTime endDate;
 
+    public Listing() {
+        // Default constructor required by JPA
+    }
+
+    public Listing(String productName, LocalDateTime endDate) {
+        this.product_name = productName;
+        this.endDate = endDate;
+    }
+
     @Transient
     public Boolean isFeatured() {
-        return LocalDateTime.now().isBefore(endDate);
+        return endDate != null && LocalDateTime.now().isBefore(endDate);
+    }
+    public Integer getId() {
+        return product_id;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible){
+        this.visible = visible;
     }
 }
