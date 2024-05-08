@@ -24,10 +24,27 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void addListingToCart(Listing listing, int quantity) {
-        CartItem cartItem = new CartItem();
-        cartItem.setListing(listing);
-        cartItem.setQuantity(quantity);
-        cartItemRepository.save(cartItem);
+        if (listing != null) {
+            CartItem cartItem = new CartItem();
+            cartItem.setListing(listing);
+            cartItem.setQuantity(quantity);
+            cartItemRepository.save(cartItem);
+        } else {
+            throw new IllegalArgumentException("Listing cannot be null");
+        }
+    }
+
+    @Override
+    public void addListingToCart(Listing listing, int quantity, int buyerId) {
+        if (listing != null) {
+            CartItem cartItem = new CartItem();
+            cartItem.setListing(listing);
+            cartItem.setQuantity(quantity);
+            cartItem.setBuyerId(buyerId);
+            cartItemRepository.save(cartItem);
+        } else {
+            throw new IllegalArgumentException("Listing cannot be null");
+        }
     }
 
     @Override
@@ -42,6 +59,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return cartItems;
     }
 
+    @Override
+    public List<CartItem> getCartItemsByBuyerId(Integer buyerId) {
+        return cartItemRepository.findByBuyerId(buyerId);
+    }
 
-    // Implement other methods for managing the shopping cart
+
 }

@@ -39,6 +39,7 @@ public class ListingServiceImpl implements ListingService {
             existingListing.setProduct_name(listingDetails.getProduct_name());
             existingListing.setProduct_quantity(listingDetails.getProduct_quantity());
             existingListing.setProduct_price(listingDetails.getProduct_price());
+            existingListing.setProduct_description(listingDetails.getProduct_description());
             existingListing.setEndDate(listingDetails.getEndDate());
             return listingRepository.save(existingListing);
         } else {
@@ -50,4 +51,10 @@ public class ListingServiceImpl implements ListingService {
     public List<Listing> getAllFeatured() {
         return listingRepository.findByEndDateGreaterThanEqual(LocalDateTime.now());
     }
+
+    @Override
+    public List<Listing> getListingsBySellerId(Integer sellerId) {
+        return listingRepository.findBySellerId(sellerId);
+    }
+
 }

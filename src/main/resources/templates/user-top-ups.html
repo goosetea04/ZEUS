@@ -52,6 +52,13 @@
         button:hover {
             background-color: #e60000;
         }
+
+        button.cancel {
+            background-color: #4a90e2;
+        }
+        button.cancel:hover {
+            background-color: #357abd;
+        }
     </style>
 </head>
 <body>
@@ -78,6 +85,10 @@
         <td th:text="${topUp.status}"></td>
         <td th:text="${topUp.createdAt}"></td>
         <td>
+            <form th:if="${topUp.status} == 'PENDING'" th:action="@{'/topups/' + ${topUp.topUpId} + '/cancel'}" method="post">
+                <button type="submit" class="cancel">Cancel</button>
+            </form>
+            <br>
             <form th:action="@{'/topups/' + ${topUp.topUpId} + '/delete'}" method="post">
                 <button type="submit">Delete</button>
             </form>

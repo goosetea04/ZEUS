@@ -8,4 +8,5 @@ public interface TopUpService {
     List<TopUp> getUserTopUps(String userId);
     boolean deleteTopUp(String topUpId);
     List<TopUp> getAllTopUps();
+    boolean cancelTopUp(String topUpId);
 }

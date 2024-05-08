@@ -1,0 +1,55 @@
+/* Set background color for the entire page */
+body {
+    background-color: #F8F5F5;
+}
+
+/* Style for the navbar */
+.navbar {
+    background-color: #F5F5F5;
+    padding: 10px 0;
+    text-align: center;
+}
+
+/* Style for the navbar title */
+.navbar .title {
+    display: inline-block; /* Display title inline */
+    font-size: 48px;
+    font-weight: bold;
+    margin-right: 10px; /* Add some right margin for spacing */
+}
+
+.navbar .links {
+    list-style-type: none;
+    padding: 0;
+    display: inline-block; /* Display links inline */
+}
+
+.navbar .links li {
+    display: inline; /* Display list items inline */
+    margin: 0 10px;
+}
+
+
+/* Style for the navbar logo */
+.navbar .logo {
+    width: 40px; /* Adjust as needed */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.card-container {
+    background-color: #F5F5F5;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px auto;
+    width: 80%; /* Adjust as needed */
+    max-width: 800px; /* Adjust as needed */
+}
+
+.box-container {
+    background-color: #F5F5F5;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px auto;
+    width: 75%; /* Takes up 75% of the screen width */
+    max-width: 800px; /* Adjust as needed */
+}

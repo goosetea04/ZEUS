@@ -14,4 +14,5 @@ public interface ListingService {
     public void deleteListing(Long id);
 
     public List<Listing> getAllFeatured();
+    List<Listing> getListingsBySellerId(Integer sellerId);
 }

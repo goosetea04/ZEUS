@@ -5,6 +5,7 @@ import zeus.zeushop.repository.TopUpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,4 +43,17 @@ public class TopUpServiceImpl implements TopUpService {
     public List<TopUp> getAllTopUps() {
         return topUpRepository.findAll();
     }
+
+    @Override
+    public boolean cancelTopUp(String topUpId) {
+        Optional<TopUp> topUp = topUpRepository.findById(topUpId);
+        if (topUp.isPresent() && "PENDING".equals(topUp.get().getStatus())) {
+            topUp.get().setStatus("CANCELLED");
+            topUp.get().setUpdatedAt(LocalDateTime.now());
+            topUpRepository.save(topUp.get());
+            return true;
+        }
+        return false;
+    }
+
 }

@@ -66,4 +66,17 @@ public class TopUpController {
         }
         return "redirect:/topups";
     }
+
+    // Cancel when the status is still pending
+    @PostMapping("/{topUpId}/cancel")
+    public String cancelTopUp(@PathVariable String topUpId, RedirectAttributes redirectAttributes) {
+        boolean cancelled = topUpService.cancelTopUp(topUpId);
+        if (cancelled) {
+            redirectAttributes.addFlashAttribute("message", "Top-up cancelled successfully.");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Top-up cannot be cancelled or not found.");
+        }
+        return "redirect:/topups";
+    }
+
 }
