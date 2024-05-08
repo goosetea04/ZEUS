@@ -10,4 +10,3 @@ import java.util.List;
 public interface TopUpRepository extends JpaRepository<TopUp, String> {
     List<TopUp> findByUserId(String userId);
 }
-

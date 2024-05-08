@@ -6,12 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import zeus.zeushop.model.TopUp;
-import zeus.zeushop.model.User;
 import zeus.zeushop.service.TopUpService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import zeus.zeushop.service.UserService;
-
 
 import java.util.List;
 
@@ -22,35 +17,16 @@ public class TopUpController {
     private final TopUpService topUpService;
 
     @Autowired
-    private UserService userService;
-
-    // In TopUpController.java
-    @GetMapping("/mytopups")
-    public String getCurrentUserTopUps(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName(); // Get the logged-in username
-        User currentUser = userService.getUserByUsername(currentUsername); // Assuming you have a userService
-
-        List<TopUp> userTopUps = topUpService.getUserTopUps(currentUser.getId().toString());
-        model.addAttribute("topUps", userTopUps);
-        return "user-top-ups"; // Point this to the correct view
-    }
-
-
-
-    @Autowired
     public TopUpController(TopUpService topUpService) {
         this.topUpService = topUpService;
     }
 
-    // Display the form for new top-up
     @GetMapping("/new")
     public String showTopUpForm(Model model) {
-        model.addAttribute("topUp", new TopUp()); // Add a new topUp to the model for form binding
+        model.addAttribute("topUp", new TopUp());
         return "top-up-form";
     }
 
-    // Handle the form submission and create a new top-up
     @PostMapping
     public String createTopUp(@ModelAttribute TopUp topUp, RedirectAttributes redirectAttributes) {
         // Set default status or perform logic to determine status
@@ -66,18 +42,16 @@ public class TopUpController {
     public String getAllTopUps(Model model) {
         List<TopUp> allTopUps = topUpService.getAllTopUps();
         model.addAttribute("topUps", allTopUps);
-        return "user-top-ups"; // Assuming 'all-top-ups' is the view for listing all top-ups
+        return "user-top-ups";
     }
 
-    // Get top-ups by user ID
     @GetMapping("/{userId}")
     public String getUserTopUps(@PathVariable String userId, Model model) {
         List<TopUp> userTopUps = topUpService.getUserTopUps(userId);
         model.addAttribute("topUps", userTopUps);
-        return "user-top-ups"; // View for displaying top-ups of a specific user
+        return "user-top-ups";
     }
 
-    // Delete a top-up and handle the redirection with a message
     @PostMapping("/{topUpId}/delete")
     public String deleteTopUp(@PathVariable String topUpId, RedirectAttributes redirectAttributes) {
         boolean deleted = topUpService.deleteTopUp(topUpId);
@@ -88,7 +62,6 @@ public class TopUpController {
         }
         return "redirect:/topups";
     }
-
     // Cancel when the status is still pending
     @PostMapping("/{topUpId}/cancel")
     public String cancelTopUp(@PathVariable String topUpId, RedirectAttributes redirectAttributes) {
