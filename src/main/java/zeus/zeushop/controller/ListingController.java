@@ -9,17 +9,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import zeus.zeushop.model.*;
 import zeus.zeushop.service.ShoppingCartService;
 import zeus.zeushop.service.ListingService;
+import zeus.zeushop.service.UserService;
 import java.time.LocalDateTime;
 import zeus.zeushop.service.ShoppingCartServiceFactory;
 import zeus.zeushop.repository.CartItemRepository;
 import zeus.zeushop.repository.ListingRepository;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.stream.Collectors;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.*;
 
 @Controller
 public class ListingController {
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ShoppingCartService shoppingCartService;
@@ -47,7 +53,9 @@ public class ListingController {
 
 
     @PostMapping("/add-to-cart")
-    public String addToCart(@ModelAttribute("cartItem") CartItem cartItem, @RequestParam("listingId") Integer listingId, Model model) {
+    public String addToCart(@ModelAttribute("cartItem") CartItem cartItem,
+                            @RequestParam("listingId") Integer listingId,
+                            Model model) {
         Listing listing = listingRepository.findById(listingId).orElse(null);
         if (listing == null) {
             // Handle case where listing is not found
@@ -60,6 +68,13 @@ public class ListingController {
             return "redirect:/listings";
         }
 
+        // Retrieve currently authenticated user's details
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userService.getUserByUsername(currentUsername);
+
+        // Set the buyerId to the ID of the currently authenticated user
+
         Listing storedListing = listingRepository.findById(listingId).orElse(null);
         if (storedListing != null && storedListing.getProduct_quantity() < quantity) {
             model.addAttribute("error", "Not enough stock available.");
@@ -71,10 +86,11 @@ public class ListingController {
         listingRepository.save(storedListing);
 
         // Add the listing to the cart
-        shoppingCartService.addListingToCart(listing, quantity);
+        shoppingCartService.addListingToCart(listing, quantity, currentUser.getId());
 
         return "redirect:/listings";
     }
+
 
 
 
@@ -91,6 +107,14 @@ public class ListingController {
             model.addAttribute("error", "Stock and price cannot be negative.");
             return "add-listing";
         }
+
+        // Retrieve currently authenticated user's details
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userService.getUserByUsername(currentUsername);
+
+        // Set the seller_id to the ID of the currently authenticated user
+        listing.setSellerId(currentUser.getId());
 
         // Set the visible column to true
         listing.setVisible(true);
@@ -144,8 +168,15 @@ public class ListingController {
 
     @GetMapping("/manage-listings")
     public String manageListings(Model model) {
-        List<Listing> allListings = listingService.getAllListings();
-        model.addAttribute("listings", allListings);
+        // Retrieve currently authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userService.getUserByUsername(currentUsername);
+
+        List<Listing> userListings = listingService.getListingsBySellerId(currentUser.getId());
+
+        // Pass the filtered listings to the view for rendering
+        model.addAttribute("listings", userListings);
         return "manage-listings";
     }
 

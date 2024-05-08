@@ -26,7 +26,7 @@ public class TopUpServiceImpl implements TopUpService {
 
     @Override
     public List<TopUp> getUserTopUps(String userId) {
-        return topUpRepository.findByUserId(userId); // Custom method defined in repository
+        return topUpRepository.findByUserId(userId);
     }
 
     @Override

@@ -6,7 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import zeus.zeushop.model.TopUp;
+import zeus.zeushop.model.User;
 import zeus.zeushop.service.TopUpService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import zeus.zeushop.service.UserService;
+
 
 import java.util.List;
 
@@ -15,6 +20,23 @@ import java.util.List;
 public class TopUpController {
 
     private final TopUpService topUpService;
+
+    @Autowired
+    private UserService userService;
+
+    // In TopUpController.java
+    @GetMapping("/mytopups")
+    public String getCurrentUserTopUps(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName(); // Get the logged-in username
+        User currentUser = userService.getUserByUsername(currentUsername); // Assuming you have a userService
+
+        List<TopUp> userTopUps = topUpService.getUserTopUps(currentUser.getId().toString());
+        model.addAttribute("topUps", userTopUps);
+        return "user-top-ups"; // Point this to the correct view
+    }
+
+
 
     @Autowired
     public TopUpController(TopUpService topUpService) {
@@ -78,5 +100,4 @@ public class TopUpController {
         }
         return "redirect:/topups";
     }
-
 }
