@@ -2,6 +2,7 @@ package zeus.zeushop.service;
 
 import zeus.zeushop.model.User;
 import zeus.zeushop.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -16,9 +17,11 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @Test
     public void testRegisterUserSuccess() {
@@ -26,9 +29,10 @@ public class UserServiceTest {
         user.setUsername("dummy");
         user.setPassword("asdf");
 
+        when(passwordEncoder.encode(any(String.class))).thenReturn(user.getPassword());
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        User registeredUser = userService.createUser(user);
+        User registeredUser = userServiceImpl.createUser(user);
 
         assertNotNull(registeredUser);
         assertEquals(user.getUsername(), registeredUser.getUsername());
@@ -42,7 +46,8 @@ public class UserServiceTest {
         user.setUsername(null);
         user.setPassword(null);
 
-        User registeredUser = userService.createUser(user);
+        when(passwordEncoder.encode(any(String.class))).thenReturn(user.getPassword());
+        User registeredUser = userServiceImpl.createUser(user);
 
         assertNull(registeredUser);
         verify(userRepository, never()).save(any(User.class));
