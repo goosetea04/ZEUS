@@ -7,38 +7,39 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ListingSellTest {
     ListingSell listingSell;
+
     @BeforeEach
-    void SetUp() {
+    void setUp() {
         this.listingSell = new ListingSell();
-        this.listingSell.setId("ee8df7c4-036e-4137-bf44-2e9d10f6a191");
-        this.listingSell.setName("Mini Skirt");
-        this.listingSell.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
-        this.listingSell.setStock(10);
-        this.listingSell.setPrice(129000);
+        this.listingSell.setProduct_id(1);
+        this.listingSell.setProduct_name("Mini Skirt");
+        this.listingSell.setProduct_description("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+        this.listingSell.setProduct_quantity(10);
+        this.listingSell.setProduct_price(129000f);
     }
 
     @Test
     void testGetListingSellId() {
-        assertEquals ( "ee8df7c4-036e-4137-bf44-2e9d10f6a191", this.listingSell.getId());
+        assertEquals(1, this.listingSell.getProduct_id());
     }
 
     @Test
     void testGetListingSellName() {
-        assertEquals( "Mini Skirt", this.listingSell.getName());
+        assertEquals("Mini Skirt", this.listingSell.getProduct_name());
     }
 
     @Test
     void testGetListingSellDescription() {
-        assertEquals( "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", this.listingSell.getDescription());
+        assertEquals("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", this.listingSell.getProduct_description());
     }
 
     @Test
     void testGetListingSellStock() {
-        assertEquals( 10, this.listingSell.getStock());
+        assertEquals(10, this.listingSell.getProduct_quantity());
     }
 
     @Test
     void testGetListingSellPrice() {
-        assertEquals( 129000, this.listingSell.getPrice());
+        assertEquals(129000, this.listingSell.getProduct_price());
     }
 }
