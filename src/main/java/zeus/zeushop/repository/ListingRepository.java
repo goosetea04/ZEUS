@@ -1,4 +1,5 @@
 package zeus.zeushop.repository;
+import org.springframework.data.jpa.repository.Query;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,5 +15,6 @@ public interface ListingRepository extends JpaRepository<Listing, Integer> {
     // Custom method to find listings by a specific attribute, for example:
     // List<Listing> findByCategory(String category);
     List<Listing> findByEndDateGreaterThanEqual(LocalDateTime endDate); //ok thanks
-    List<Listing> findByVisibleIsTrue();
+    @Query("SELECT l FROM Listing l WHERE l.seller_id = :sellerId")
+    List<Listing> findBySellerId(Integer sellerId);
 }
