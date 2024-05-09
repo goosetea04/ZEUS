@@ -59,11 +59,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="list: ${lists}">
-            <td th:text="${list.name}"></td>
-            <td th:text="${list.description}"></td>
-            <td th:text="${list.stock}"></td>
-            <td th:text="${list.price}"></td>
+        <tr th:each="list: ${listingSells}">
+            <td th:text="${list.product_name}"></td>
+            <td th:text="${list.product_description}"></td>
+            <td th:text="${list.product_quantity}"></td>
+            <td th:text="${list.product_price}"></td>
             <td>
                 <a th:href="@{/sell/edit/{id}(id=${list.id})}" class="btn btn-secondary">Edit</a>
                 <form th:action="@{/sell/delete/{id}(id=${list.id})}" method="post">
