@@ -25,6 +25,7 @@ repositories {
 }
 
 dependencies {
+    testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '6.2.4'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
