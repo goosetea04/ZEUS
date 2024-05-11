@@ -1,7 +1,10 @@
 <!DOCTYPE>
-<html lang=eng xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<title>Profile</title>
+<html lang=en xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+</head>
 <body>
 <div sec:authorize="isAuthenticated()">
     Username <span sec:authentication="name"></span>
