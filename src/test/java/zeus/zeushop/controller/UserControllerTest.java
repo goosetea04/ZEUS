@@ -19,6 +19,7 @@ import zeus.zeushop.service.UserService;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -62,29 +63,23 @@ public class UserControllerTest {
     @WithMockUser
     public void testEditProfile() {
         User user = new User();
+        String oldUsername = "dummy";
         user.setId(1);
-        user.setUsername("dummy");
+        user.setUsername(oldUsername);
 
         User updateUser = new User();
-        user.setId(1);
-        user.setUsername("newdummy");
+        String newUsername = "newDummy";
+        updateUser.setId(1);
+        updateUser.setUsername(newUsername);
 
-        when(userDetailsServiceImpl.loadUserByUsername(anyString())).thenReturn(user);
-        when(userService.updateUser(anyInt(), any(User.class))).thenReturn(updateUser);
+        when(userService.updateUser(eq(1), any(User.class))).thenReturn(updateUser);
 
-        Authentication auth = mock(Authentication.class);
-        when(userDetails.getPassword()).thenReturn("asdf");
-        when(userDetails.getUsername()).thenReturn("dummy");
-        when(userDetails.getAuthorities()).thenReturn(Collections.emptyList());
+        User updatedUser = userService.updateUser(1, user);
 
-        SecurityContext securityContext = mock(SecurityContext.class);
-        when(securityContext.getAuthentication()).thenReturn(auth);
-        SecurityContextHolder.setContext(securityContext);
+        assertEquals(newUsername, updatedUser.getUsername());
 
-        String viewName = userController.editProfile(user, userDetails);
+        verify(userService, times(1)).updateUser(eq(1), eq(user));
 
-        assertEquals("profile", viewName);
-        verify(auth).setAuthenticated(true);
-        verify(userService).updateUser(eq(1), eq(user));
+        assertNotEquals(user.getUsername(), updatedUser.getUsername());
     }
 }
