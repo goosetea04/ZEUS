@@ -13,10 +13,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.ui.Model;
 import zeus.zeushop.model.User;
+import zeus.zeushop.repository.UserRepository;
 import zeus.zeushop.service.UserDetailsServiceImpl;
 import zeus.zeushop.service.UserService;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -36,6 +38,8 @@ public class UserControllerTest {
 
     @Mock
     private UserDetails userDetails;
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private UserController userController;
@@ -60,26 +64,57 @@ public class UserControllerTest {
         verify(model).addAttribute(eq("user"), any(User.class));
     }
     @Test
-    @WithMockUser
     public void testEditProfile() {
-        User user = new User();
-        String oldUsername = "dummy";
-        user.setId(1);
-        user.setUsername(oldUsername);
+        // Setup
+        User user = new User(); // This is the user from the form.
+        user.setUsername("dummy");
 
-        User updateUser = new User();
-        String newUsername = "newDummy";
-        updateUser.setId(1);
-        updateUser.setUsername(newUsername);
+        User oldUser = new User(); // This should be the result of loadUserByUsername.
+        oldUser.setId(1);
+        oldUser.setUsername("dummy");
 
-        when(userService.updateUser(eq(1), any(User.class))).thenReturn(updateUser);
+        User updatedUser = new User(); // This should be the result of updateUser.
+        updatedUser.setId(1);
+        updatedUser.setUsername("newDummy");
 
-        User updatedUser = userService.updateUser(1, user);
+        // Mock the behavior of userDetails to match the username of oldUser.
+        when(userDetails.getUsername()).thenReturn("dummy");
+        when(userDetailsServiceImpl.loadUserByUsername("dummy")).thenReturn(oldUser);
 
-        assertEquals(newUsername, updatedUser.getUsername());
+        // Setup updateUser to return updatedUser when called with correct id and user.
+        when(userService.updateUser(eq(1), any(User.class))).thenReturn(updatedUser);
 
-        verify(userService, times(1)).updateUser(eq(1), eq(user));
+        // Action
+        String result = userController.editProfile(user, userDetails);
 
-        assertNotEquals(user.getUsername(), updatedUser.getUsername());
+        // Assertions
+        assertEquals("profile", result);
+        verify(userService).updateUser(eq(1), any(User.class));
+    }
+
+    @Test
+    public void testGetRegisterPage() {
+        // Action
+        String viewName = userController.getRegisterPage(model);
+
+        // Assertions
+        assertEquals("register", viewName);
+        verify(model).addAttribute(eq("user"), any(User.class));
+    }
+
+    @Test
+    public void testRegister() {
+        // Setup
+        User newUser = new User();
+        newUser.setUsername("newUser");
+        newUser.setPassword("password");
+
+        when(userService.createUser(any(User.class))).thenReturn(newUser);
+
+        // Action
+        String view = userController.register(newUser);
+
+        // Assertions
+        assertEquals("redirect:/login", view);
     }
 }
