@@ -39,6 +39,10 @@ public class TopUpController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         topUp.setUserId(currentUsername);
+        if (topUp.getAmount() < 0) {
+            redirectAttributes.addFlashAttribute("error", "Top up amount cannot be negative.");
+            return "redirect:/topups/new";
+        }
         topUp.setStatus("PENDING");
 
         topUpService.createTopUp(topUp);

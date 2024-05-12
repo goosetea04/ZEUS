@@ -34,7 +34,7 @@ public class TopUpServiceImpl implements TopUpService {
     @Override
     public TopUp createTopUp(TopUp topUp) {
         TopUpFactoryInterface factory;
-        if (topUp.getAmount() < 10000) {
+        if (topUp.getAmount() < 10) {
             factory = new SmallAmountTopUpFactory();  // small amounts
         } else {
             factory = new BigAmountTopUpFactory();  // large amounts

@@ -25,7 +25,7 @@
             margin-bottom: 5px;
         }
         input[type="number"] {
-            width: 100%;
+            width: 95%;
             padding: 10px;
             margin-bottom: 20px;
             border-radius: 4px;
@@ -43,12 +43,20 @@
         button:hover {
             background-color: #545d66;
         }
+        .error {
+            color: #D8000C;
+            background-color: #FFD2D2;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
 <h1>Top Up Your Balance</h1>
+<div th:if="${error}" class="error" th:text="${error}"></div>
 <form action="/topups" method="post">
-    <input type="hidden" id="userId" name="userId" value="123"> <!-- Replace "123" with actual userId -->
+    <input type="hidden" id="userId" name="userId">
 
     <label for="amount">Amount:</label><br>
     <input type="number" id="amount" name="amount" required><br>
