@@ -1,6 +1,6 @@
 /* Set background color for the entire page */
 body {
-    background-color: #F8F5F5;
+    background-color: #F8A5A5;
 }
 
 /* Style for the navbar */
@@ -52,4 +52,19 @@ body {
     margin: 20px auto;
     width: 75%; /* Takes up 75% of the screen width */
     max-width: 800px; /* Adjust as needed */
+}
+
+.wrapper {
+    text-align: center; /* Center the form elements */
+}
+
+.input-box {
+    margin: 10px 0; /* Add space between input fields */
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 200px; /* Adjust width as needed */
 }
