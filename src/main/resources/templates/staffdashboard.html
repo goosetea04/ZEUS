@@ -50,7 +50,7 @@
                 <td th:text="${topUp.amount}"></td>
                 <td th:text="${topUp.status}"></td>
                 <td>
-                    <div th:if="${topUp.status != 'APPROVED'}">
+                    <div th:if="${topUp.status == 'PENDING'}">
                         <form th:action="@{/staff/approve/{topUpId}(topUpId=${topUp.topUpId})}" method="post">
                             <button type="submit" class="btn btn-success">Approve</button>
                         </form>
