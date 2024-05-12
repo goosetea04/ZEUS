@@ -5,6 +5,8 @@
   <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
   <title>Cart</title>
   <link rel="stylesheet" href="/styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="/script.js"></script>
 </head>
 <body>
 <div th:replace="~{nav :: nav}"></div>
@@ -29,10 +31,7 @@
     <td th:text="${cartItem.quantity}"></td>
     <td th:text="${cartItem.listing.product_price}"></td>
     <td>
-      <form action="/remove-from-cart" method="post">
-        <input type="hidden" name="cartItemId" th:value="${cartItem.id}" />
-        <button type="submit">Delete</button>
-      </form>
+      <button class="remove-from-cart-btn" th:attr="data-cart-item-id=${cartItem.id}">Delete</button>
     </td>
   </tr>
   </tbody>

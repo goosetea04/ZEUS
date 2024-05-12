@@ -13,6 +13,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.List;
 import zeus.zeushop.service.UserService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+
+
 
 @Controller
 public class CartController {
@@ -42,14 +46,21 @@ public class CartController {
 
 
     @PostMapping("/remove-from-cart")
-    public String removeFromCart(@RequestParam("cartItemId") Long cartItemId) {
-        // Convert cartItemId from Long to Integer
-        Integer itemId = cartItemId.intValue();
+    @ResponseBody
+    public ResponseEntity<String> removeFromCart(@RequestParam("cartItemId") Long cartItemId) {
+        try {
+            // Convert cartItemId from Long to Integer
+            Integer itemId = cartItemId.intValue();
 
-        // Delete the cart item from the database
-        cartItemRepository.deleteById(itemId);
+            // Delete the cart item from the database
+            cartItemRepository.deleteById(itemId);
 
-        return "redirect:/cart";
+            // Return success response
+            return ResponseEntity.ok("Item removed from cart successfully.");
+        } catch (Exception e) {
+            // Return error response
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error removing item from cart: " + e.getMessage());
+        }
     }
 
 }

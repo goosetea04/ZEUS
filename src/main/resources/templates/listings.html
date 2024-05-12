@@ -6,17 +6,7 @@
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-
-<nav class="navbar">
-    <span class="title">ZEUS</span>
-    <ul class="links">
-        <li><a href="/manage-listings">MANAGE LISTINGS</a></li>
-        <li><a href="#">TOPUP</a></li>
-        <li><a href="/cart">CART</a></li>
-        <li><a href="/logout">LOGOUT</a></li>
-    </ul>
-</nav>
-
+<div th:replace="~{nav :: nav}"></div>
 <div class="container">
     <h1>Listings</h1>
 
