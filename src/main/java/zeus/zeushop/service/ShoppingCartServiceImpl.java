@@ -64,5 +64,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return cartItemRepository.findByBuyerId(buyerId);
     }
 
+    public void markItemsPending(List<CartItem> cartItems) {
+        cartItems.forEach(item -> {
+            item.setStatus("PENDING");
+            cartItemRepository.save(item);
+        });
+    }
+
 
 }

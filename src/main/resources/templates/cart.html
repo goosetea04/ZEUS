@@ -29,7 +29,7 @@
     tr:hover {
       background-color: #f5f5f5;
     }
-    .balance-display {
+    .balance-display, .status-display {
       text-align: center;
       font-size: 1.2em;
       margin-top: 20px;
@@ -58,11 +58,22 @@
       border-radius: 5px;
       margin-bottom: 20px;
     }
-    .error-container{
+
+    .alert {
+      padding: 10px;
+      color: white;
       width: 80%;
       margin: 20px auto;
       text-align: left;
     }
+
+    .alert-info {
+      background-color: #32cc56;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
   </style>
 </head>
 <body>
@@ -97,14 +108,17 @@
   </tbody>
 </table>
 <div class="pay-button-container">
-  <form action="/pay" method="post" onsubmit="return confirm('Are you sure you want to complete this purchase?');">
-    <button type="submit" class="pay-now">Pay Now</button>
+  <form action="/request-approval" method="post" onsubmit="return confirm('Are you sure you want to request approval for this purchase?');">
+    <button type="submit" class="pay-now">Request Approval</button>
   </form>
 </div>
-
+<div class="alert">
+<div th:if="${info}">
+  <div class="alert-info" th:text="${info}"></div>
 </div>
-<div class="error-container">
-<div th:if="${error}" class="error" th:text="${error}"></div>
+<div th:if="${error}">
+  <div class="error" th:text="${error}"></div>
+</div>
 </div>
 </body>
 </html>

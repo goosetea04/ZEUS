@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+
+@Getter @Setter
 @Entity
 @Table(name = "cart_item")
 public class CartItem {
@@ -19,6 +21,9 @@ public class CartItem {
     private int quantity;
     @Column(name = "buyer_id")
     private Integer buyerId;
+
+    @Column(name = "status")
+    private String status; // Values could be PENDING, APPROVED, REJECTED
 
     // Constructors
     public CartItem() {

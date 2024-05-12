@@ -1,5 +1,6 @@
 package zeus.zeushop.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +30,7 @@ public class CartController {
     @Autowired
     private CartItemRepository cartItemRepository;
     @GetMapping("/cart")
-    public String showCart(Model model) {
+    public String showCart(Model model, HttpSession session) {
         // Retrieve currently authenticated user's details
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -41,9 +42,20 @@ public class CartController {
         // Pass the cart items to the view
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("balance", currentUser.getBalance());
+
+        String infoMessage = (String) session.getAttribute("info");
+        if (infoMessage != null) {
+            model.addAttribute("info", infoMessage);
+            if (allItemsApproved(cartItems)) {
+                session.removeAttribute("info"); // Remove only if all items are approved
+            }
+        }
         return "cart";
     }
 
+    private boolean allItemsApproved(List<CartItem> cartItems) {
+        return cartItems.stream().noneMatch(item -> "PENDING".equals(item.getStatus()));
+    }
 
     @PostMapping("/remove-from-cart")
     public String removeFromCart(@RequestParam("cartItemId") Long cartItemId) {
@@ -56,8 +68,8 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    @PostMapping("/pay")
-    public String processPayment(RedirectAttributes redirectAttributes) {
+    @PostMapping("/request-approval")
+    public String requestPaymentApproval(RedirectAttributes redirectAttributes, HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userService.getUserByUsername(currentUsername);
@@ -68,16 +80,17 @@ public class CartController {
                 .sum());
 
         if (currentUser.getBalance().compareTo(totalCost) >= 0) {
-            BigDecimal newBalance = currentUser.getBalance().subtract(totalCost);
-            userService.updateUserBalance(currentUser.getId(), newBalance); // Update balance
-            cartItemRepository.deleteAllInBatch(cartItems); // Clear the cart after payment
-            redirectAttributes.addFlashAttribute("success", "Payment successful!");
+            shoppingCartService.markItemsPending(cartItems);
+            session.setAttribute("info", "Your payment request has been sent and is pending approval."); // Set in session
             return "redirect:/cart";
         } else {
             redirectAttributes.addFlashAttribute("error", "Insufficient balance. Please top up your account.");
             return "redirect:/cart";
         }
     }
+
+
+
 
 }
 
