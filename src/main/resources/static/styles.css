@@ -1,11 +1,11 @@
 /* Set background color for the entire page */
 body {
-    background-color: #F5F5F5;
+    background-color: #F5F0E0;
 }
 
 /* Style for the navbar */
 .navbar {
-    background-color: #F5F5F5;
+    background-color: #EFEAE0;
     padding: 10px 0;
     text-align: center;
 }
@@ -39,7 +39,7 @@ body {
 }
 
 .card-container {
-    background-color: #F5F5F5;
+    background-color: #EFEAE0;
     border-radius: 10px;
     padding: 20px;
     margin: 20px auto;
@@ -48,7 +48,7 @@ body {
 }
 
 .box-container {
-    background-color: #F5F5F5;
+    background-color: #EFEAE0;
     border-radius: 10px;
     padding: 20px;
     margin: 20px auto;
