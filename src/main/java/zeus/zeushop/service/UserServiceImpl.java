@@ -4,6 +4,8 @@ import zeus.zeushop.model.User;
 import zeus.zeushop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,4 +52,15 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }
+    public User updateUserBalance(Integer id, BigDecimal newBalance) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            User existingUser = userOptional.get();
+            existingUser.setBalance(newBalance);
+            userRepository.save(existingUser);
+            return existingUser;
+        }
+        return null;
+    }
+
 }
