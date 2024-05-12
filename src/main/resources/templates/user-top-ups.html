@@ -25,20 +25,27 @@
             text-align: left;
         }
         th {
-            background-color: #5fba7d;
+            background-color: #343A40;
             color: white;
+        }
+        tr:nth-child(odd) {
+            background-color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
         }
         a.button {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #5fba7d;
+            background-color: #343A40;
             color: white;
             text-decoration: none;
             border-radius: 4px;
             transition: background 0.3s ease;
         }
         a.button:hover {
-            background-color: #4cae6b;
+            background-color: #545d66;
         }
         button {
             padding: 8px 15px;
@@ -59,11 +66,16 @@
         button.cancel:hover {
             background-color: #357abd;
         }
+        .balance-display {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
 <h1>Top-Up History</h1>
-
+<div class="balance-display">
+    <strong>Your Current Balance:</strong> <span th:text="${balance}">0.00</span>
+</div>
 
 <a href="/topups/new" class="button">Add New Top-Up</a>
 
@@ -83,7 +95,8 @@
         <td th:text="${topUp.topUpId}"></td>
         <td th:text="${topUp.amount}"></td>
         <td th:text="${topUp.status}"></td>
-        <td th:text="${topUp.createdAt}"></td>
+        <td th:text="${topUp.formattedCreatedAt}"></td>
+
         <td>
             <form th:if="${topUp.status} == 'PENDING'" th:action="@{'/topups/' + ${topUp.topUpId} + '/cancel'}" method="post">
                 <button type="submit" class="cancel">Cancel</button>

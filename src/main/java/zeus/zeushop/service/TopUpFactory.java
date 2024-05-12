@@ -20,7 +20,7 @@ public class TopUpFactory {
         @Override
         public TopUp createTopUp(String userId, int amount) {
             // Big amounts need pending verification
-            return new TopUp(userId, amount, "PENDING_VERIFICATION");
+            return new TopUp(userId, amount, "PENDING");
         }
     }
 }
