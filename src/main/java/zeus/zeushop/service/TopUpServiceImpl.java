@@ -2,6 +2,10 @@ package zeus.zeushop.service;
 
 import zeus.zeushop.model.TopUp;
 import zeus.zeushop.repository.TopUpRepository;
+import zeus.zeushop.service.TopUpFactory;
+import zeus.zeushop.service.TopUpFactory.TopUpFactoryInterface;
+import zeus.zeushop.service.TopUpFactory.SmallAmountTopUpFactory;
+import zeus.zeushop.service.TopUpFactory.BigAmountTopUpFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +25,14 @@ public class TopUpServiceImpl implements TopUpService {
 
     @Override
     public TopUp createTopUp(TopUp topUp) {
-        return topUpRepository.save(topUp); // Save handles both create and update
+        TopUpFactoryInterface factory;
+        if (topUp.getAmount() < 10000) {
+            factory = new SmallAmountTopUpFactory();
+        } else {
+            factory = new BigAmountTopUpFactory();
+        }
+        TopUp newTopUp = factory.createTopUp(topUp.getUserId(), topUp.getAmount());
+        return topUpRepository.save(newTopUp); // Save handles both create and update
     }
 
     @Override

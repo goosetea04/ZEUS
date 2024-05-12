@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import zeus.zeushop.model.TopUp;
 import zeus.zeushop.service.TopUpService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -23,13 +25,15 @@ public class TopUpController {
 
     @GetMapping("/new")
     public String showTopUpForm(Model model) {
-        model.addAttribute("topUp", new TopUp());
+        model.addAttribute("topUp", new TopUp());  // Top-up model attribute for form binding
         return "top-up-form";
     }
 
     @PostMapping
     public String createTopUp(@ModelAttribute TopUp topUp, RedirectAttributes redirectAttributes) {
-        // Set default status or perform logic to determine status
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        topUp.setUserId(currentUsername);
         topUp.setStatus("PENDING");
 
         topUpService.createTopUp(topUp);
@@ -37,17 +41,12 @@ public class TopUpController {
         return "redirect:/topups";
     }
 
-    // List all top-ups
+    // Modified to use authenticated user's ID
     @GetMapping
-    public String getAllTopUps(Model model) {
-        List<TopUp> allTopUps = topUpService.getAllTopUps();
-        model.addAttribute("topUps", allTopUps);
-        return "user-top-ups";
-    }
-
-    @GetMapping("/{userId}")
-    public String getUserTopUps(@PathVariable String userId, Model model) {
-        List<TopUp> userTopUps = topUpService.getUserTopUps(userId);
+    public String getUserTopUps(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        List<TopUp> userTopUps = topUpService.getUserTopUps(currentUsername);
         model.addAttribute("topUps", userTopUps);
         return "user-top-ups";
     }
@@ -62,7 +61,7 @@ public class TopUpController {
         }
         return "redirect:/topups";
     }
-    // Cancel when the status is still pending
+
     @PostMapping("/{topUpId}/cancel")
     public String cancelTopUp(@PathVariable String topUpId, RedirectAttributes redirectAttributes) {
         boolean cancelled = topUpService.cancelTopUp(topUpId);
