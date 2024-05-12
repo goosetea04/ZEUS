@@ -1,14 +1,16 @@
 package zeus.zeushop.service;
 
 import zeus.zeushop.model.TopUp;
+import zeus.zeushop.model.User;
 import zeus.zeushop.repository.TopUpRepository;
-import zeus.zeushop.service.TopUpFactory;
+import zeus.zeushop.repository.UserRepository;
 import zeus.zeushop.service.TopUpFactory.TopUpFactoryInterface;
 import zeus.zeushop.service.TopUpFactory.SmallAmountTopUpFactory;
 import zeus.zeushop.service.TopUpFactory.BigAmountTopUpFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +18,16 @@ import java.util.Optional;
 @Service
 public class TopUpServiceImpl implements TopUpService {
 
-    private final TopUpRepository topUpRepository;
+    @Autowired
+    private TopUpRepository topUpRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Autowired
     public TopUpServiceImpl(TopUpRepository topUpRepository) {
+
         this.topUpRepository = topUpRepository;
     }
 
@@ -27,12 +35,19 @@ public class TopUpServiceImpl implements TopUpService {
     public TopUp createTopUp(TopUp topUp) {
         TopUpFactoryInterface factory;
         if (topUp.getAmount() < 10000) {
-            factory = new SmallAmountTopUpFactory();
+            factory = new SmallAmountTopUpFactory();  // small amounts
         } else {
-            factory = new BigAmountTopUpFactory();
+            factory = new BigAmountTopUpFactory();  // large amounts
         }
+        // Create top up
         TopUp newTopUp = factory.createTopUp(topUp.getUserId(), topUp.getAmount());
-        return topUpRepository.save(newTopUp); // Save handles both create and update
+        User user = userRepository.findByUsername(topUp.getUserId());
+        if (user != null && "APPROVED".equals(newTopUp.getStatus())) {
+            // Update balance only if top up is approved
+            user.setBalance(user.getBalance().add(BigDecimal.valueOf(topUp.getAmount())));
+            userRepository.save(user);
+        }
+        return topUpRepository.save(newTopUp);
     }
 
     @Override

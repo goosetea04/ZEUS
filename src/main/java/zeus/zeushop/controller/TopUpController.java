@@ -6,9 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import zeus.zeushop.model.TopUp;
+import zeus.zeushop.model.User;
 import zeus.zeushop.service.TopUpService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import zeus.zeushop.service.UserService;
 
 import java.util.List;
 
@@ -17,10 +19,13 @@ import java.util.List;
 public class TopUpController {
 
     private final TopUpService topUpService;
+    private final UserService userService;
 
     @Autowired
-    public TopUpController(TopUpService topUpService) {
+    public TopUpController(TopUpService topUpService, UserService userService) {
+
         this.topUpService = topUpService;
+        this.userService = userService;
     }
 
     @GetMapping("/new")
@@ -46,8 +51,10 @@ public class TopUpController {
     public String getUserTopUps(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
+        User currentUser = userService.getUserByUsername(currentUsername);
         List<TopUp> userTopUps = topUpService.getUserTopUps(currentUsername);
         model.addAttribute("topUps", userTopUps);
+        model.addAttribute("balance", currentUser.getBalance());
         return "user-top-ups";
     }
 
