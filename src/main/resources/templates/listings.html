@@ -35,13 +35,13 @@
         <table>
             <thead>
             <tr>
-                <th>ID</th>
+                <!-- <th>ID</th> -->
                 <th>Name</th>
                 <th>Quantity</th>
                 <th>Description</th>
                 <th>Price</th>
                 <th>Add to Cart</th>
-                <th>Update</th>
+                <!-- <th>Update</th> -->
             </tr>
             </thead>
             <tbody>
@@ -50,7 +50,7 @@
                 <!-- Check if listing is visible -->
                 <th:block th:if="${listing.visible}">
                     <!-- Display listing information -->
-                    <td th:text="${listing.product_id}"></td>
+                    <!-- <td th:text="${listing.product_id}"></td> -->
                     <td th:text="${listing.product_name}"></td>
                     <td th:text="${listing.product_quantity}"></td>
                     <td th:text="${listing.product_description}"></td>
@@ -64,12 +64,12 @@
                             <button type="button" onclick="addToCart(this)">Add to Cart</button>
                         </form>
                     </td>
-                    <td>
+                    <!-- <td>
                         <form action="/update-listing" method="get">
                             <input type="hidden" name="id" th:value="${listing.product_id}" />
                             <button type="submit">Update</button>
                         </form>
-                    </td>
+                    </td> -->
                 </th:block>
             </tr>
             </tbody>
