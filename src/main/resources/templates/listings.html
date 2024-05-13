@@ -30,7 +30,7 @@
                 <th>Quantity</th>
                 <th>Description</th>
                 <th>Price</th>
-                <th>Add to Cart</th>
+                <!-- <th>Add to Cart</th> -->
                 <!-- <th>Update</th> -->
             </tr>
             </thead>
@@ -46,6 +46,7 @@
                     <td th:text="${listing.product_description}"></td>
                     <td th:text="${listing.product_price}"></td>
                     <!-- Form to add listing to cart -->
+                    <!--
                     <td>
                         <form action="/add-to-cart" method="post">
                             <input type="hidden" name="listingId" th:value="${listing.product_id}" />
@@ -53,7 +54,7 @@
                             <input type="number" name="quantity" value="1" />
                             <button type="button" onclick="addToCart(this)">Add to Cart</button>
                         </form>
-                    </td>
+                    </td> -->
                     <!-- <td>
                         <form action="/update-listing" method="get">
                             <input type="hidden" name="id" th:value="${listing.product_id}" />

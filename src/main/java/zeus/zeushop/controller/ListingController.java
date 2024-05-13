@@ -82,8 +82,8 @@ public class ListingController {
         }
 
         // Decrease the quantity of the listing
-        storedListing.setProduct_quantity(storedListing.getProduct_quantity() - quantity);
-        listingRepository.save(storedListing);
+        // storedListing.setProduct_quantity(storedListing.getProduct_quantity() - quantity);
+        // listingRepository.save(storedListing);
 
         // Add the listing to the cart
         shoppingCartService.addListingToCart(listing, quantity, currentUser.getId());
