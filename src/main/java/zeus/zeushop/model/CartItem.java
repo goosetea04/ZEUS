@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter @Setter
@@ -14,9 +15,15 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private BigDecimal price;  // Direct price field added
+
     @ManyToOne
     @JoinColumn(name = "listing_id")
     private Listing listing;
+
+    @ManyToOne
+    @JoinColumn(name = "payment_id")  // This is the new part
+    private Payment payment;
 
     private int quantity;
     @Column(name = "buyer_id")
@@ -66,6 +73,7 @@ public class CartItem {
     public Integer getBuyerId() {
         return buyerId;
     }
+
 
     // Other methods as needed
 }

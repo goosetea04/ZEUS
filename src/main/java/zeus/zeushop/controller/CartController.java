@@ -7,7 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import zeus.zeushop.model.CartItem;
+import zeus.zeushop.model.Payment;
 import zeus.zeushop.model.User;
+import zeus.zeushop.service.PaymentService;
 import zeus.zeushop.service.ShoppingCartService;
 import zeus.zeushop.repository.CartItemRepository;
 import zeus.zeushop.repository.ListingRepository;
@@ -17,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.math.BigDecimal;
 import java.util.List;
 import zeus.zeushop.service.UserService;
+
 
 @Controller
 public class CartController {
@@ -29,27 +32,29 @@ public class CartController {
 
     @Autowired
     private CartItemRepository cartItemRepository;
+
+    @Autowired
+    private PaymentService paymentService;
     @GetMapping("/cart")
     public String showCart(Model model, HttpSession session) {
-        // Retrieve currently authenticated user's details
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userService.getUserByUsername(currentUsername);
 
-        // Get cart items associated with the current user's ID
         List<CartItem> cartItems = shoppingCartService.getCartItemsByBuyerId(currentUser.getId());
+        BigDecimal totalCost = cartItems.stream()
+                .map(item -> BigDecimal.valueOf(item.getListing().getProduct_price())
+                        .multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // Pass the cart items to the view
         model.addAttribute("cartItems", cartItems);
+        model.addAttribute("totalCost", totalCost);
         model.addAttribute("balance", currentUser.getBalance());
 
-        String infoMessage = (String) session.getAttribute("info");
-        if (infoMessage != null) {
-            model.addAttribute("info", infoMessage);
-            if (allItemsApproved(cartItems)) {
-                session.removeAttribute("info"); // Remove only if all items are approved
-            }
-        }
+        // Fetching the latest payment status
+        String paymentStatus = paymentService.getLatestPaymentStatus(currentUser.getId());
+        model.addAttribute("paymentStatus", paymentStatus);
+
         return "cart";
     }
 
@@ -67,29 +72,6 @@ public class CartController {
 
         return "redirect:/cart";
     }
-
-    @PostMapping("/request-approval")
-    public String requestPaymentApproval(RedirectAttributes redirectAttributes, HttpSession session) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        User currentUser = userService.getUserByUsername(currentUsername);
-        List<CartItem> cartItems = shoppingCartService.getCartItemsByBuyerId(currentUser.getId());
-
-        BigDecimal totalCost = BigDecimal.valueOf(cartItems.stream()
-                .mapToDouble(item -> item.getListing().getProduct_price() * item.getQuantity())
-                .sum());
-
-        if (currentUser.getBalance().compareTo(totalCost) >= 0) {
-            shoppingCartService.markItemsPending(cartItems);
-            session.setAttribute("info", "Your payment request has been sent and is pending approval."); // Set in session
-            return "redirect:/cart";
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Insufficient balance. Please top up your account.");
-            return "redirect:/cart";
-        }
-    }
-
-
 
 
 }
