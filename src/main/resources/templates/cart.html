@@ -71,14 +71,25 @@
   <strong>Total Cost:</strong> <span th:text="${totalCost}">0.00</span>
 </div>
 <div class="payment-status">
-  <strong>Payment Status:</strong> <span th:text="${paymentStatus}">No recent payments</span>
+  <strong>Payment Status:</strong>
+  <span id="paymentStatus" th:text="${paymentStatus}">No recent payments</span>
 </div>
 <div class="pay-button-container">
-  <form action="/payment/initiate" method="post">
+  <form id="paymentForm" action="/payment/initiate" method="post">
     <input type="hidden" name="amount" th:value="${totalCost}" />
     <button type="submit" class="pay-now">Request Approval</button>
   </form>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var status = document.getElementById('paymentStatus').textContent;
+    if (status === 'PENDING') {
+      document.getElementById('paymentForm').style.display = 'none';
+    }
+  });
+</script>
+
 
 <table>
   <thead>
