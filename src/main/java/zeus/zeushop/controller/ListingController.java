@@ -3,9 +3,7 @@ package zeus.zeushop.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import zeus.zeushop.model.*;
 import zeus.zeushop.service.ShoppingCartService;
 import zeus.zeushop.service.ListingService;
@@ -185,5 +183,18 @@ public class ListingController {
         listingService.deleteListing(id);
         return "redirect:/manage-listings"; // Redirect to the manage-listings page after deletion
     }
+
+    @GetMapping("/product/{id}")
+    public String showProductDetails(@PathVariable("id") Integer id, Model model) {
+        Optional<Listing> listingOptional = listingService.getListingById(id.longValue());
+        if (listingOptional.isPresent()) {
+            model.addAttribute("listing", listingOptional.get());
+            model.addAttribute("cartItem", new CartItem());
+            return "product";
+        } else {
+            return "redirect:/listings"; // Handle the case where the listing is not found
+        }
+    }
+
 }
 

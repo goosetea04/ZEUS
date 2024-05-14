@@ -41,7 +41,9 @@
                 <th:block th:if="${listing.visible}">
                     <!-- Display listing information -->
                     <!-- <td th:text="${listing.product_id}"></td> -->
-                    <td th:text="${listing.product_name}"></td>
+                    <td>
+                        <a th:href="@{/product/{id}(id=${listing.product_id})}" th:text="${listing.product_name}"></a>
+                    </td>
                     <td th:text="${listing.product_quantity}"></td>
                     <td th:text="${listing.product_description}"></td>
                     <td th:text="${listing.product_price}"></td>
