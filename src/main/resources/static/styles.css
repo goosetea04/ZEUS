@@ -105,4 +105,9 @@ th, td {
 
 th {
     background-color: #f2f2f2; /* Gray background color for header cells */
+    font-size: 25px; /* Text size for header cells */
+}
+
+td {
+    font-size: 20px; /* Text size for body cells */
 }
