@@ -186,6 +186,28 @@ form textarea {
     transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
 }
 
+.a-styled-button {
+    font-family: "Inria Serif", serif;
+    color: white;
+    width: 100%;
+    font-size: 20px;
+    background-color: #AEAEAE; /* Button background color */
+    border: none; /* Remove border */
+    border-radius: 0; /* Rounded corners */
+    padding: 10px 20px; /* Padding inside the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    display: inline-block; /* Inline-block display */
+    margin: 10px 0; /* Margin for spacing */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+}
+.a-styled-button a {
+    font-family: "Inria Serif", serif;
+    color: white; /* Link text color */
+    text-decoration: none; /* Remove underline */
+    font-size: 20px; /* Font size */
+    display: block; /* Make the link block-level to fill the button */
+    transition: color 0.3s; /* Smooth transition for text color */
+}
 /* Style for the button-link class */
 .styled-button a {
     font-family: "Inria Serif", serif;
@@ -203,6 +225,15 @@ form textarea {
 }
 
 .styled-button:hover a {
+    color: black; /* Text color on hover */
+}
+
+.a-styled-button:hover {
+    background-color: #EFEAE0; /* Background color on hover */
+    color: black;
+}
+
+.a-styled-button:hover a {
     color: black; /* Text color on hover */
 }
 
