@@ -22,11 +22,12 @@
     <thead>
     <tr>
       <th>ID</th>
-      <th>Name</th>
-      <th>Quantity</th>
-      <th>Description</th>
-      <th>Price</th>
-      <th>Actions</th>
+      <th>NAME</th>
+      <th>STOCK</th>
+      <th>DESCRIPTION</th>
+      <th>PRICE</th>
+      <th>UPDATE</th>
+      <th>DELETE</th>
     </tr>
     </thead>
     <tbody>
@@ -39,7 +40,9 @@
       <td th:text="${listing.product_price}"></td>
       <td>
         <!-- Update button -->
-        <a th:href="@{/update-listing(id=${listing.product_id})}" class="button">Update</a>
+        <button class="styled-button"><a th:href="@{/update-listing(id=${listing.product_id})}" class="button">Update</a></button>
+      </td>
+      <td>
         <!-- Delete button -->
         <form th:action="@{/delete-listing}" method="post" style="display: inline;">
           <input type="hidden" name="id" th:value="${listing.product_id}" />

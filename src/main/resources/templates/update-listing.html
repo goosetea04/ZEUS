@@ -13,6 +13,7 @@
 <div th:replace="~{nav :: nav}"></div>
 <div class="container">
   <h1>Update Listing</h1>
+  <div class="box-container">
   <!-- Update Listing Form -->
   <form id="updateListingForm" action="/update-listing" method="post">
     <input type="hidden" id="productId" name="id" th:value="${listing.id}" />
@@ -23,13 +24,14 @@
     <input type="number" id="productQuantity" name="product_quantity" th:value="${listing.product_quantity}" required>
 
     <label for="productDescription">Description:</label>
-    <input id="productDescription" class="large-input" name="product_description" th:value="${listing.product_description}" required>
+    <textarea id="productDescription" class="large-input" name="product_description" required th:text="${listing.product_description}"></textarea>
 
     <label for="productPrice">Price:</label>
     <input type="number" id="productPrice" name="product_price" th:value="${listing.product_price}" required>
 
     <button type="submit">Update Listing</button>
   </form>
+</div>
 </div>
 </body>
 </html>

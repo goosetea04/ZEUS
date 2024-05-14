@@ -32,8 +32,10 @@ h1{
 }
 
 .navbar .links li {
+    font-family: "Inria Serif", serif;
     display: inline; /* Display list items inline */
     margin: 0 10px;
+    font-size: 30px;
 }
 
 
@@ -104,7 +106,7 @@ table {
 
 th, td {
     padding: 20px; /* Increase space between rows and columns */
-    border: 0px solid #ddd; /* Add border for cells */
+    border: 0 solid #ddd; /* Add border for cells */
     text-align: left; /* Align text to left */
     font-family: "Inria Serif", serif;
     font-weight: 400;
@@ -125,3 +127,92 @@ td {
     background-color: #000; /* Black color */
     margin: 20px 10%; /* Adds space above, below, left, and right */
 }
+
+/* General form styling */
+form {
+    width:90%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 0 solid #ccc;
+    border-radius: 10px;
+    background-color: #EFEAE0;
+}
+
+/* Label styling */
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Input field styling */
+form input[type="text"],
+form input[type="number"],
+form input[type="hidden"],
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Specific styling for textarea to make it taller */
+form textarea {
+    height: 100px; /* Adjust this value as needed */
+    resize: vertical;
+}
+
+/* Button styling */
+form button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #AEAEAE;
+    color: white;
+    border: none;
+    border-radius: 0px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+form button:hover {
+    background-color: #EFEAE0;
+}
+
+/* Style for the styled-button class */
+.styled-button {
+    color: white;
+    width: 100%;
+    background-color: #AEAEAE; /* Button background color */
+    border: none; /* Remove border */
+    border-radius: 0; /* Rounded corners */
+    padding: 10px 20px; /* Padding inside the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    display: inline-block; /* Inline-block display */
+    margin: 10px 0; /* Margin for spacing */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Style for the button-link class */
+.styled-button a {
+    color: white; /* Link text color */
+    text-decoration: none; /* Remove underline */
+    font-size: 16px; /* Font size */
+    font-weight: bold; /* Font weight */
+    display: block; /* Make the link block-level to fill the button */
+    transition: color 0.3s; /* Smooth transition for text color */
+}
+
+/* Hover effect for the button */
+.styled-button:hover {
+    background-color: #EFEAE0; /* Background color on hover */
+    color: black;
+}
+
+.styled-button:hover a {
+    color: black; /* Text color on hover */
+}
+
