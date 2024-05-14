@@ -104,6 +104,7 @@ a {
 table {
     border-width: 0; /* Collapse table borders */
     width: 100%; /* Full width */
+    border-collapse: collapse;
 }
 
 th, td {
@@ -242,6 +243,12 @@ form textarea {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2px; /* Adjust spacing as needed */
+    position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    top: 0;
+    background-color: #EFEAE0; /* Same as the container background */
+    z-index: 1;
+    padding: 10px 0; /* Add padding to avoid content overlap */
 }
 
 /* Style for the Add Listing link */
@@ -256,4 +263,10 @@ form textarea {
 .add-listing-link:hover {
     text-decoration: none;
     color: #000;
+}
+
+.table-container {
+    overflow-y: auto;
+    overflow-x: auto;
+    width: 100%;
 }
