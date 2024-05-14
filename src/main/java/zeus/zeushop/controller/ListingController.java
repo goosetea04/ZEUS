@@ -120,7 +120,7 @@ public class ListingController {
         // Create the listing
         listingService.createListing(listing);
 
-        return "redirect:/listings";
+        return "redirect:/manage-listings";
     }
 
     @GetMapping("/listings-cart")

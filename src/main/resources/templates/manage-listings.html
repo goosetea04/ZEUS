@@ -12,7 +12,10 @@
 <body>
 <div th:replace="~{nav :: nav}"></div>
 <div class="container">
-  <h1> Manage Listings </h1>
+  <div class="title-container">
+    <h1>Manage Listings</h1>
+    <a th:href="@{/add-listing}" class="add-listing-link">Add Listing</a>
+  </div>
   <!-- Display error message if any -->
   <div th:if="${error}" class="error-message">
     <p th:text="${error}" style="color: red;"></p>

@@ -205,4 +205,55 @@ form textarea {
     color: black; /* Text color on hover */
 }
 
+/* adhis */
+.balance-display, .total-display, .payment-status, .pay-button-container {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.2em;
+}
+.pay-now {
+    padding: 10px 20px;
+    background-color:#343A40;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+.pay-now:hover {
+    background-color: #545d66;
+}
+.error, .alert-info {
+    color: #D8000C;
+    background-color: #FFD2D2;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 80%;
+    margin: 20px auto;
+    text-align: left;
+}
+.alert-info {
+    background-color: #32cc56;
+    color: white;
+}
+.title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px; /* Adjust spacing as needed */
+}
 
+/* Style for the Add Listing link */
+.add-listing-link {
+    font-family: "Inria Serif", serif;
+    font-size: 1.5em;
+    color: #000;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+.add-listing-link:hover {
+    text-decoration: none;
+    color: #000;
+}
