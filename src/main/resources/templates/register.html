@@ -2,23 +2,21 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <!-- <link rel="stylesheet" href="register.css"> -->
+    <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 <div class="wrapper">
+    <h2>Register</h2>
+
     <form method="POST" action="/register" th:object="${user}">
-        <h1>Register</h1>
 
         <div class="input-box">
-            <input type="text" th:field="*{username}" placeholder="Username" required>
-            <i class='bx bxs-user'></i>
+            <input type="text" th:field="*{username}" required>
         </div>
 
         <div class="input-box">
-            <input type="password" th:field="*{password}" placeholder="Password" required>
-            <i class='bx bxs-lock-alt'></i>
+            <input type="password" th:field="*{password}" required>
         </div>
 
         <button type="submit" class="btn">Register</button>

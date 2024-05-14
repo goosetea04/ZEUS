@@ -1,21 +1,34 @@
 /* Set background color for the entire page */
 body {
-    background-color: #F8F5F5;
+    background-color: #F5F0E0;
+}
+
+h1{
+    font-family: "Inria Serif", serif;
 }
 
 /* Style for the navbar */
 .navbar {
-    background-color: #F5F5F5;
-    padding: 10px 0;
+    background-color: #EFEAE0;
+    padding: 0;
     text-align: center;
+}
+.navbar .logo {
+    height: 54px;
+    width: auto;
+    margin-right: 10px;
+    transform: translateY(10px);
 }
 
 /* Style for the navbar title */
 .navbar .title {
+    font-family: "Inria Serif", serif;
     display: inline-block; /* Display title inline */
     font-size: 48px;
     font-weight: bold;
     margin-right: 10px; /* Add some right margin for spacing */
+    color: #000000; /* Set the desired color */
+    text-decoration: none; /* Remove underline */
 }
 
 .navbar .links {
@@ -25,19 +38,17 @@ body {
 }
 
 .navbar .links li {
+    font-family: "Inria Serif", serif;
     display: inline; /* Display list items inline */
     margin: 0 10px;
+    font-size: 26px;
 }
 
 
 /* Style for the navbar logo */
-.navbar .logo {
-    width: 40px; /* Adjust as needed */
-    height: auto; /* Maintain aspect ratio */
-}
 
 .card-container {
-    background-color: #F5F5F5;
+    background-color: #EFEAE0;
     border-radius: 10px;
     padding: 20px;
     margin: 20px auto;
@@ -46,10 +57,152 @@ body {
 }
 
 .box-container {
-    background-color: #F5F5F5;
+    background-color: #EFEAE0;
     border-radius: 10px;
     padding: 20px;
-    margin: 20px auto;
-    width: 75%; /* Takes up 75% of the screen width */
-    max-width: 800px; /* Adjust as needed */
+    margin: 10px auto;
+    width: 90%; /* Take up full width of the container */
 }
+
+.wrapper {
+    text-align: center; /* Center the form elements */
+}
+
+.input-box {
+    margin: 10px 0; /* Add space between input fields */
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 200px; /* Adjust width as needed */
+}
+
+a {
+    text-decoration: none; /* Remove underline */
+}
+
+.container {
+    background-color: #EFEAE0;
+    border-radius: 10px;
+    padding: 2px 20px 20px 20px;
+    display: flex;
+    flex-direction: column; /* Stacks elements vertically */
+    position: fixed;
+    bottom: 0;
+    top: 150px;
+    width: 75%; /* Take up full width of the viewport */
+    max-height: calc(100vh - 55px); /* Subtract padding from total viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    left: 50%;
+    transform: translateX(-50%);
+    /* Center horizontally */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    border-width: 0; /* Collapse table borders */
+    width: 100%; /* Full width */
+}
+
+th, td {
+    padding: 20px; /* Increase space between rows and columns */
+    border: 0 solid #ddd; /* Add border for cells */
+    text-align: left; /* Align text to left */
+    font-family: "Inria Serif", serif;
+    font-weight: 400;
+}
+
+th {
+    background-color: #EFEAE0;
+    font-size: 25px; /* Text size for header cells */
+}
+
+td {
+    font-size: 20px; /* Text size for body cells */
+}
+
+.custom-hr {
+    border: none;
+    height: 5px;
+    background-color: #000; /* Black color */
+    margin: 20px 10%; /* Adds space above, below, left, and right */
+}
+
+/* General form styling */
+form {
+    width:90%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 0 solid #ccc;
+    border-radius: 10px;
+    background-color: #EFEAE0;
+}
+
+/* Label styling */
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Input field styling */
+form input[type="text"],
+form input[type="number"],
+form input[type="hidden"],
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Specific styling for textarea to make it taller */
+form textarea {
+    height: 100px; /* Adjust this value as needed */
+    resize: vertical;
+}
+
+/* Button styling */
+
+
+/* Style for the styled-button class */
+.styled-button {
+    font-family: "Inria Serif", serif;
+    color: white;
+    width: 100%;
+    font-size: 20px;
+    background-color: #AEAEAE; /* Button background color */
+    border: none; /* Remove border */
+    border-radius: 0; /* Rounded corners */
+    padding: 10px 20px; /* Padding inside the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    display: inline-block; /* Inline-block display */
+    margin: 10px 0; /* Margin for spacing */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Style for the button-link class */
+.styled-button a {
+    font-family: "Inria Serif", serif;
+    color: white; /* Link text color */
+    text-decoration: none; /* Remove underline */
+    font-size: 20px; /* Font size */
+    display: block; /* Make the link block-level to fill the button */
+    transition: color 0.3s; /* Smooth transition for text color */
+}
+
+/* Hover effect for the button */
+.styled-button:hover {
+    background-color: #EFEAE0; /* Background color on hover */
+    color: black;
+}
+
+.styled-button:hover a {
+    color: black; /* Text color on hover */
+}
+
+

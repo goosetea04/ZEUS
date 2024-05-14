@@ -4,75 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manage Listings</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-    .container {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
-    tr:hover {
-      background-color: #f9f9f9;
-    }
-    a.button {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 5px;
-      margin-right: 10px;
-    }
-    a.button:hover {
-      background-color: #0056b3;
-    }
-    input[type="number"] {
-      width: 50px;
-      padding: 5px;
-      border: 1px solid #ddd;
-      border-radius: 3px;
-    }
-    button[type="submit"] {
-      padding: 5px 10px;
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-    }
-    button[type="submit"]:hover {
-      background-color: #c82333;
-    }
-  </style>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
+<div th:replace="~{nav :: nav}"></div>
 <div class="container">
-  <h1>Manage Listings</h1>
+  <h1> Manage Listings </h1>
   <!-- Display error message if any -->
   <div th:if="${error}" class="error-message">
     <p th:text="${error}" style="color: red;"></p>
@@ -82,11 +22,12 @@
     <thead>
     <tr>
       <th>ID</th>
-      <th>Name</th>
-      <th>Quantity</th>
-      <th>Description</th>
-      <th>Price</th>
-      <th>Actions</th>
+      <th>NAME</th>
+      <th>STOCK</th>
+      <th>DESCRIPTION</th>
+      <th>PRICE</th>
+      <th>UPDATE</th>
+      <th>DELETE</th>
     </tr>
     </thead>
     <tbody>
@@ -99,11 +40,13 @@
       <td th:text="${listing.product_price}"></td>
       <td>
         <!-- Update button -->
-        <a th:href="@{/update-listing(id=${listing.product_id})}" class="button">Update</a>
+        <button class="styled-button"><a th:href="@{/update-listing(id=${listing.product_id})}" class="button">Update</a></button>
+      </td>
+      <td>
         <!-- Delete button -->
         <form th:action="@{/delete-listing}" method="post" style="display: inline;">
           <input type="hidden" name="id" th:value="${listing.product_id}" />
-          <button type="submit">Delete</button>
+          <button class ="styled-button" type="submit">Delete</button>
         </form>
       </td>
     </tr>
