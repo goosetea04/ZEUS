@@ -10,8 +10,14 @@ h1{
 /* Style for the navbar */
 .navbar {
     background-color: #EFEAE0;
-    padding: 10px 0;
+    padding: 0;
     text-align: center;
+}
+.navbar .logo {
+    height: 54px;
+    width: auto;
+    margin-right: 10px;
+    transform: translateY(10px);
 }
 
 /* Style for the navbar title */
@@ -35,15 +41,11 @@ h1{
     font-family: "Inria Serif", serif;
     display: inline; /* Display list items inline */
     margin: 0 10px;
-    font-size: 30px;
+    font-size: 26px;
 }
 
 
 /* Style for the navbar logo */
-.navbar .logo {
-    width: 40px; /* Adjust as needed */
-    height: auto; /* Maintain aspect ratio */
-}
 
 .card-container {
     background-color: #EFEAE0;
