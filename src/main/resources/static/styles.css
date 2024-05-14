@@ -16,6 +16,7 @@ h1{
 
 /* Style for the navbar title */
 .navbar .title {
+    font-family: "Inria Serif", serif;
     display: inline-block; /* Display title inline */
     font-size: 48px;
     font-weight: bold;
