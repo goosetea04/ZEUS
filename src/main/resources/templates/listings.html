@@ -73,33 +73,5 @@
         </table>
     </div>
 </div>
-<script>
-    function addToCart(button) {
-        var row = button.closest('tr'); // Get the parent row of the button
-        var form = row.querySelector('form'); // Get the form element within the row
-
-        if (!form) {
-            console.error('Form element not found.');
-            return; // Exit the function if form element is not found
-        }
-
-        var quantity = parseInt(row.querySelector('input[name="quantity"]').value);
-        var maxQuantity = parseInt(row.querySelector('input[name="maxQuantity"]').value);
-        console.log("Quantity:", quantity); // Print quantity to console
-        console.log("Max Quantity:", maxQuantity); // Print maxQuantity to console
-        if (isNaN(quantity) || quantity <= 0) {
-            alert("Please enter a valid quantity greater than zero.");
-            return; // Exit the function if quantity is invalid
-        }
-
-        if (quantity > maxQuantity) {
-            alert("Quantity exceeds available stock.");
-            return; // Exit the function if quantity exceeds maxQuantity
-        }
-
-        // If validation passes, submit the form
-        form.submit();
-    }
-</script>
 </body>
 </html>

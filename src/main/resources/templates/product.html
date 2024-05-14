@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
   <title>Product Details</title>
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/script.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
@@ -22,15 +23,17 @@
   </div>
 
   <!-- Form to add listing to cart -->
-  <form action="/add-to-cart" method="post">
-    <input type="hidden" name="listingId" th:value="${listing.product_id}" />
-    <label for="quantity">Quantity:</label>
-    <input type="number" id="quantity" name="quantity" value="1" min="1" max="999" />
-    <button type="submit">Add to Cart</button>
-  </form>
+  <div>
+    <form action="/add-to-cart" method="post">
+      <input type="hidden" name="listingId" th:value="${listing.product_id}" />
+      <input type="hidden" name="maxQuantity" th:value="${listing.product_quantity}" />
+      <input type="number" name="quantity" value="1" />
+      <button class ="styled-button" type="button" onclick="addToCart(this)">Add to Cart</button>
+    </form>
+  </div>
 
   <!-- Link back to all listings -->
-  <a href="/listings" class="button">Back to Listings</a>
+  <button class="styled-button"><a href="/listings">Back to Listings</a></button>
 </div>
 </body>
 </html>

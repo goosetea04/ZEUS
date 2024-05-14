@@ -46,7 +46,7 @@
         <!-- Delete button -->
         <form th:action="@{/delete-listing}" method="post" style="display: inline;">
           <input type="hidden" name="id" th:value="${listing.product_id}" />
-          <button type="submit">Delete</button>
+          <button class ="styled-button" type="submit">Delete</button>
         </form>
       </td>
     </tr>
