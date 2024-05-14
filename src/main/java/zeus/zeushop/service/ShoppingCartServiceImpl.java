@@ -6,6 +6,7 @@ import zeus.zeushop.model.Listing;
 import zeus.zeushop.model.CartItem;
 import zeus.zeushop.repository.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -64,5 +65,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return cartItemRepository.findByBuyerId(buyerId);
     }
 
+    public void markItemsPending(List<CartItem> cartItems) {
+        cartItems.forEach(item -> {
+            item.setStatus("PENDING");
+            cartItemRepository.save(item);
+        });
+    }
 
 }

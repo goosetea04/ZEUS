@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.math.BigDecimal;
 
 @Data
 @Entity
@@ -27,6 +28,9 @@ public class User implements UserDetails {
 
     @Column(name = "role", nullable = false)
     private String role = "USER";
+
+    @Column(name = "balance", nullable = false, precision = 10, scale = 2)
+    private BigDecimal balance = BigDecimal.ZERO; // Default balance set to 0
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

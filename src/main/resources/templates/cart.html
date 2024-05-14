@@ -13,9 +13,32 @@
 </head>
 <body>
 <div th:replace="~{nav :: nav}"></div>
+  
 <div class="container">
 <h1>Cart</h1>
-  <div class="box-container">
+<div class="box-container">
+<div class="balance-display">
+  <strong>Your Current Balance:</strong> <span th:text="${balance}">0.00</span>
+</div>
+<div class="total-display">
+  <strong>Total Cost:</strong> <span th:text="${totalCost}">0.00</span>
+</div>
+<div class="payment-status">
+  <strong>Payment Status:</strong>
+  <span id="paymentStatus" th:text="${paymentStatus}">No recent payments</span>
+</div>
+<div class="pay-button-container">
+  <form id="paymentForm" action="/payment/initiate" method="post">
+    <input type="hidden" name="amount" th:value="${totalCost}" />
+    <button type="submit" class="pay-now">Request Approval</button>
+  </form>
+  </div>
+ </div>
+
+
+
+
+<div class="box-container">
 <table>
   <thead>
   <tr>
@@ -27,7 +50,6 @@
   </tr>
   </thead>
   <tbody>
-  <!-- Loop through cart items -->
   <tr th:each="cartItem : ${cartItems}">
     <td th:text="${cartItem.listing.id}"></td>
     <td th:text="${cartItem.listing.product_name}"></td>
@@ -41,6 +63,14 @@
     </td>
   </tr>
   </tbody>
-</table></div></div>
+</table></div>
 </body>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var status = document.getElementById('paymentStatus').textContent;
+    if (status === 'PENDING') {
+      document.getElementById('paymentForm').style.display = 'none';
+    }
+  });
+</script>
 </html>

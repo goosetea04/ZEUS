@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Status</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+    }
+    .message {
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 5px;
+      color: white;
+      text-align: center;
+    }
+    .success {
+      background-color: #4CAF50;
+    }
+    .error {
+      background-color: #f44336;
+    }
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    a:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Payment Status</h1>
+  <div th:if="${successMessage}" class="message success" th:text="${successMessage}">
+    Payment was successful!
+  </div>
+  <div th:if="${errorMessage}" class="message error" th:text="${errorMessage}">
+    Something went wrong with your payment.
+  </div>
+  <a href="/cart">Return to Cart</a>
+</div>
+</body>
+</html>
