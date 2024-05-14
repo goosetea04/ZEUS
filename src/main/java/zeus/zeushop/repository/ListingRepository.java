@@ -10,10 +10,6 @@ import java.util.List;
 
 @Repository
 public interface ListingRepository extends JpaRepository<Listing, Integer> {
-    // No need to implement these methods manually, JpaRepository provides them
-
-    // Custom method to find listings by a specific attribute, for example:
-    // List<Listing> findByCategory(String category);
     List<Listing> findByEndDateGreaterThanEqual(LocalDateTime endDate); //ok thanks
     @Query("SELECT l FROM Listing l WHERE l.seller_id = :sellerId")
     List<Listing> findBySellerId(Integer sellerId);

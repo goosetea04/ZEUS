@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Details</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{nav :: nav}"></div>
+<div class="container">
+  <h1>Product Details</h1>
+
+  <!-- Display listing details -->
+  <div>
+    <h2 th:text="${listing.product_name}"></h2>
+    <p><strong>Description:</strong> <span th:text="${listing.product_description}"></span></p>
+    <p><strong>Quantity:</strong> <span th:text="${listing.product_quantity}"></span></p>
+    <p><strong>Price:</strong> <span th:text="${listing.product_price}"></span></p>
+  </div>
+
+  <!-- Form to add listing to cart -->
+  <form action="/add-to-cart" method="post">
+    <input type="hidden" name="listingId" th:value="${listing.product_id}" />
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" value="1" min="1" th:max="${listing.product_quantity}" step="1" required />
+    <button class="styled-button" type="submit">Add to Cart</button>
+  </form>
+
+  <!-- Link back to all listings -->
+  <button class="styled-button"><a href="/listings">Back to Listings</a></button>
+</div>
+<script>
+  function validateForm() {
+    const quantityInput = document.getElementById('quantity');
+    const quantity = parseInt(quantityInput.value, 10);
+    const maxQuantity = parseInt(quantityInput.getAttribute('max'), 10);
+
+    if (isNaN(quantity) || quantity <= 0 || quantity > maxQuantity) {
+      alert('Please enter a valid quantity greater than 0 and not exceeding the available quantity.');
+      return false;
+    }
+    return true;
+  }
+</script>
+</body>
+</html>
