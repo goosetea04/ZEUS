@@ -26,10 +26,10 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>Amount</th>
-        <th>Status</th>
-        <th>Date Created</th>
-        <th>Update</th>
+        <th>AMOUNT</th>
+        <th>STATUS</th>
+        <th>CREATED AT</th>
+        <th>ACTION</th>
     </tr>
     </thead>
     <tbody>
@@ -41,11 +41,11 @@
 
         <td>
             <form th:if="${topUp.status} == 'PENDING'" th:action="@{'/topups/' + ${topUp.topUpId} + '/cancel'}" method="post">
-                <button type="submit" class="cancel">Cancel</button>
+                <button class="cancel a-styled-button" type="submit">Cancel</button>
             </form>
             <br>
             <form th:action="@{'/topups/' + ${topUp.topUpId} + '/delete'}" method="post">
-                <button type="submit">Delete</button>
+                <button class="a-styled-button" type="submit">Delete</button>
             </form>
         </td>
     </tr>

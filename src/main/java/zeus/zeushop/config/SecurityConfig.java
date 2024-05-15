@@ -23,9 +23,10 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.formLogin(Customizer.withDefaults())
+        return http.formLogin(form->form.loginPage("/login").permitAll().defaultSuccessUrl("/listings"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
+                        .requestMatchers("/**").permitAll()
                         .requestMatchers("/login/**", "/register/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAnyAuthority("ADMIN", "USER")
@@ -33,7 +34,7 @@ public class SecurityConfig {
                 .userDetailsService(userDetailsServiceImpl)
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/login")
                         .permitAll()
                 )
                 .build();

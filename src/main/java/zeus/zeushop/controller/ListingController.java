@@ -150,7 +150,7 @@ public class ListingController {
         Listing originalListing = listingService.getListingById(id).orElse(null);
         if (originalListing == null) {
             // Handle case where original listing is not found
-            return "redirect:/listings";
+            return "redirect:/update-listings";
         }
 
         // Update the fields of the original listing with the new values
