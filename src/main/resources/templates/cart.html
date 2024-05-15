@@ -64,6 +64,9 @@
   </tr>
   </tbody>
 </table></div>
+  <div th:if="${#lists.isEmpty(cartItems)}">
+    <p>Your cart is empty.</p>
+  </div>
 </body>
 <script>
   document.addEventListener("DOMContentLoaded", function() {

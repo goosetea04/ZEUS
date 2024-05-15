@@ -12,6 +12,7 @@ public interface ShoppingCartService {
     List<CartItem> getAllCartItems();
     List<CartItem> getCartItemsByBuyerId(Integer buyerId);
     void markItemsPending(List<CartItem> cartItems);
+    void clearCartItemsByBuyerId(Integer buyerId);
 
     // Add other methods for managing the shopping cart
 }
