@@ -28,5 +28,8 @@ public class AuthController {
         User newUser = userService.createUser(user);
         return newUser != null ? "redirect:/login" : "register";
     }
-
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
 }
