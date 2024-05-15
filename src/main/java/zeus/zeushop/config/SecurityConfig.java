@@ -26,6 +26,7 @@ public class SecurityConfig {
         return http.formLogin(form->form.loginPage("/login").permitAll().defaultSuccessUrl("/listings"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
+                        .requestMatchers("/**").permitAll()
                         .requestMatchers("/login/**", "/register/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAnyAuthority("ADMIN", "USER")

@@ -161,6 +161,7 @@ form label {
 form input[type="text"],
 form input[type="number"],
 form input[type="hidden"],
+form input[type="password"],
 form textarea {
     width: 70%;
     padding: 10px;
