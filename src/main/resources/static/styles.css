@@ -52,7 +52,7 @@ h1{
     border-radius: 10px;
     padding: 20px;
     margin: 20px auto;
-    width: 80%; /* Adjust as needed */
+    width: 75%; /* Adjust as needed */
     max-width: 800px; /* Adjust as needed */
 }
 
@@ -104,6 +104,7 @@ a {
 table {
     border-width: 0; /* Collapse table borders */
     width: 100%; /* Full width */
+    border-collapse: collapse;
 }
 
 th, td {
@@ -138,25 +139,36 @@ form {
     border: 0 solid #ccc;
     border-radius: 10px;
     background-color: #EFEAE0;
+    display: flex;
+    flex-wrap: wrap;
 }
-
+.form-group {
+    display: flex;
+    width: 100%;
+    margin-bottom: 15px;
+}
 /* Label styling */
 form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+    font-family: "Inria Serif", serif;
+    font-size: 24px;
+    width: 30%;
+    margin-bottom: 0;
+    text-align: left;
+    padding-right: 10px;
 }
 
 /* Input field styling */
 form input[type="text"],
 form input[type="number"],
 form input[type="hidden"],
+form input[type="password"],
 form textarea {
-    width: 100%;
+    width: 70%;
     padding: 10px;
     margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #8E8E8E;
+    border-radius: 0;
+    background-color: #EFEAE0;
     box-sizing: border-box;
 }
 
@@ -185,6 +197,28 @@ form textarea {
     transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
 }
 
+.a-styled-button {
+    font-family: "Inria Serif", serif;
+    color: white;
+    width: 100%;
+    font-size: 20px;
+    background-color: #AEAEAE; /* Button background color */
+    border: none; /* Remove border */
+    border-radius: 0; /* Rounded corners */
+    padding: 10px 20px; /* Padding inside the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    display: inline-block; /* Inline-block display */
+    margin: 10px 0; /* Margin for spacing */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+}
+.a-styled-button a {
+    font-family: "Inria Serif", serif;
+    color: white; /* Link text color */
+    text-decoration: none; /* Remove underline */
+    font-size: 20px; /* Font size */
+    display: block; /* Make the link block-level to fill the button */
+    transition: color 0.3s; /* Smooth transition for text color */
+}
 /* Style for the button-link class */
 .styled-button a {
     font-family: "Inria Serif", serif;
@@ -205,4 +239,82 @@ form textarea {
     color: black; /* Text color on hover */
 }
 
+.a-styled-button:hover {
+    background-color: #EFEAE0; /* Background color on hover */
+    color: black;
+}
 
+.a-styled-button:hover a {
+    color: black; /* Text color on hover */
+}
+
+/* adhis */
+.balance-display, .total-display, .payment-status, .pay-button-container {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.2em;
+}
+.pay-now {
+    padding: 10px 20px;
+    background-color:#343A40;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+.pay-now:hover {
+    background-color: #545d66;
+}
+.error, .alert-info {
+    color: #D8000C;
+    background-color: #FFD2D2;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 80%;
+    margin: 20px auto;
+    text-align: left;
+}
+.alert-info {
+    background-color: #32cc56;
+    color: white;
+}
+.title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px; /* Adjust spacing as needed */
+    position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    top: 0;
+    background-color: #EFEAE0; /* Same as the container background */
+    z-index: 1;
+    padding: 10px 0; /* Add padding to avoid content overlap */
+}
+
+/* Style for the Add Listing link */
+.add-listing-link {
+    font-family: "Inria Serif", serif;
+    font-size: 1.5em;
+    color: #000;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+.add-listing-link:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+.table-container {
+    overflow-y: auto;
+    overflow-x: auto;
+    width: 100%;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+}

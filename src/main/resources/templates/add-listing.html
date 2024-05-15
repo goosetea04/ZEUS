@@ -17,21 +17,29 @@
   <div th:if="${error}" class="error-message">
     <p th:text="${error}" style="color: red;"></p>
   </div>
-  <form id="addListingForm" action="/save-listing" method="post" onsubmit="return validateForm()">
-    <label for="product_name">Listing Name:</label>
-    <input type="text" id="product_name" name="product_name" required>
-
-    <label for="product_quantity">Stock:</label>
-    <input type="number" id="product_quantity" name="product_quantity" required>
-
-    <label for="product_description">Description:</label>
-    <textarea id="product_description" name="product_description" rows="4" cols="50" required></textarea>
-
-    <label for="product_price">Price:</label>
-    <input type="number" id="product_price" name="product_price" required>
-
-    <button type="submit">Add Listing</button>
-  </form>
+  <div class="card-container">
+    <form id="addListingForm" action="/save-listing" method="post" onsubmit="return validateForm()">
+      <div class="form-group">
+        <label for="product_name">Listing Name:</label>
+        <input type="text" id="product_name" name="product_name" required>
+      </div>
+      <div class="form-group">
+        <label for="product_quantity">Stock:</label>
+        <input type="number" id="product_quantity" name="product_quantity" required>
+      </div>
+      <div class="form-group">
+        <label for="product_description">Description:</label>
+        <textarea id="product_description" name="product_description" rows="4" cols="50" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="product_price">Price:</label>
+        <input type="number" id="product_price" name="product_price" required>
+      </div>
+      <div class="button-container">
+        <button type="submit" class="a-styled-button" style="width:25%">Add Listing</button>
+      </div>
+    </form>
+  </div>
 </div>
 <script>
   function validateForm() {

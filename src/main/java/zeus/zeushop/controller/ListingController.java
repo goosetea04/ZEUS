@@ -41,8 +41,12 @@ public class ListingController {
 
     @GetMapping("/listings")
     public String getAllListings(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userService.getUserByUsername(currentUsername);
+
         List<Listing> visibleListings = listingService.getAllListings().stream()
-                .filter(Listing::isVisible)
+                .filter(listing -> listing.isVisible() && listing.getSellerId() != null && !listing.getSellerId().equals(currentUser.getId()))
                 .collect(Collectors.toList());
         model.addAttribute("listings", visibleListings);
         model.addAttribute("cartItem", new CartItem()); // For adding listings to cart
@@ -120,7 +124,7 @@ public class ListingController {
         // Create the listing
         listingService.createListing(listing);
 
-        return "redirect:/listings";
+        return "redirect:/manage-listings";
     }
 
     @GetMapping("/listings-cart")
@@ -146,7 +150,7 @@ public class ListingController {
         Listing originalListing = listingService.getListingById(id).orElse(null);
         if (originalListing == null) {
             // Handle case where original listing is not found
-            return "redirect:/listings";
+            return "redirect:/update-listings";
         }
 
         // Update the fields of the original listing with the new values
