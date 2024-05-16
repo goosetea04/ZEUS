@@ -72,4 +72,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         });
     }
 
+    @Override
+    public void clearCartItemsByBuyerId(Integer buyerId) {
+        List<CartItem> cartItems = cartItemRepository.findByBuyerId(buyerId);
+        cartItemRepository.deleteAll(cartItems);
+    }
+
 }

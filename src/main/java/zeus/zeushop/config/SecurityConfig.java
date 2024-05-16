@@ -23,18 +23,27 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.formLogin(Customizer.withDefaults())
+        return http.formLogin(form->form.loginPage("/login").permitAll().defaultSuccessUrl("/listings"))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req->req
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/**").permitAll()
                         .requestMatchers("/login/**", "/register/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAnyAuthority("ADMIN", "USER")
                         .anyRequest().authenticated())
-                .userDetailsService(userDetailsServiceImpl).build();
+                .userDetailsService(userDetailsServiceImpl)
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login")
+                        .permitAll()
+                )
+                .build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 }

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import zeus.zeushop.model.User;
 import zeus.zeushop.model.Payment;
 import zeus.zeushop.service.PaymentService;
+import zeus.zeushop.service.ShoppingCartService;
 import zeus.zeushop.service.UserService;
 
 import java.math.BigDecimal;
@@ -25,6 +26,9 @@ public class PaymentController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ShoppingCartService shoppingCartService;
 
     @PostMapping("/initiate")
     public String initiatePayment(@RequestParam("amount") BigDecimal amount, RedirectAttributes redirectAttributes) {
@@ -44,6 +48,7 @@ public class PaymentController {
 
         if (user.getBalance().compareTo(amount) >= 0) {
             paymentService.createPayment(user.getId(), amount);
+            shoppingCartService.clearCartItemsByBuyerId(user.getId());
             redirectAttributes.addFlashAttribute("success", "Payment initiated successfully.");
         } else {
             redirectAttributes.addFlashAttribute("error", "Insufficient balance.");
