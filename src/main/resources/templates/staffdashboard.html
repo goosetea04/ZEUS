@@ -10,57 +10,9 @@
 <body>
 <h1 class="my-4 text-center">Staff Dashboard</h1>
 
-<!-- Filter Top-Ups by Status with Bootstrap styling -->
-<div class="container">
-    <h2 class="mb-3">Filter Top-Ups by Status</h2>
-    <form id="filterForm" th:action="@{/staff/top-ups/{status}}" method="get" class="form-inline mb-4">
-        <label for="status" class="mr-2">Select Status:</label>
-        <select id="status" name="status" class="form-control mr-3" onchange="submitForm()">
-            <option value="ALL" th:selected="${status == null or status == 'ALL'}">None</option>
-            <option value="PENDING" th:selected="${status == 'PENDING'}">Pending</option>
-            <option value="APPROVED" th:selected="${status == 'APPROVED'}">Approved</option>
-        </select>
-    </form>
-    <script>
-        function submitForm() {
-            var form = document.getElementById('filterForm');
-            var selectedStatus = document.getElementById('status').value;
-            form.action = '/staff/top-ups/' + selectedStatus;
-            form.submit(); // Submit the form automatically when status changes
-        }
-    </script>
-
-    <!-- List Top-Ups in a Bootstrap styled Table -->
-    <div class="content">
-        <h2 class="mb-3">All Top-Ups</h2>
-        <table th:if="${topUps}" class="table table-bordered table-striped">
-            <thead class="thead-dark">
-            <tr>
-                <th>ID</th>
-                <th>User ID</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="topUp : ${topUps}">
-                <td th:text="${topUp.topUpId}"></td>
-                <td th:text="${topUp.userId}"></td>
-                <td th:text="${topUp.amount}"></td>
-                <td th:text="${topUp.status}"></td>
-                <td>
-                    <div th:if="${topUp.status == 'PENDING'}">
-                        <form th:action="@{/staff/approve/{topUpId}(topUpId=${topUp.topUpId})}" method="post">
-                            <button type="submit" class="btn btn-success">Approve</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+<!-- Filter Payments by Status with Bootstrap styling -->
+<a href="staff/top-ups"><button class="btn btn-success">TopUps</button></a>
+<a href="staff/payments"><button class="btn btn-success">Payments</button></a>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

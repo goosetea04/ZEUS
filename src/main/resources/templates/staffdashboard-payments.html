@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard</title>
+    <!-- Include Bootstrap CSS from CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+<h1 class="my-4 text-center">Staff Dashboard</h1>
+
+<!-- Filter Payments by Status with Bootstrap styling -->
+<div class="container">
+    <h2 class="mb-3">Filter Payments by Status</h2>
+    <form id="filterForm" th:action="@{/staff/payments/{status}}" method="get" class="form-inline mb-4">
+        <label for="status" class="mr-2">Select Status:</label>
+        <select id="status" name="status" class="form-control mr-3" onchange="submitForm()">
+            <option value="ALL" th:selected="${status == null or status == 'ALL'}">None</option>
+            <option value="PENDING" th:selected="${status == 'PENDING'}">Pending</option>
+            <option value="APPROVED" th:selected="${status == 'APPROVED'}">Approved</option>
+            <option value="REJECTED" th:selected="${status == 'REJECTED'}">Rejected</option>
+        </select>
+    </form>
+    <script>
+        function submitForm() {
+            var form = document.getElementById('filterForm');
+            var selectedStatus = document.getElementById('status').value;
+            form.action = '/staff/payments/' + selectedStatus;
+            form.submit(); // Submit the form automatically when status changes
+        }
+    </script>
+
+    <!-- List Payments in a Bootstrap styled Table -->
+    <div class="content">
+        <h2 class="mb-3">All Payments</h2>
+        <table th:if="${payments}" class="table table-bordered table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>User ID</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="payment : ${payments}">
+                <td th:text="${payment.id}"></td>
+                <td th:text="${payment.userId}"></td>
+                <td th:text="${payment.amount}"></td>
+                <td th:text="${payment.status}"></td>
+                <td>
+                    <div th:if="${payment.status == 'PENDING'}">
+                        <form th:action="@{/staff/payments/approve/{Id}(Id=${payment.Id})}" method="post">
+                            <button type="submit" class="styled-button" style="width: 125%;height: 25%">Approve</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
