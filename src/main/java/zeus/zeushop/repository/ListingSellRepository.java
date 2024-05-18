@@ -16,6 +16,7 @@ public interface ListingSellRepository extends JpaRepository<ListingSell, Intege
     // List<Listing> findByCategory(String category);
     List<ListingSell> findByEndDateGreaterThanEqual(LocalDateTime endDate); //ok thanks
     List<ListingSell> findByVisibleIsTrue();
+    List<ListingSell> findBySellerId(Integer sellerId);
 }
 
 //@Repository

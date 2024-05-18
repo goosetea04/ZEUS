@@ -59,4 +59,9 @@ public class ListingSellServiceImpl implements ListingSellService {
         }
         return null;
     }
+
+    @Override
+    public List<ListingSell> findBySellerId(Integer sellerId) {
+        return listingSellRepository.findBySellerId(sellerId);
+    }
 }

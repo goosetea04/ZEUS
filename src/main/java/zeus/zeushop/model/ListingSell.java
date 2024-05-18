@@ -22,6 +22,8 @@ public class ListingSell {
     private Float product_price;
     private String product_description;
     private LocalDateTime endDate;
+    @Column(name = "seller_id")
+    private Integer sellerId;
 
     public ListingSell() {
         // Default constructor required by JPA
@@ -49,14 +51,10 @@ public class ListingSell {
         this.visible = visible;
     }
 
-
-//    private String id;
-//    private String name;
-//    private String description;
-//    private int stock;
-//    private int price;
-//
-//    public ListingSell() {
-//        id = UUID.randomUUID().toString();
-//    }
+    public void setSellerId(Integer sellerId) {
+        this.sellerId = sellerId;
+    }
+    public Integer getSellerId() {
+        return sellerId;
+    }
 }

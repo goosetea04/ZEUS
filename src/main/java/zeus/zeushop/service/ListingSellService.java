@@ -12,4 +12,5 @@ public interface ListingSellService {
     public Optional<ListingSell> findById(Integer id);
     public ListingSell editListingSell(Integer id, ListingSell editedListingSell);
     public ListingSell deleteListingSell(Integer id);
+    List<ListingSell> findBySellerId(Integer sellerId);
 }
