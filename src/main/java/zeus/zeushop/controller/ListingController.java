@@ -3,9 +3,7 @@ package zeus.zeushop.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import zeus.zeushop.model.*;
 import zeus.zeushop.service.ShoppingCartService;
 import zeus.zeushop.service.ListingService;
@@ -43,8 +41,12 @@ public class ListingController {
 
     @GetMapping("/listings")
     public String getAllListings(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userService.getUserByUsername(currentUsername);
+
         List<Listing> visibleListings = listingService.getAllListings().stream()
-                .filter(Listing::isVisible)
+                .filter(listing -> listing.isVisible() && listing.getSellerId() != null && !listing.getSellerId().equals(currentUser.getId()))
                 .collect(Collectors.toList());
         model.addAttribute("listings", visibleListings);
         model.addAttribute("cartItem", new CartItem()); // For adding listings to cart
@@ -82,8 +84,8 @@ public class ListingController {
         }
 
         // Decrease the quantity of the listing
-        storedListing.setProduct_quantity(storedListing.getProduct_quantity() - quantity);
-        listingRepository.save(storedListing);
+        // storedListing.setProduct_quantity(storedListing.getProduct_quantity() - quantity);
+        // listingRepository.save(storedListing);
 
         // Add the listing to the cart
         shoppingCartService.addListingToCart(listing, quantity, currentUser.getId());
@@ -122,7 +124,7 @@ public class ListingController {
         // Create the listing
         listingService.createListing(listing);
 
-        return "redirect:/listings";
+        return "redirect:/manage-listings";
     }
 
     @GetMapping("/listings-cart")
@@ -148,7 +150,7 @@ public class ListingController {
         Listing originalListing = listingService.getListingById(id).orElse(null);
         if (originalListing == null) {
             // Handle case where original listing is not found
-            return "redirect:/listings";
+            return "redirect:/update-listings";
         }
 
         // Update the fields of the original listing with the new values
@@ -185,4 +187,17 @@ public class ListingController {
         listingService.deleteListing(id);
         return "redirect:/manage-listings"; // Redirect to the manage-listings page after deletion
     }
+
+    @GetMapping("/product/{id}")
+    public String showProductDetails(@PathVariable("id") Integer id, Model model) {
+        Optional<Listing> listingOptional = listingService.getListingById(id.longValue());
+        if (listingOptional.isPresent()) {
+            model.addAttribute("listing", listingOptional.get());
+            model.addAttribute("cartItem", new CartItem());
+            return "product";
+        } else {
+            return "redirect:/listings"; // Handle the case where the listing is not found
+        }
+    }
+
 }

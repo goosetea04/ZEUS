@@ -27,67 +27,99 @@ public class StaffBoardServiceImplTest {
     private TopUp topUp1, topUp2;
 
     @BeforeEach
-    void setUp() {
-        String uuid1 = UUID.randomUUID().toString();
-        String uuid2 = UUID.randomUUID().toString();
-        topUp1 = new TopUp(uuid1, 100, "PENDING");
-        topUp2 = new TopUp(uuid2,  200, "APPROVED");
+    void setUp(){
+        topUp1 = new TopUp();
+        topUp1.setTopUpId(UUID.randomUUID().toString());
+        topUp1.setUserId("U100");
+        topUp1.setAmount(200);
+        topUp1.setStatus("PENDING");
 
-        // Assuming the createTopUp method updates or saves the top-up object.
-        when(topUpService.createTopUp(topUp1)).thenReturn(topUp1);
-        when(topUpService.createTopUp(topUp2)).thenReturn(topUp2);
+        topUp2 = new TopUp();
+        topUp2.setTopUpId(UUID.randomUUID().toString());
+        topUp2.setUserId("U101");
+        topUp2.setAmount(300);
+        topUp2.setStatus("APPROVED");
     }
-
     @Test
-    void approveTopUp_ExistingPendingId_ReturnsTrue() {
-        // Arrange
-        when(topUpService.getAllTopUps()).thenReturn(Arrays.asList(topUp1, topUp2));
+    void testPositiveApproveTopUp(){
+        List<TopUp> topUps = Arrays.asList(topUp1, topUp2);
+        when(topUpService.getAllTopUps()).thenReturn(topUps);
         when(topUpService.deleteTopUp(topUp1.getTopUpId())).thenReturn(true);
+        when(topUpService.createTopUp(topUp1)).thenReturn(topUp1);
 
-        // Act
-        boolean result = staffBoardService.approveTopUp(topUp1.getTopUpId());
-
-        // Assert
-        assertTrue(result);
-        verify(topUpService).deleteTopUp(topUp1.getTopUpId());
-        verify(topUpService).createTopUp(topUp1);
+        assertTrue(staffBoardService.approveTopUp(topUp1.getTopUpId()));
+        verify(topUpService, times(1)).getAllTopUps();
+        verify(topUpService, times(1)).deleteTopUp(topUp1.getTopUpId());
+        verify(topUpService, times(1)).createTopUp(topUp1);
     }
-
     @Test
-    void getTopUpsByStatus_ReturnsFilteredTopUps() {
-        // Arrange
-        when(topUpService.getAllTopUps()).thenReturn(Arrays.asList(topUp1, topUp2));
+    void testNegativeApproveTopUp(){
+        List<TopUp> topUps = Arrays.asList(topUp2);
+        when(topUpService.getAllTopUps()).thenReturn(topUps);
 
-        // Act
-        List<TopUp> result = staffBoardService.getTopUpsByStatus("APPROVED");
+        assertFalse(staffBoardService.approveTopUp(topUp1.getTopUpId()));
+        verify(topUpService, times(1)).getAllTopUps();
+        verify(topUpService, never()).deleteTopUp(topUp1.getTopUpId());
+        verify(topUpService, never()).createTopUp(topUp1);
+    }
+    @Test
+    void testPositiveGetTopUpsByStatus(){
+        List<TopUp> topUps = Arrays.asList(topUp1, topUp2);
+        when(topUpService.getAllTopUps()).thenReturn(topUps);
 
-        // Assert
+        List<TopUp> result = staffBoardService.getTopUpsByStatus("PENDING");
+
         assertEquals(1, result.size());
-        assertEquals("APPROVED", result.get(0).getStatus());
+        verify(topUpService, times(1)).getAllTopUps();
     }
-
     @Test
-    void getAllTopUps_ReturnsAllTopUps() {
-        // Arrange
-        when(topUpService.getAllTopUps()).thenReturn(Arrays.asList(topUp1, topUp2));
+    void testNegativeGetTopUpsByStatus(){
+        List<TopUp> topUps = Arrays.asList(topUp1, topUp2);
+        when(topUpService.getAllTopUps()).thenReturn(topUps);
 
-        // Act
+        List<TopUp> result = staffBoardService.getTopUpsByStatus("REJECTED");
+
+        assertEquals(0, result.size());
+        verify(topUpService, times(1)).getAllTopUps();
+    }
+    @Test
+    void testPositiveGetAllTopUps(){
+        List<TopUp> topUps = Arrays.asList(topUp1, topUp2);
+        when(topUpService.getAllTopUps()).thenReturn(topUps);
+
         List<TopUp> result = staffBoardService.getAllTopUps();
 
-        // Assert
         assertEquals(2, result.size());
+        verify(topUpService, times(1)).getAllTopUps();
     }
-
     @Test
-    void getUserTopUps_ReturnsUserSpecificTopUps() {
-        // Arrange
-        when(topUpService.getUserTopUps("user1")).thenReturn(Arrays.asList(topUp1));
+    void testPositiveGetUserTopUps(){
+        List<TopUp> topUps = Arrays.asList(topUp1, topUp2);
+        when(topUpService.getUserTopUps("U100")).thenReturn(topUps);
 
-        // Act
-        List<TopUp> result = staffBoardService.getUserTopUps("user1");
+        List<TopUp> result = staffBoardService.getUserTopUps("U100");
 
-        // Assert
-        assertEquals(1, result.size());
-        assertEquals("user1", result.get(0).getUserId());
+        assertEquals(2, result.size());
+        verify(topUpService, times(1)).getUserTopUps("U100");
+    }
+    @Test
+    void testNegativeGetAllTopUps(){
+        List<TopUp> topUps = Arrays.asList();
+        when(topUpService.getAllTopUps()).thenReturn(topUps);
+
+        List<TopUp> result = staffBoardService.getAllTopUps();
+
+        assertEquals(0, result.size());
+        verify(topUpService, times(1)).getAllTopUps();
+    }
+    @Test
+    void testNegativeGetUserTopUps(){
+        List<TopUp> topUps = Arrays.asList();
+        when(topUpService.getUserTopUps("U100")).thenReturn(topUps);
+
+        List<TopUp> result = staffBoardService.getUserTopUps("U100");
+
+        assertEquals(0, result.size());
+        verify(topUpService, times(1)).getUserTopUps("U100");
     }
 }

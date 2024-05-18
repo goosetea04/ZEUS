@@ -4,46 +4,41 @@
     <meta charset="UTF-8">
     <title>Listings</title>
     <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<nav class="navbar">
-    <span class="title">ZEUS</span>
-    <ul class="links">
-        <li><a href="#">MANAGE LISTINGS</a></li>
-        <a href="/topups">TOPUP</a>
-        <li><a href="#">CART</a></li>
-        <li><a href="#">LOGOUT</a></li>
-    </ul>
-</nav>
-
+<div th:replace="~{nav :: nav}"></div>
 <div class="container">
     <h1>Listings</h1>
 
-    <!-- Display error message -->
+    <!--
     <div th:if="${error}" class="error-message">
         <p th:text="${error}" style="color: red;"></p>
     </div>
 
-    <!-- Button to add new listing -->
+
     <a href="/add-listing" class="button">Add New Listing</a>
     <a href="/cart" class="button">Cart</a>
     <a href="/manage-listings" class="button">Manage Listings</a>
     <a href="/sell-list" class="button">Sell</a>
     <a href="/topups" class="button">Top Up</a>
 
-    <!-- Display listings -->
-    <div class="box-container">
+    Display listings -->
+    <hr>
+    <div class="table-container">
         <table>
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Quantity</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Add to Cart</th>
-                <th>Update</th>
+                <!-- <th>ID</th> -->
+                <th>NAME</th>
+                <th>STOCK</th>
+                <th>DESCRIPTION</th>
+                <th>PRICE</th>
+                <!-- <th>Add to Cart</th> -->
+                <!-- <th>Update</th> -->
             </tr>
             </thead>
             <tbody>
@@ -52,12 +47,15 @@
                 <!-- Check if listing is visible -->
                 <th:block th:if="${listing.visible}">
                     <!-- Display listing information -->
-                    <td th:text="${listing.product_id}"></td>
-                    <td th:text="${listing.product_name}"></td>
+                    <!-- <td th:text="${listing.product_id}"></td> -->
+                    <td>
+                        <a th:href="@{/product/{id}(id=${listing.product_id})}" th:text="${listing.product_name}"></a>
+                    </td>
                     <td th:text="${listing.product_quantity}"></td>
                     <td th:text="${listing.product_description}"></td>
                     <td th:text="${listing.product_price}"></td>
                     <!-- Form to add listing to cart -->
+                    <!--
                     <td>
                         <form action="/add-to-cart" method="post">
                             <input type="hidden" name="listingId" th:value="${listing.product_id}" />
@@ -65,46 +63,18 @@
                             <input type="number" name="quantity" value="1" />
                             <button type="button" onclick="addToCart(this)">Add to Cart</button>
                         </form>
-                    </td>
-                    <td>
+                    </td> -->
+                    <!-- <td>
                         <form action="/update-listing" method="get">
                             <input type="hidden" name="id" th:value="${listing.product_id}" />
                             <button type="submit">Update</button>
                         </form>
-                    </td>
+                    </td> -->
                 </th:block>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
-<script>
-    function addToCart(button) {
-        var row = button.closest('tr'); // Get the parent row of the button
-        var form = row.querySelector('form'); // Get the form element within the row
-
-        if (!form) {
-            console.error('Form element not found.');
-            return; // Exit the function if form element is not found
-        }
-
-        var quantity = parseInt(row.querySelector('input[name="quantity"]').value);
-        var maxQuantity = parseInt(row.querySelector('input[name="maxQuantity"]').value);
-        console.log("Quantity:", quantity); // Print quantity to console
-        console.log("Max Quantity:", maxQuantity); // Print maxQuantity to console
-        if (isNaN(quantity) || quantity <= 0) {
-            alert("Please enter a valid quantity greater than zero.");
-            return; // Exit the function if quantity is invalid
-        }
-
-        if (quantity > maxQuantity) {
-            alert("Quantity exceeds available stock.");
-            return; // Exit the function if quantity exceeds maxQuantity
-        }
-
-        // If validation passes, submit the form
-        form.submit();
-    }
-</script>
 </body>
 </html>
