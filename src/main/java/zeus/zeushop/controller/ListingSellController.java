@@ -39,7 +39,6 @@ public class ListingSellController {
         String currentUsername = authentication.getName();
         User currentUser = userService.getUserByUsername(currentUsername);
         listingSell.setSellerId(currentUser.getId());
-
         service.create(listingSell);
         redirectAttributes.addFlashAttribute("successMessage", "Listing created successfully.");
         return REDIRECT_LIST;
