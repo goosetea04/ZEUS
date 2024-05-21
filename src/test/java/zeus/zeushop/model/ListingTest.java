@@ -69,4 +69,73 @@ public class ListingTest {
         listing.setProduct_quantity(-5);
         assertEquals(-5, listing.getProduct_quantity());
     }
+
+    @Test
+    public void testGetSellerId() {
+        Listing listing = new Listing();
+        listing.setSeller_id(100);
+        assertEquals(100, listing.getSeller_id());
+    }
+
+    @Test
+    public void testIsVisible() {
+        Listing listing = new Listing();
+        listing.setVisible(true);
+        assertTrue(listing.isVisible());
+
+        listing.setVisible(false);
+        assertFalse(listing.isVisible());
+    }
+
+    @Test
+    public void testGetId() {
+        Listing listing = new Listing();
+        listing.setProduct_id(999);
+        assertEquals(999, listing.getId());
+    }
+
+    @Test
+    public void testSetSellerId() {
+        Listing listing = new Listing();
+        listing.setSeller_id(250);
+        assertEquals(250, listing.getSeller_id());
+    }
+
+    @Test
+    public void testSetVisible() {
+        Listing listing = new Listing();
+        listing.setVisible(true);
+        assertTrue(listing.isVisible());
+
+        listing.setVisible(false);
+        assertFalse(listing.isVisible());
+    }
+
+    @Test
+    public void testConstructorWithStringAndLocalDateTime() {
+        LocalDateTime endDate = LocalDateTime.now().plusDays(10);
+        Listing listing = new Listing("Test Product", endDate);
+
+        assertEquals("Test Product", listing.getProduct_name());
+        assertEquals(endDate, listing.getEndDate());
+    }
+
+    @Test
+    public void testConstructorWithLongAndOtherParameters() {
+        Listing listing = new Listing(1L, "Test Product", 10, "Product Description", 99.99, 1L, true);
+
+        assertEquals(1, listing.getProduct_id());
+        assertEquals("Test Product", listing.getProduct_name());
+        assertEquals(10, listing.getProduct_quantity());
+        assertEquals("Product Description", listing.getProduct_description());
+        assertEquals(99.99f, listing.getProduct_price());
+        assertEquals(1, listing.getSeller_id());
+        assertTrue(listing.isVisible());
+    }
+    @Test
+    public void testSetId() {
+        Listing listing = new Listing();
+        listing.setId(500);
+        assertEquals(500, listing.getId());
+    }
 }
