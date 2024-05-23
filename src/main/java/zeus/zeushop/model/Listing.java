@@ -20,21 +20,20 @@ public class Listing {
     private Float product_price;
     private Integer seller_id;
     private String product_description;
-
-    private LocalDateTime endDate;
+    private LocalDateTime end_date;
 
     public Listing() {
         // Default constructor required by JPA
     }
 
-    public Listing(String productName, LocalDateTime endDate) {
+    public Listing(String productName, LocalDateTime end_date) {
         this.product_name = productName;
-        this.endDate = endDate;
+        this.end_date = end_date;
     }
 
     @Transient
     public Boolean isFeatured() {
-        return endDate != null && LocalDateTime.now().isBefore(endDate);
+        return end_date != null && LocalDateTime.now().isBefore(end_date);
     }
     public Integer getId() {
         return product_id;

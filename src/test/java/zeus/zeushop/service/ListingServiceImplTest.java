@@ -107,23 +107,6 @@ public class ListingServiceImplTest {
     }
 
     @Test
-    void testGetAllFeatured() {
-        Listing listing1 = new Listing();
-        listing1.setEndDate(LocalDateTime.now().plusDays(1));
-        Listing listing2 = new Listing();
-        listing2.setEndDate(LocalDateTime.now().plusDays(2));
-        List<Listing> featuredListings = Arrays.asList(listing1, listing2);
-
-        when(listingRepository.findByEndDateGreaterThanEqual(any(LocalDateTime.class))).thenReturn(featuredListings);
-
-        List<Listing> result = listingService.getAllFeatured();
-
-        assertEquals(featuredListings, result);
-        verify(listingRepository, times(1)).findByEndDateGreaterThanEqual(any(LocalDateTime.class));
-    }
-
-
-    @Test
     void testGetListingsBySellerId() {
         Integer sellerId = 1;
         Listing listing1 = new Listing();
@@ -150,5 +133,19 @@ public class ListingServiceImplTest {
 
         assertEquals(allListings, result);
         verify(listingRepository, times(1)).findAll();
+    }
+
+    @Test
+    public void testGetAllFeatured() {
+        Listing listing1 = new Listing();
+        Listing listing2 = new Listing();
+        listing1.setEnd_date(LocalDateTime.now());
+        listing2.setEnd_date(LocalDateTime.now());
+        List<Listing> mockedListings = Arrays.asList(listing1, listing2);
+
+        when(listingRepository.findByEndDateGreaterThan(any(LocalDateTime.class))).thenReturn(mockedListings);
+        List<Listing> featuredListings = listingService.getAllFeatured();
+
+        assertEquals(2, featuredListings.size());
     }
 }

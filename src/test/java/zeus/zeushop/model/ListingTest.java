@@ -33,17 +33,17 @@ public class ListingTest {
     @Test
     public void testIsFeatured() {
         Listing listing = new Listing();
-        listing.setEndDate(null);
+        listing.setEnd_date(null);
         assertFalse(listing.isFeatured());
 
         // Create a future date from now
         LocalDateTime futureDate = LocalDateTime.now().plusDays(1);
-        listing.setEndDate(futureDate);
+        listing.setEnd_date(futureDate);
         assertTrue(listing.isFeatured());
 
         // Create a past date from now
         LocalDateTime pastDate = LocalDateTime.now().minusDays(1);
-        listing.setEndDate(pastDate);
+        listing.setEnd_date(pastDate);
         assertFalse(listing.isFeatured());
     }
 
@@ -53,7 +53,7 @@ public class ListingTest {
         assertNull(listing.getProduct_name());
         assertNull(listing.getProduct_description());
         assertNull(listing.getSeller_id());
-        assertNull(listing.getEndDate());
+        assertNull(listing.getEnd_date());
     }
 
     @Test

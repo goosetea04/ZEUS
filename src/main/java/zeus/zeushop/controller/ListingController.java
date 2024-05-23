@@ -37,6 +37,7 @@ public class ListingController {
         this.userService = userService;
         this.shoppingCartService = shoppingCartService;
     }
+
     @Autowired
     private ListingRepository listingRepository;
 
@@ -48,11 +49,19 @@ public class ListingController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userService.getUserByUsername(currentUsername);
+        Boolean isAdmin = Objects.equals(currentUser.getRole(), "ADMIN");
 
         List<Listing> visibleListings = listingService.getAllListings().stream()
                 .filter(listing -> listing.isVisible() && listing.getSellerId() != null && !listing.getSellerId().equals(currentUser.getId()))
                 .collect(Collectors.toList());
+
+        List<Listing> featuredListings = listingService.getAllFeatured().stream()
+                .filter(listing -> listing.isVisible() && listing.getSellerId() != null && !listing.getSellerId().equals(currentUser.getId()))
+                .collect(Collectors.toList());
+
+        model.addAttribute("admin", isAdmin);
         model.addAttribute("listings", visibleListings);
+        model.addAttribute("featured_listings", featuredListings);
         model.addAttribute("cartItem", new CartItem()); // For adding listings to cart
         return "listings";
     }
@@ -147,6 +156,43 @@ public class ListingController {
         return "update-listing";
     }
 
+    @GetMapping("/feature-listing")
+    public String showFeatureListingForm(@RequestParam("id") Integer id, Model model) {
+        Listing listing = listingService.getListingById(Long.valueOf(id)).orElse(null);
+        if (listing == null) {
+            return "redirect:/listings";
+        }
+        model.addAttribute("listing", listing);
+        return "feature-listing";
+    }
+
+    @PostMapping("/feature-listing")
+    public String featureListing(@ModelAttribute Listing featuredListing, @RequestParam("id") Long id, Model model) {
+        Listing listing = listingService.getListingById(id).orElse(null);
+        if (listing == null) {
+            return "redirect:/listings";
+        }
+        listing.setEnd_date(featuredListing.getEnd_date());
+
+        // Save the updated listing
+        listingService.updateListing(id, listing);
+
+        return "redirect:/listings";
+    }
+
+    @GetMapping("/delete-feature-listing")
+    public String deleteFeatureListing(@ModelAttribute Listing featuredListing, @RequestParam("id") Long id, Model model) {
+        Listing listing = listingService.getListingById(id).orElse(null);
+        if (listing == null) {
+            return "redirect:/listings";
+        }
+        listing.setEnd_date(LocalDateTime.now());
+
+        // Save the updated listing
+        listingService.updateListing(id, listing);
+
+        return "redirect:/listings";
+    }
 
     @PostMapping("/update-listing")
     public String updateListing(@ModelAttribute Listing updatedListing, @RequestParam("id") Long id, Model model) {
