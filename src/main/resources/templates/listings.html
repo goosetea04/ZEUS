@@ -54,8 +54,8 @@
                     <td th:text="${listing.product_description}"></td>
                     <td th:text="${listing.product_price}"></td>
                     <td>
-                        <a th:href="@{/feature-listing(id=${listing.product_id})}" th:text="Feature"></a>
-                        <a th:href="@{/delete-feature-listing(id=${listing.product_id})}" th:text="Delete"></a>
+                        <a th:block th:if="${admin}" th:href="@{/feature-listing(id=${listing.product_id})}" th:text="Feature"></a>
+                        <a th:block th:if="${admin}" th:href="@{/delete-feature-listing(id=${listing.product_id})}" th:text="Delete"></a>
                     </td>
                     <!-- Form to add listing to cart -->
                     <!--
@@ -109,7 +109,7 @@
                     <td th:text="${listing.product_price}"></td>
                     <!-- Add Feature Button -->
                     <td>
-                        <a th:href="@{/feature-listing(id=${listing.product_id})}" th:text="Feature"></a>
+                        <a th:block th:if="${admin}" th:href="@{/feature-listing(id=${listing.product_id})}" th:text="Feature"></a>
                     </td>
                     <!-- Form to add listing to cart -->
                     <!--
