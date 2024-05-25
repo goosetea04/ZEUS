@@ -9,11 +9,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
+import zeus.zeushop.model.Payment;
+import zeus.zeushop.model.TopUp;
 import zeus.zeushop.model.User;
 import zeus.zeushop.service.StaffBoardService;
 import zeus.zeushop.service.UserService;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,6 +48,8 @@ public class StaffBoardControllerTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("admin");
     }
 
     private void mockAdminUser() {
@@ -60,6 +66,18 @@ public class StaffBoardControllerTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn("user");
         when(userService.getUserByUsername("user")).thenReturn(user);
+    }
+
+    private void setupAdminUser() {
+        User admin = new User();
+        admin.setRole("ADMIN");
+        when(authentication.getPrincipal()).thenReturn(admin);
+    }
+
+    private void setupNonAdminUser() {
+        User user = new User();
+        user.setRole("USER");
+        when(authentication.getPrincipal()).thenReturn(user);
     }
 
     // Positive test cases
@@ -129,4 +147,119 @@ public class StaffBoardControllerTest {
         verify(staffBoardService, never()).getAllPayments();
         assertEquals("redirect:/listings", view);
     }
+
+    @Test
+    void staffHome_AdminAccess() {
+        // Arrange
+        User admin = new User();
+        admin.setUsername("admin");
+        admin.setRole("ADMIN");
+        when(userService.getUserByUsername("admin")).thenReturn(admin);
+
+        // Act
+        String view = staffBoardController.staffHome();
+
+        // Assert
+        assertEquals("staffdashboard", view, "Admin should access the staff dashboard");
+    }
+
+    @Test
+    void staffHome_NonAdminRedirection() {
+        setupNonAdminUser();
+        String view = staffBoardController.staffHome();
+        assertEquals("redirect:/listings", view, "Non-admin should be redirected from staff dashboard");
+    }
+
+    @Test
+    void getTopUpsByStatus_NonAdminRedirection() {
+        setupNonAdminUser();
+        String status = "ALL";
+        String view = staffBoardController.getTopUpsByStatus(status, model);
+        assertEquals("redirect:/listings", view, "Non-admin should be redirected when accessing top-ups by status");
+    }
+
+    @Test
+    void getPaymentsByStatus_NonAdminRedirection() {
+        setupNonAdminUser();
+        String status = "ALL";
+        String view = staffBoardController.getPaymentsByStatus(status, model);
+        assertEquals("redirect:/listings", view, "Non-admin should be redirected when accessing payments by status");
+    }
+
+    @Test
+    void testGetTopUpsByStatus_AdminAccess() {
+        // Arrange
+        User admin = new User();
+        admin.setRole("ADMIN");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("admin");
+        when(userService.getUserByUsername("admin")).thenReturn(admin);
+
+        List<TopUp> topUps = new ArrayList<>(); // Example list
+        when(staffBoardService.getTopUpsByStatus("ACTIVE")).thenReturn(topUps);
+
+        // Act
+        String viewName = staffBoardController.getTopUpsByStatus("ACTIVE", model);
+
+        // Assert
+        assertEquals("staffdashboard-topup", viewName);
+        verify(model).addAttribute("topUps", topUps);
+        verify(model).addAttribute("status", "ACTIVE");
+    }
+
+    @Test
+    void testGetTopUpsByStatus_NonAdminAccess() {
+        // Arrange
+        User nonAdmin = new User();
+        nonAdmin.setRole("USER");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("user");
+        when(userService.getUserByUsername("user")).thenReturn(nonAdmin);
+
+        // Act
+        String viewName = staffBoardController.getTopUpsByStatus("ACTIVE", model);
+
+        // Assert
+        assertEquals("redirect:/listings", viewName);
+        verify(staffBoardService, never()).getTopUpsByStatus(anyString());
+    }
+
+    @Test
+    void testGetPaymentsByStatus_AdminAccess() {
+        // Arrange
+        User admin = new User();
+        admin.setRole("ADMIN");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("admin");
+        when(userService.getUserByUsername("admin")).thenReturn(admin);
+
+        List<Payment> payments = new ArrayList<>();
+        when(staffBoardService.getPaymentsByStatus("COMPLETED")).thenReturn(payments);
+
+        // Act
+        String viewName = staffBoardController.getPaymentsByStatus("COMPLETED", model);
+
+        // Assert
+        assertEquals("staffdashboard-payments", viewName);
+        verify(model).addAttribute("payments", payments);
+        verify(model).addAttribute("status", "COMPLETED");
+    }
+
+    @Test
+    void testGetPaymentsByStatus_NonAdminAccess() {
+        // Arrange
+        User nonAdmin = new User();
+        nonAdmin.setRole("USER");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("user");
+        when(userService.getUserByUsername("user")).thenReturn(nonAdmin);
+
+        // Act
+        String viewName = staffBoardController.getPaymentsByStatus("COMPLETED", model);
+
+        // Assert
+        assertEquals("redirect:/listings", viewName);
+        verify(staffBoardService, never()).getPaymentsByStatus(anyString());
+    }
+
 }
