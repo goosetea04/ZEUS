@@ -6,11 +6,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import zeus.zeushop.model.TopUp;
+import zeus.zeushop.model.User;
 import zeus.zeushop.service.TopUpService;
+import zeus.zeushop.service.UserService;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +28,9 @@ public class TopUpControllerTest {
     @Mock
     private TopUpService topUpService;
 
+    @Mock
+    private UserService userService;
+
     @InjectMocks
     private TopUpController topUpController;
 
@@ -32,65 +40,86 @@ public class TopUpControllerTest {
     @Mock
     private RedirectAttributes redirectAttributes;
 
+    @Mock
+    private Authentication authentication;
+
     @BeforeEach
     void setUp() {
-        model = mock(Model.class);
-        redirectAttributes = mock(RedirectAttributes.class);
+        // Only setup necessary for all tests
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        lenient().when(authentication.getName()).thenReturn("user");
     }
 
-    @Test
-    void testShowTopUpForm() {
-        String viewName = topUpController.showTopUpForm(model);
-        assertEquals("top-up-form", viewName);
-        verify(model).addAttribute(eq("topUp"), any(TopUp.class));
-    }
 
     @Test
-    void testCreateTopUp() {
+    void testCreateTopUp_Positive() {
         TopUp topUp = new TopUp();
+        topUp.setAmount(500);
+        when(authentication.getName()).thenReturn("user");
         String redirect = topUpController.createTopUp(topUp, redirectAttributes);
         assertEquals("redirect:/topups", redirect);
         verify(topUpService).createTopUp(topUp);
-        verify(redirectAttributes).addFlashAttribute(eq("message"), eq("Top-up created successfully!"));
+        verify(redirectAttributes).addFlashAttribute("message", "Top-up created successfully!");
     }
 
     @Test
-    void testGetAllTopUps() {
-        List<TopUp> allTopUps = new ArrayList<>();
-        when(topUpService.getAllTopUps()).thenReturn(allTopUps);
-
-        String viewName = topUpController.getAllTopUps(model);
-        assertEquals("user-top-ups", viewName);
-        verify(model).addAttribute("topUps", allTopUps);
+    void testCreateTopUp_NegativeAmount() {
+        TopUp topUp = new TopUp();
+        topUp.setAmount(-100);
+        String redirect = topUpController.createTopUp(topUp, redirectAttributes);
+        assertEquals("redirect:/topups/new", redirect);
+        verify(redirectAttributes).addFlashAttribute("error", "Top up amount cannot be negative.");
     }
 
     @Test
     void testGetUserTopUps() {
         List<TopUp> userTopUps = new ArrayList<>();
-        when(topUpService.getUserTopUps("123")).thenReturn(userTopUps);
-
-        String viewName = topUpController.getUserTopUps("123", model);
+        User user = new User();
+        user.setBalance(BigDecimal.valueOf(1000));  // Convert int to BigDecimal
+        when(userService.getUserByUsername("user")).thenReturn(user);
+        when(topUpService.getUserTopUps("user")).thenReturn(userTopUps);
+        String viewName = topUpController.getUserTopUps(model);
         assertEquals("user-top-ups", viewName);
         verify(model).addAttribute("topUps", userTopUps);
+        verify(model).addAttribute("balance", BigDecimal.valueOf(1000));  // Ensure BigDecimal is used here too
     }
+
 
     @Test
-    void testDeleteTopUp() {
-        when(topUpService.deleteTopUp("1")).thenReturn(true);
-
-        String redirect = topUpController.deleteTopUp("1", redirectAttributes);
+    void testDeleteTopUp_Success() {
+        String topUpId = "1";
+        when(topUpService.deleteTopUp(topUpId)).thenReturn(true);
+        lenient().when(authentication.getName()).thenReturn("user");
+        String redirect = topUpController.deleteTopUp(topUpId, redirectAttributes);
         assertEquals("redirect:/topups", redirect);
         verify(redirectAttributes).addFlashAttribute("message", "Top-up deleted successfully.");
-        verify(topUpService).deleteTopUp("1");
     }
+
 
     @Test
     void testDeleteTopUp_Failure() {
         when(topUpService.deleteTopUp("1")).thenReturn(false);
-
         String redirect = topUpController.deleteTopUp("1", redirectAttributes);
         assertEquals("redirect:/topups", redirect);
         verify(redirectAttributes).addFlashAttribute("error", "Top-up not found or could not be deleted.");
-        verify(topUpService).deleteTopUp("1");
     }
+
+    @Test
+    void testCancelTopUp_Success() {
+        when(topUpService.cancelTopUp("2")).thenReturn(true);
+        String redirect = topUpController.cancelTopUp("2", redirectAttributes);
+        assertEquals("redirect:/topups", redirect);
+        verify(redirectAttributes).addFlashAttribute("message", "Top-up cancelled successfully.");
+    }
+
+    @Test
+    void testCancelTopUp_Failure() {
+        String topUpId = "2";
+        when(topUpService.cancelTopUp(topUpId)).thenReturn(false);
+        lenient().when(authentication.getName()).thenReturn("user");
+        String redirect = topUpController.cancelTopUp(topUpId, redirectAttributes);
+        assertEquals("redirect:/topups", redirect);
+        verify(redirectAttributes).addFlashAttribute("error", "Top-up cannot be cancelled or not found.");
+    }
+
 }
