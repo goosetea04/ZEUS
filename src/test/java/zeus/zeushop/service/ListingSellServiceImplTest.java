@@ -5,7 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,13 +13,27 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import zeus.zeushop.model.ListingSell;
 import zeus.zeushop.repository.ListingSellRepository;
+import zeus.zeushop.strategy.ListingSellStrategy;
 
 class ListingSellServiceImplTest {
 
     @Mock
     private ListingSellRepository listingSellRepository;
+
+    @Mock
+    @Qualifier("createListingSellStrategy")
+    private ListingSellStrategy createStrategy;
+
+    @Mock
+    @Qualifier("editListingSellStrategy")
+    private ListingSellStrategy editStrategy;
+
+    @Mock
+    @Qualifier("deleteListingSellStrategy")
+    private ListingSellStrategy deleteStrategy;
 
     @InjectMocks
     private ListingSellServiceImpl listingSellService;
@@ -31,8 +45,6 @@ class ListingSellServiceImplTest {
 
     @Test
     void testCreateListingSell() {
-//        String id = UUID.randomUUID().toString();
-
         ListingSell list = new ListingSell();
         list.setProduct_id(1);
         list.setProduct_name("Mini Skirt");
@@ -40,6 +52,7 @@ class ListingSellServiceImplTest {
         list.setProduct_quantity(10);
         list.setProduct_price(129000f);
 
+        doNothing().when(createStrategy).execute(list);
         when(listingSellRepository.save(list)).thenReturn(list);
         ListingSell createdList = listingSellService.create(list);
 
@@ -64,29 +77,8 @@ class ListingSellServiceImplTest {
         assertEquals(2, foundLists.size());
     }
 
-//    @Test
-//    void testFindListingSellById() {
-////        String id = UUID.randomUUID().toString();
-//
-//        ListingSell list = new ListingSell();
-//        list.setProduct_id(1);
-//        list.setProduct_name("Mini Skirt");
-//        list.setProduct_description("Lorem ipsum dolor sit amet,");
-//        list.setProduct_quantity(10);
-//        list.setProduct_price(129000f);
-//        list.setProduct_id(1);
-//
-//        when(listingSellRepository.findById(1)).thenReturn(java.util.Optional.of(list));
-//        ListingSell foundList = listingSellService.findById(1);
-//
-//        assertNotNull(foundList);
-//        assertEquals(1, foundList.getProduct_id());
-//    }
-
     @Test
-    void testEditListingSell() {
-//        String id = UUID.randomUUID().toString();
-
+    void testFindListingSellById() {
         ListingSell list = new ListingSell();
         list.setProduct_id(1);
         list.setProduct_name("Mini Skirt");
@@ -94,6 +86,23 @@ class ListingSellServiceImplTest {
         list.setProduct_quantity(10);
         list.setProduct_price(129000f);
 
+        when(listingSellRepository.findById(1)).thenReturn(Optional.of(list));
+        Optional<ListingSell> foundList = listingSellService.findById(1);
+
+        assertTrue(foundList.isPresent());
+        assertEquals(1, foundList.get().getProduct_id());
+    }
+
+    @Test
+    void testEditListingSell() {
+        ListingSell list = new ListingSell();
+        list.setProduct_id(1);
+        list.setProduct_name("Mini Skirt");
+        list.setProduct_description("Lorem ipsum dolor sit amet,");
+        list.setProduct_quantity(10);
+        list.setProduct_price(129000f);
+
+        doNothing().when(editStrategy).execute(list);
         when(listingSellRepository.save(list)).thenReturn(list);
         ListingSell editedList = listingSellService.editListingSell(1, list);
 
@@ -106,8 +115,6 @@ class ListingSellServiceImplTest {
 
     @Test
     void testDeleteListingSell() {
-//        String id = UUID.randomUUID().toString();
-
         ListingSell list = new ListingSell();
         list.setProduct_id(1);
         list.setProduct_name("Mini Skirt");
@@ -115,10 +122,61 @@ class ListingSellServiceImplTest {
         list.setProduct_quantity(10);
         list.setProduct_price(129000f);
 
-        when(listingSellRepository.findById(1)).thenReturn(java.util.Optional.of(list));
+        when(listingSellRepository.findById(1)).thenReturn(Optional.of(list));
+        doNothing().when(deleteStrategy).execute(list);
         ListingSell deletedList = listingSellService.deleteListingSell(1);
 
         assertNotNull(deletedList);
         assertEquals(1, deletedList.getProduct_id());
+    }
+
+    @Test
+    void testDeleteNonExistingListingSell() {
+        when(listingSellRepository.findById(1)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> {
+            listingSellService.deleteListingSell(1);
+        });
+    }
+
+    @Test
+    void testFindBySellerId() {
+        List<ListingSell> listingSells = new ArrayList<>();
+        ListingSell list1 = new ListingSell();
+        list1.setSellerId(123);
+        ListingSell list2 = new ListingSell();
+        list2.setSellerId(123);
+        listingSells.add(list1);
+        listingSells.add(list2);
+
+        when(listingSellRepository.findBySellerId(123)).thenReturn(listingSells);
+        List<ListingSell> foundLists = listingSellService.findBySellerId(123);
+
+        assertEquals(2, foundLists.size());
+    }
+
+    @Test
+    void testFindBySellerIdWithNoListings() {
+        when(listingSellRepository.findBySellerId(999)).thenReturn(new ArrayList<>());
+
+        List<ListingSell> foundLists = listingSellService.findBySellerId(999);
+
+        assertTrue(foundLists.isEmpty());
+    }
+
+    @Test
+    void testEditNonExistingListingSell() {
+        ListingSell list = new ListingSell();
+        list.setProduct_id(1);
+        list.setProduct_name("Mini Skirt");
+        list.setProduct_description("Lorem ipsum dolor sit amet,");
+        list.setProduct_quantity(10);
+        list.setProduct_price(129000f);
+
+        when(listingSellRepository.findById(1)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> {
+            listingSellService.editListingSell(1, list);
+        });
     }
 }
