@@ -62,7 +62,6 @@ public class ListingSellController {
         redirectAttributes.addFlashAttribute("successMessage", "Listing deleted successfully.");
         return REDIRECT_LIST;
     }
-
     @GetMapping("/edit-sell/{id}")
     public String editListingSellPage(@PathVariable Integer id, Model model) {
         Optional<ListingSell> optionalListingSell = service.findById(id);

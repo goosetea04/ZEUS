@@ -46,8 +46,12 @@
 
 <div class="container my-5">
     <h2>Sell List</h2>
+<<<<<<< HEAD
     <a th:href="@{/create-sell}" class="btn btn-primary">Create Listing</a>
     <a th:href="@{/order-lists}" class="btn btn-primary">Order List</a>
+=======
+    <a th:href="@{/list/create}" class="btn btn-primary btn-sm mb-3">Create Listing</a>
+>>>>>>> 8266908 (add the create listing sell html)
 
     <table class="table table-striped table-responsive-md">
         <thead>
@@ -60,6 +64,7 @@
         </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
         <tr th:each="list: ${listingSells}">
             <td th:text="${list.product_name}"></td>
             <td th:text="${list.product_description}"></td>
@@ -70,6 +75,16 @@
                 <form th:action="@{/delete-sell/{id}(id=${list.id})}" method="post">
                     <input type="submit" value="Delete" class="btn btn-danger" />
                 </form>
+=======
+        <tr th:each="sell: ${sells}">
+            <td th:text="${sell.name}"></td>
+            <td th:text="${sell.description}"></td>
+            <td th:text="${sell.stock}"></td>
+            <td th:text="${sell.price}"></td>
+            <td>
+                <a th:href="@{/product/delete/{id}(id=${listingSell.id})}" class="btn btn-danger">Delete</a>
+                <a th:href="@{/product/edit/{id}(id=${listingSell.id})}" class="btn btn-light">Edit</a>
+>>>>>>> 8266908 (add the create listing sell html)
             </td>
         </tr>
         </tbody>

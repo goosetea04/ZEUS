@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Create New Listing</title>
+<<<<<<< HEAD
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <style>
         body {
@@ -30,12 +31,16 @@
             border-radius: 5px;
         }
     </style>
+=======
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERd`knLPMO" crossorigin="anonymous">
+>>>>>>> 8266908 (add the create listing sell html)
 </head>
 <body>
 
 <div class="container">
     <h3>Create New Listing</h3>
 
+<<<<<<< HEAD
     <form th:action="@{/create-sell}" th:object="${listingSell}" method="post">
         <div class="form-group">
             <label for="nameInput">Name</label>
@@ -52,6 +57,24 @@
         <div class="form-group">
             <label for="priceInput">Price</label>
             <input th:field="*{product_price}" type="number" class="form-control" id="priceInput" placeholder="Enter list price">
+=======
+    <form th:action="@{/list/create}" th:object="${list}" method="post">
+        <div class="form-group">
+            <label for="nameInput">Name</label>
+            <input th:field="*{name}" type="text" class="form-control mb-4 col-4" id="nameInput" placeholder="Enter list' name">
+        </div>
+        <div class="form-group">
+            <label for="descriptionInput">Description</label>
+            <input th:field="*{description}" type="text" class="form-control" id="descriptionInput" rows="3" placeholder="Enter list' description">
+        </div>
+        <div class="form-group">
+            <label for="stockInput">Stock</label>
+            <input th:field="*{stock}" type="text" class="form-control mb-4 col-4" id="stockInput" placeholder="Enter list' stock">
+        </div>
+        <div class="form-group">
+            <label for="priceInput">Quantity</label>
+            <input th:field="*{price}" type="text" class="form-control mb-4 col-4" id="priceInput" placeholder="Enter list' price">
+>>>>>>> 8266908 (add the create listing sell html)
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
@@ -59,4 +82,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> 8266908 (add the create listing sell html)
