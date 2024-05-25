@@ -318,3 +318,11 @@ form textarea {
     width: 100%;
     margin-top: 20px;
 }
+.table.table-bordered.table-striped th,
+.table.table-bordered.table-striped td {
+    padding: 20px; /* Increase space between rows and columns */
+    border: 2px solid #ddd; /* Add border for cells */
+    text-align: left; /* Align text to left */
+    font-family: "Inria Serif", serif;
+    font-weight: 400;
+}
