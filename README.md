@@ -1,4 +1,4 @@
-Dpeloyment link: https://short-octopus-goosetea04.koyeb.app/
+Dpeloyment link: https://short-octopus-goosetea04.koyeb.app/login
 
 # Zeus Shop
 
