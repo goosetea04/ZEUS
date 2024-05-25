@@ -33,6 +33,7 @@ class TopUpServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     void testCreateSmallAmountTopUp() {
         TopUp inputTopUp = new TopUp("user1", 5, "INITIAL");
@@ -61,6 +62,19 @@ class TopUpServiceImplTest {
         assertEquals("PENDING", result.getStatus());
         verify(topUpRepository).save(result);
     }
+    @Test
+    void testCreateTopUpWithNonExistentUser() {
+        TopUp inputTopUp = new TopUp("user3", 50, "INITIAL");
+        when(userRepository.findByUsername("user3")).thenReturn(null);  // No user found
+        when(topUpRepository.save(any(TopUp.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        TopUp result = topUpService.createTopUp(inputTopUp);
+
+        assertNotNull(result, "TopUp creation should succeed even if user is not found");
+        verify(topUpRepository).save(result);
+        verify(userRepository, never()).save(any(User.class));
+    }
+
 
     @Test
     void getUserTopUps() {
@@ -103,5 +117,26 @@ class TopUpServiceImplTest {
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
         verify(topUpRepository).findAll();
+    }
+
+    @Test
+    void cancelTopUp_WhenPending_TopUpCancelled() {
+        TopUp topUp = new TopUp();
+        topUp.setStatus("PENDING");
+        when(topUpRepository.findById("123")).thenReturn(Optional.of(topUp));
+        boolean result = topUpService.cancelTopUp("123");
+        assertTrue(result, "TopUp should be cancelled since it is PENDING");
+        assertEquals("CANCELLED", topUp.getStatus(), "Status should be updated to CANCELLED");
+        verify(topUpRepository).save(topUp);
+    }
+    @Test
+    void cancelTopUp_WhenNotPending_ReturnsFalse() {
+        TopUp topUp = new TopUp();
+        topUp.setStatus("APPROVED");
+        when(topUpRepository.findById("123")).thenReturn(Optional.of(topUp));
+        boolean result = topUpService.cancelTopUp("123");
+        assertFalse(result, "TopUp should not be cancelled as it is not PENDING");
+        assertEquals("APPROVED", topUp.getStatus(), "Status should not change from APPROVED");
+        verify(topUpRepository, never()).save(topUp);
     }
 }
