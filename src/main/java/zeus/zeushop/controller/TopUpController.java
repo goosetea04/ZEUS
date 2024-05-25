@@ -50,7 +50,6 @@ public class TopUpController {
         return "redirect:/topups";
     }
 
-    // Modified to use authenticated user's ID
     @GetMapping
     public String getUserTopUps(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
