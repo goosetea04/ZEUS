@@ -50,6 +50,12 @@ public class TopUpControllerTest {
         lenient().when(authentication.getName()).thenReturn("user");
     }
 
+    @Test
+    void testShowTopUpForm() {
+        String viewName = topUpController.showTopUpForm(model);
+        assertEquals("top-up-form", viewName);
+        verify(model).addAttribute(eq("topUp"), any(TopUp.class));
+    }
 
     @Test
     void testCreateTopUp_Positive() {
@@ -75,13 +81,13 @@ public class TopUpControllerTest {
     void testGetUserTopUps() {
         List<TopUp> userTopUps = new ArrayList<>();
         User user = new User();
-        user.setBalance(BigDecimal.valueOf(1000));  // Convert int to BigDecimal
+        user.setBalance(BigDecimal.valueOf(1000));
         when(userService.getUserByUsername("user")).thenReturn(user);
         when(topUpService.getUserTopUps("user")).thenReturn(userTopUps);
         String viewName = topUpController.getUserTopUps(model);
         assertEquals("user-top-ups", viewName);
         verify(model).addAttribute("topUps", userTopUps);
-        verify(model).addAttribute("balance", BigDecimal.valueOf(1000));  // Ensure BigDecimal is used here too
+        verify(model).addAttribute("balance", BigDecimal.valueOf(1000));
     }
 
 

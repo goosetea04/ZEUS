@@ -6,8 +6,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import zeus.zeushop.model.TopUp;
+import zeus.zeushop.model.User;
 import zeus.zeushop.repository.TopUpRepository;
+import zeus.zeushop.repository.UserRepository;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -23,19 +26,40 @@ class TopUpServiceImplTest {
     @InjectMocks
     private TopUpServiceImpl topUpService;
 
+    @Mock
+    private UserRepository userRepository;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+    @Test
+    void testCreateSmallAmountTopUp() {
+        TopUp inputTopUp = new TopUp("user1", 5, "INITIAL");
+        User user = new User();
+        user.setUsername("user1");
+        user.setBalance(BigDecimal.ZERO);
+
+        when(userRepository.findByUsername("user1")).thenReturn(user);
+        when(topUpRepository.save(any(TopUp.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        TopUp result = topUpService.createTopUp(inputTopUp);
+
+        assertEquals("APPROVED", result.getStatus());
+        assertEquals(BigDecimal.valueOf(5), user.getBalance());
+        verify(topUpRepository).save(result);
+    }
 
     @Test
-    void createTopUp() {
-        TopUp topUp = new TopUp("user1", 100, "PENDING");
-        when(topUpRepository.save(any(TopUp.class))).thenReturn(topUp);
+    void testCreateBigAmountTopUp() {
+        TopUp inputTopUp = new TopUp("user2", 100, "INITIAL");
+        when(userRepository.findByUsername("user2")).thenReturn(new User());
+        when(topUpRepository.save(any(TopUp.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        TopUp savedTopUp = topUpService.createTopUp(topUp);
-        assertNotNull(savedTopUp);
-        verify(topUpRepository).save(topUp);
+        TopUp result = topUpService.createTopUp(inputTopUp);
+
+        assertEquals("PENDING", result.getStatus());
+        verify(topUpRepository).save(result);
     }
 
     @Test
