@@ -36,7 +36,7 @@
 <div class="container">
     <h3>Create New Listing</h3>
 
-    <form th:action="@{/sell/create}" th:object="${listingSell}" method="post">
+    <form th:action="@{/create-sell}" th:object="${listingSell}" method="post">
         <div class="form-group">
             <label for="nameInput">Name</label>
             <input th:field="*{product_name}" type="text" class="form-control" id="nameInput" placeholder="Enter list name">

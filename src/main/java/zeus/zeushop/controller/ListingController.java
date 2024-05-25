@@ -44,11 +44,8 @@ public class ListingController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userService.getUserByUsername(currentUsername);
-
-        List<Listing> visibleListings = listingService.getAllListings().stream()
-                .filter(listing -> listing.isVisible() && listing.getSellerId() != null && !listing.getSellerId().equals(currentUser.getId()))
-                .collect(Collectors.toList());
-        model.addAttribute("listings", visibleListings);
+        List<Listing> allListings = listingService.getAllListings();
+        model.addAttribute("listings", allListings);
         model.addAttribute("cartItem", new CartItem()); // For adding listings to cart
         return "listings";
     }

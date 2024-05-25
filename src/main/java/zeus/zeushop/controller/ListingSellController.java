@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Controller
 public class ListingSellController {
+
     private final ListingSellService service;
     private final UserService userService;
     private static final String REDIRECT_LIST = "redirect:/sell-list";
@@ -27,13 +28,13 @@ public class ListingSellController {
         this.userService = userService;
     }
 
-    @GetMapping("/create")
+    @GetMapping("/create-sell")
     public String createListingSellPage(Model model) {
         model.addAttribute("listingSell", new ListingSell());
         return "createListingSell";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create-sell")
     public String createListingSellPost(@ModelAttribute ListingSell listingSell, RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
@@ -41,7 +42,7 @@ public class ListingSellController {
         listingSell.setSellerId(currentUser.getId());
         service.create(listingSell);
         redirectAttributes.addFlashAttribute("successMessage", "Listing created successfully.");
-        return REDIRECT_LIST;
+        return "redirect:/sell-list";
     }
 
     @GetMapping("/sell-list")
@@ -55,14 +56,14 @@ public class ListingSellController {
         return "sell";
     }
 
-    @PostMapping("/delete/{id}")
+    @PostMapping("/delete-sell/{id}")
     public String deleteListingSell(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         service.deleteListingSell(id);
         redirectAttributes.addFlashAttribute("successMessage", "Listing deleted successfully.");
         return REDIRECT_LIST;
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/edit-sell/{id}")
     public String editListingSellPage(@PathVariable Integer id, Model model) {
         Optional<ListingSell> optionalListingSell = service.findById(id);
         if (optionalListingSell.isPresent()) {
@@ -73,11 +74,11 @@ public class ListingSellController {
         }
     }
 
-    @PostMapping("/edit/{id}")
+    @PostMapping("/edit-sell/{id}")
     public String editListingSellPost(@PathVariable Integer id, @ModelAttribute ListingSell listingSell, RedirectAttributes redirectAttributes) {
         listingSell.setProduct_id(id);
         service.editListingSell(id, listingSell);
         redirectAttributes.addFlashAttribute("successMessage", "Listing updated successfully.");
-        return REDIRECT_LIST;
+        return "redirect:/sell-list";
     }
 }

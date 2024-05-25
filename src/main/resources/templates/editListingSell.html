@@ -36,7 +36,7 @@
 <div class="container">
     <h3>Edit New Listing</h3>
 
-    <form th:action="@{/sell/edit/{id}(id=${listingSell.id})}" th:object="${listingSell}" method="post">
+    <form th:action="@{/edit-sell/{id}(id=${listingSell.id})}" th:object="${listingSell}" method="post">
         <div class="form-group">
             <label for="nameInput">Name</label>
             <input th:field="*{product_name}" type="text" class="form-control" id="nameInput" placeholder="Enter list name">

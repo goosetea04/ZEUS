@@ -1,25 +1,38 @@
 package zeus.zeushop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import zeus.zeushop.model.ListingSell;
 import zeus.zeushop.repository.ListingSellRepository;
-import org.springframework.stereotype.Service;
+import zeus.zeushop.strategy.ListingSellStrategy;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ListingSellServiceImpl implements ListingSellService {
+
     private final ListingSellRepository listingSellRepository;
+    private final ListingSellStrategy createStrategy;
+    private final ListingSellStrategy editStrategy;
+    private final ListingSellStrategy deleteStrategy;
 
     @Autowired
-    public ListingSellServiceImpl(ListingSellRepository listingSellRepository) {
+    public ListingSellServiceImpl(
+            ListingSellRepository listingSellRepository,
+            @Qualifier("createListingSellStrategy") ListingSellStrategy createStrategy,
+            @Qualifier("editListingSellStrategy") ListingSellStrategy editStrategy,
+            @Qualifier("deleteListingSellStrategy") ListingSellStrategy deleteStrategy) {
         this.listingSellRepository = listingSellRepository;
+        this.createStrategy = createStrategy;
+        this.editStrategy = editStrategy;
+        this.deleteStrategy = deleteStrategy;
     }
 
     @Override
     public ListingSell create(ListingSell listingSell) {
-        listingSellRepository.save(listingSell);
+        createStrategy.execute(listingSell);
         return listingSell;
     }
 
@@ -29,35 +42,23 @@ public class ListingSellServiceImpl implements ListingSellService {
     }
 
     @Override
-    public Optional<ListingSell> findById(Integer Id) {
-        return listingSellRepository.findById(Id);
+    public Optional<ListingSell> findById(Integer id) {
+        return listingSellRepository.findById(id);
     }
 
     @Override
     public ListingSell editListingSell(Integer id, ListingSell editedListingSell) {
-        Optional<ListingSell> listingData = listingSellRepository.findById(id);
-        if (listingData.isPresent()) {
-            ListingSell list = listingData.get();
-            list.setProduct_name(editedListingSell.getProduct_name());
-            list.setProduct_description(editedListingSell.getProduct_description());
-            list.setProduct_price(Math.max(0, editedListingSell.getProduct_price()));
-            list.setProduct_quantity(Math.max(0, editedListingSell.getProduct_quantity()));
-            list.setEndDate(editedListingSell.getEndDate());
-            return listingSellRepository.save(list);
-        } else {
-            return null;
-        }
+        editedListingSell.setProduct_id(id);
+        editStrategy.execute(editedListingSell);
+        return editedListingSell;
     }
 
     @Override
     public ListingSell deleteListingSell(Integer id) {
-        Optional<ListingSell> listingData = listingSellRepository.findById(id);
-        if (listingData.isPresent()) {
-            ListingSell listingToDelete = listingData.get();
-            listingSellRepository.delete(listingToDelete);
-            return listingToDelete;
-        }
-        return null;
+        ListingSell listingSell = new ListingSell();
+        listingSell.setProduct_id(id);
+        deleteStrategy.execute(listingSell);
+        return listingSell;
     }
 
     @Override
@@ -65,3 +66,4 @@ public class ListingSellServiceImpl implements ListingSellService {
         return listingSellRepository.findBySellerId(sellerId);
     }
 }
+

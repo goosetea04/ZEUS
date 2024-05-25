@@ -46,7 +46,8 @@
 
 <div class="container my-5">
     <h2>Sell List</h2>
-    <a th:href="@{/sell/create}" class="btn btn-primary">Create Listing</a>
+    <a th:href="@{/create-sell}" class="btn btn-primary">Create Listing</a>
+    <a th:href="@{/order-lists}" class="btn btn-primary">Order List</a>
 
     <table class="table table-striped table-responsive-md">
         <thead>
@@ -65,8 +66,8 @@
             <td th:text="${list.product_quantity}"></td>
             <td th:text="${list.product_price}"></td>
             <td>
-                <a th:href="@{/sell/edit/{id}(id=${list.id})}" class="btn btn-secondary">Edit</a>
-                <form th:action="@{/sell/delete/{id}(id=${list.id})}" method="post">
+                <a th:href="@{/edit-sell/{id}(id=${list.id})}" class="btn btn-secondary">Edit</a>
+                <form th:action="@{/delete-sell/{id}(id=${list.id})}" method="post">
                     <input type="submit" value="Delete" class="btn btn-danger" />
                 </form>
             </td>

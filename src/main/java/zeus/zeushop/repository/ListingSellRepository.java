@@ -1,4 +1,5 @@
 package zeus.zeushop.repository;
+import org.springframework.data.jpa.repository.Query;
 import zeus.zeushop.model.ListingSell;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
