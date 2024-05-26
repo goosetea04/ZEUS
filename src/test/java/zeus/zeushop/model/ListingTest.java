@@ -117,7 +117,7 @@ public class ListingTest {
         Listing listing = new Listing("Test Product", endDate);
 
         assertEquals("Test Product", listing.getProduct_name());
-        assertEquals(endDate, listing.getEndDate());
+        assertEquals(endDate, listing.getEnd_date());
     }
 
     @Test
