@@ -63,5 +63,41 @@ public class User implements UserDetails {
         return true;
     }
 
+    public static class Builder {
+        private final User user;
+
+        public Builder() {
+            user = new User();
+        }
+
+        public Builder withUsername(String username) {
+            user.setUsername(username);
+            return this;
+        }
+
+        public Builder withPassword(String password) {
+            user.setPassword(password);
+            return this;
+        }
+
+        public Builder withRole(String role) {
+            user.setRole(role);
+            return this;
+        }
+
+        public Builder withBalance(BigDecimal balance) {
+            user.setBalance(balance);
+            return this;
+        }
+
+        public Builder withConfirmPassword(String confirmPassword) {
+            user.setConfirmPassword(confirmPassword);
+            return this;
+        }
+
+        public User build() {
+            return user;
+        }
+    }
 
 }

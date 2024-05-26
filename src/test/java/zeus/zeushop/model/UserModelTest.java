@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import zeus.zeushop.repository.UserRepository;
 import zeus.zeushop.service.UserDetailsServiceImpl;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,6 +36,24 @@ public class UserModelTest {
         assertEquals("asdf", user.getPassword());
         assertEquals("USER", user.getRole());
     }
+
+    @Test
+    public void testUserBuilder() {
+        User user = new User.Builder()
+                .withUsername("john")
+                .withPassword("password")
+                .withRole("ADMIN")
+                .withBalance(BigDecimal.valueOf(1000))
+                .withConfirmPassword("password")
+                .build();
+
+        assertEquals("john", user.getUsername());
+        assertEquals("password", user.getPassword());
+        assertEquals("ADMIN", user.getRole());
+        assertEquals(BigDecimal.valueOf(1000), user.getBalance());
+        assertEquals("password", user.getConfirmPassword());
+    }
+
     @Test
     public void testGetAuthorities() {
         User user = new User();
