@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>My Orders</title>
+    <title>Orders</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,9 +22,7 @@
             <thead>
             <tr>
                 <th>Order ID</th>
-                <th>Listing Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
+                <th>Total Cost</th>
                 <th>Status</th>
                 <th>Created At</th>
             </tr>
@@ -32,26 +30,9 @@
             <tbody>
             <tr th:each="order : ${orders}">
                 <td th:text="${order.id}"></td>
-                <td>
-                    <ul>
-                        <li th:each="item : ${order.items}">
-                            <span th:text="${item.listing != null ? item.listing.product_name : 'N/A'}"></span>
-                        </li>
-                    </ul>
-                </td>
-                <td>
-                    <ul>
-                        <li th:each="item : ${order.items}">
-                            <span th:text="${item.quantity != null ? item.quantity : 'N/A'}"></span>
-                        </li>
-                    </ul>
-                </td>
-                <td>
-                    <ul>
-                        <li th:each="item : ${order.items}">
-                            $<span th:text="${item.price != null ? item.price : 'N/A'}"></span>
-                        </li>
-                    </ul>
+                <td th:text="${order.totalCost}"></td>
+                <td th:text="${order.status}"></td>
+                <td th:text="${order.createdAt}"></td>
             </tr>
             </tbody>
         </table>
@@ -59,6 +40,7 @@
 </div>
 </body>
 </html>
+
 
 
 

@@ -18,7 +18,6 @@
             <thead>
             <tr>
                 <th>Order ID</th>
-                <th>Listing</th>
                 <th>Total Cost</th>
                 <th>Status</th>
                 <th>Created At</th>
@@ -28,11 +27,6 @@
             <tbody>
             <tr th:each="order : ${orders}">
                 <td th:text="${order.id}"></td>
-                <td>
-                    <ul>
-                        <li th:each="item : ${order.items}" th:text="${item.listing.product_name} + ' (' + ${item.quantity} + ')'"></li>
-                    </ul>
-                </td>
                 <td th:text="${order.totalCost}"></td>
                 <td th:text="${order.status}"></td>
                 <td th:text="${order.createdAt}"></td>
@@ -53,4 +47,5 @@
 </div>
 </body>
 </html>
+
 

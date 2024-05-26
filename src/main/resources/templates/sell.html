@@ -2,80 +2,56 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sell List</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <style>
-        body {
-            background-color: #f4f4f4;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            color: #333;
-        }
-        .btn-primary {
-            background-color: #007bff;
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-        }
-        .table {
-            margin-top: 20px;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-        td {
-            vertical-align: middle;
-        }
-        .btn {
-            margin-right: 5px;
-        }
-        form {
-            display: inline;
-        }
-    </style>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
+<div th:replace="~{nav :: nav}"></div>
+<div class="container">
+    <div class="title-container">
+        <h1>Sell List</h1>
+        <a th:href="@{/create-sell}" class="add-listing-link">Create Listing</a>
+    </div>
 
-<div class="container my-5">
-    <h2>Sell List</h2>
-    <a th:href="@{/create-sell}" class="btn btn-primary">Create Listing</a>
-    <a th:href="@{/order-lists}" class="btn btn-primary">Order List</a>
+    <!-- Display error message if any -->
+    <div th:if="${error}" class="error-message">
+        <p th:text="${error}" style="color: red;"></p>
+    </div>
 
-    <table class="table table-striped table-responsive-md">
-        <thead>
-        <tr>
-            <th scope="col">Listing Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Stock Amount</th>
-            <th scope="col">Price</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="list: ${listingSells}">
-            <td th:text="${list.product_name}"></td>
-            <td th:text="${list.product_description}"></td>
-            <td th:text="${list.product_quantity}"></td>
-            <td th:text="${list.product_price}"></td>
-            <td>
-                <a th:href="@{/edit-sell/{id}(id=${list.id})}" class="btn btn-secondary">Edit</a>
-                <form th:action="@{/delete-sell/{id}(id=${list.id})}" method="post">
-                    <input type="submit" value="Delete" class="btn btn-danger" />
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>Listing Name</th>
+                <th>Description</th>
+                <th>Stock Amount</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Iterate over all listings -->
+            <tr th:each="list : ${listingSells}">
+                <td th:text="${list.product_name}"></td>
+                <td th:text="${list.product_description}"></td>
+                <td th:text="${list.product_quantity}"></td>
+                <td th:text="${list.product_price}"></td>
+                <td>
+                    <a th:href="@{/edit-sell/{id}(id=${list.product_id})}" class="styled-button">Edit</a>
+                    <form th:action="@{/delete-sell/{id}(id=${list.product_id})}" method="post" style="display: inline;">
+                        <input type="submit" value="Delete" class="styled-button" />
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
 </html>
+
+

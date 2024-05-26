@@ -1,17 +1,19 @@
 package zeus.zeushop.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.persistence.*;
 
-@Getter
-@Setter
+import java.math.BigDecimal;
+
+@Getter @Setter
 @Entity
 @Table(name = "order_items")
 public class OrderItem {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
@@ -22,10 +24,11 @@ public class OrderItem {
     private Listing listing;
 
     private int quantity;
-    private Float price;
+    private BigDecimal price;
 
-    public OrderItem() {
-    }
+    // Constructors, getters, and setters
 }
+
+
 
 

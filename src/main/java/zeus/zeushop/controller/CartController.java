@@ -17,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
 
-
-
 @Controller
 public class CartController {
 
@@ -94,26 +92,27 @@ public class CartController {
             return "redirect:/cart";
         }
 
-        // Create a new order
+        BigDecimal totalCost = cartItems.stream()
+                .map(item -> BigDecimal.valueOf(item.getListing().getProduct_price())
+                        .multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         Order order = new Order();
         order.setUser(currentUser);
+        order.setTotalCost(totalCost);
         order.setStatus("CREATED");
 
-        // Assuming all items in the cart are from the same seller for simplicity
-        Integer sellerId = cartItems.get(0).getListing().getSellerId();
-        User seller = userService.getUserById(sellerId); // Fetch the User entity based on sellerId
-        order.setSeller(seller);
+        order = orderService.createOrder(order);
 
         for (CartItem cartItem : cartItems) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setListing(cartItem.getListing());
             orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setPrice(cartItem.getListing().getProduct_price());
-            order.getItems().add(orderItem); // Ensure items are added to the initialized list
+            orderItem.setPrice(cartItem.getPrice());
+            orderService.createOrder(order);
         }
 
-        orderService.createOrder(order);
         shoppingCartService.clearCartItemsByBuyerId(currentUser.getId());
 
         redirectAttributes.addFlashAttribute("success", "Order created successfully.");
@@ -126,7 +125,7 @@ public class CartController {
         String currentUsername = authentication.getName();
         User currentUser = userService.getUserByUsername(currentUsername);
 
-        List<Order> orders = orderService.getOrdersByUserId(currentUser.getId());
+        List<Order> orders = orderService.getOrdersByUserId(Long.valueOf(currentUser.getId()));
         model.addAttribute("orders", orders);
 
         return "orders";

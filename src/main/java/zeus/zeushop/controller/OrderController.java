@@ -7,10 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import zeus.zeushop.model.Order;
-import zeus.zeushop.model.User;
-import zeus.zeushop.service.OrderService;
-import zeus.zeushop.service.UserService;
+import zeus.zeushop.model.*;
+import zeus.zeushop.service.*;
 
 import java.util.List;
 
@@ -30,16 +28,18 @@ public class OrderController {
         String currentUsername = authentication.getName();
         User currentUser = userService.getUserByUsername(currentUsername);
 
-        List<Order> orders = orderService.getOrdersBySellerId(currentUser.getId());
+        List<Order> orders = orderService.getOrdersByUserId(Long.valueOf(currentUser.getId()));
         model.addAttribute("orders", orders);
 
         return "manage-orders";
     }
 
     @PostMapping("/update-order-status/{id}")
-    public String updateOrderStatus(@PathVariable Integer id, @RequestParam("status") String status, RedirectAttributes redirectAttributes) {
+    public String updateOrderStatus(@PathVariable Long id, @RequestParam("status") String status, RedirectAttributes redirectAttributes) {
         orderService.updateOrderStatus(id, status);
         redirectAttributes.addFlashAttribute("success", "Order status updated successfully.");
         return "redirect:/orders/manage";
     }
 }
+
+

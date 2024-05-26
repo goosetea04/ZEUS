@@ -7,7 +7,8 @@ import zeus.zeushop.model.Order;
 import java.util.List;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Order, Integer> {
-    List<Order> findByUserId(Integer userId);
-    List<Order> findBySellerId(Integer sellerId);
+public interface OrderRepository extends JpaRepository<Order, Long> {
+    List<Order> findByUserId(Long userId);
 }
+
+

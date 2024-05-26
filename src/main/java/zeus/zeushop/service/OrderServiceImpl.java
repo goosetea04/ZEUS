@@ -3,7 +3,9 @@ package zeus.zeushop.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import zeus.zeushop.model.Order;
+import zeus.zeushop.model.OrderItem;
 import zeus.zeushop.repository.OrderRepository;
+import zeus.zeushop.repository.OrderItemRepository;
 
 import java.util.List;
 
@@ -13,28 +15,26 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
     @Override
     public Order createOrder(Order order) {
         return orderRepository.save(order);
     }
 
     @Override
-    public List<Order> getOrdersByUserId(Integer userId) {
+    public List<Order> getOrdersByUserId(Long userId) {
         return orderRepository.findByUserId(userId);
     }
 
     @Override
-    public List<Order> getOrdersBySellerId(Integer sellerId) {
-        return orderRepository.findBySellerId(sellerId);
-    }
-
-    @Override
-    public Order getOrderById(Integer id) {
+    public Order getOrderById(Long id) {
         return orderRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Order updateOrderStatus(Integer id, String status) {
+    public Order updateOrderStatus(Long id, String status) {
         Order order = orderRepository.findById(id).orElse(null);
         if (order != null) {
             order.setStatus(status);
@@ -43,3 +43,4 @@ public class OrderServiceImpl implements OrderService {
         return null;
     }
 }
+
