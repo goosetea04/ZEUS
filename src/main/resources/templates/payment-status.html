@@ -10,15 +10,16 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: #f4f4f4;
+      background-color: #F5F0E0;
     }
     .container {
       max-width: 600px;
       margin: auto;
-      background: white;
+      background: #EFEAE0;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      background: #EFEAE0;
     }
     h1 {
       color: #333;
@@ -31,10 +32,16 @@
       text-align: center;
     }
     .success {
-      background-color: #4CAF50;
+      font-size: 30px;
+      color: black;
+      font-weight: bold;
+      font-family: Arial, sans-serif;
     }
     .error {
-      background-color: #f44336;
+      font-size: 30px;
+      font-family: Arial, sans-serif;
+      color: black;
+      font-weight: bold;
     }
     a {
       display: inline-block;
@@ -48,6 +55,14 @@
     a:hover {
       background-color: #0056b3;
     }
+
+    .return-cart{
+      background: black;
+    }
+
+    .return-cart:hover{
+      background: dimgrey;
+    }
   </style>
 </head>
 <body>
@@ -59,7 +74,7 @@
   <div th:if="${errorMessage}" class="message error" th:text="${errorMessage}">
     Something went wrong with your payment.
   </div>
-  <a href="/cart">Return to Cart</a>
+  <a class="return-cart" href="/cart">Return to Cart</a>
 </div>
 </body>
 </html>

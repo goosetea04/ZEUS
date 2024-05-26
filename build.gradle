@@ -68,5 +68,6 @@ sonar {
         property("sonar.organization", "goosetea04")
         property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.junit.reportPaths", "${project.buildDir}/test-results/test")
+        property("sonar.exclusions", "**/config/**")
     }
 }

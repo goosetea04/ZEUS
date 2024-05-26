@@ -9,6 +9,35 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        /* ensure table borders are collapsed and spacing within cells is minimized */
+        .table-container table {
+            border-collapse: collapse;
+        }
+
+        .table-container th, .table-container td {
+            padding: 8px 10px;
+        }
+
+        /* Reduce margin around buttons */
+        .a-styled-button {
+            margin: 0px;
+            padding: 6px 12px;
+        }
+
+        .table-container form {
+            margin-bottom: 0;
+        }
+        .table-container tr {
+            border-bottom: 2px solid #ccc; /* grey line */
+        }
+
+        .balance-display{
+            margin-bottom: 15px;
+        }
+
+
+    </style>
 </head>
 <body>
 <div th:replace="~{nav :: nav}"></div>
@@ -24,8 +53,9 @@
 <div class="table-container">
 <table>
     <thead>
-    <tr>
-        <th>ID</th>
+    <tr >
+
+        <th>No</th>
         <th>AMOUNT</th>
         <th>STATUS</th>
         <th>CREATED AT</th>
@@ -33,8 +63,9 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="topUp : ${topUps}">
-        <td th:text="${topUp.topUpId}"></td>
+    <tr th:each="topUp, stat : ${topUps}">
+
+        <td th:text="${stat.index + 1}"></td>
         <td th:text="${topUp.amount}"></td>
         <td th:text="${topUp.status}"></td>
         <td th:text="${topUp.formattedCreatedAt}"></td>
