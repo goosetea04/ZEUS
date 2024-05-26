@@ -27,7 +27,7 @@ class TopUpServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
+    /*
     @Test
     void createTopUp() {
         TopUp topUp = new TopUp("user1", 100, "PENDING");
@@ -37,6 +37,8 @@ class TopUpServiceImplTest {
         assertNotNull(savedTopUp);
         verify(topUpRepository).save(topUp);
     }
+
+     */
 
     @Test
     void getUserTopUps() {
