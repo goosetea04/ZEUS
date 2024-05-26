@@ -32,7 +32,6 @@ public class ShoppingCartServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        // You can add any setup logic here if needed
     }
 
     @Test
@@ -133,5 +132,31 @@ public class ShoppingCartServiceImplTest {
         assertEquals("PENDING", cartItem2.getStatus());
         verify(cartItemRepository, times(1)).save(cartItem1);
         verify(cartItemRepository, times(1)).save(cartItem2);
+    }
+    @Test
+    void testClearCartItemsByBuyerId_NoItems() {
+        Integer buyerId = 123;
+        List<CartItem> emptyCartItems = new ArrayList<>();
+
+        when(cartItemRepository.findByBuyerId(buyerId)).thenReturn(emptyCartItems);
+
+        shoppingCartService.clearCartItemsByBuyerId(buyerId);
+
+        verify(cartItemRepository, times(1)).findByBuyerId(buyerId);
+        verify(cartItemRepository, times(1)).deleteAll(emptyCartItems);
+    }
+
+    @Test
+    void testClearCartItemsByBuyerId_Exception() {
+        Integer buyerId = 123;
+
+        when(cartItemRepository.findByBuyerId(buyerId)).thenThrow(new RuntimeException("Database error"));
+
+        assertThrows(RuntimeException.class, () -> {
+            shoppingCartService.clearCartItemsByBuyerId(buyerId);
+        });
+
+        verify(cartItemRepository, times(1)).findByBuyerId(buyerId);
+        verify(cartItemRepository, never()).deleteAll(anyList());
     }
 }
