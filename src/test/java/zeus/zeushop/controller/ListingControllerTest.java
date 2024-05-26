@@ -1,7 +1,6 @@
 package zeus.zeushop.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 import zeus.zeushop.service.PaymentService;
 
@@ -9,8 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Captor;
-import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -22,12 +19,11 @@ import zeus.zeushop.service.ListingService;
 import zeus.zeushop.service.ShoppingCartService;
 import zeus.zeushop.service.UserService;
 import zeus.zeushop.repository.ListingRepository;
-import zeus.zeushop.repository.CartItemRepository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,12 +34,6 @@ public class ListingControllerTest {
 
     @Mock
     private UserService userService;
-
-    @Captor
-    private ArgumentCaptor<String> keyCaptor;
-
-    @Captor
-    private ArgumentCaptor<Object> valueCaptor;
 
     @Mock
     private ShoppingCartService shoppingCartService;
@@ -59,9 +49,6 @@ public class ListingControllerTest {
 
     @Mock
     private ListingRepository listingRepository;
-
-    @Mock
-    private CartItemRepository cartItemRepository;
 
     @InjectMocks
     private ListingController listingController;
@@ -84,7 +71,6 @@ public class ListingControllerTest {
 
     @Test
     public void testGetAllListings() {
-        // Arrange
         User currentUser = new User();
         currentUser.setId(1);
         when(authentication.getName()).thenReturn("user");
@@ -104,10 +90,8 @@ public class ListingControllerTest {
 
         when(listingService.getAllListings()).thenReturn(listings);
 
-        // Act
         String viewName = listingController.getAllListings(model);
 
-        // Assert
         assertEquals("listings", viewName);
         List<Listing> visibleListings = (List<Listing>) model.getAttribute("listings");
         assertNotNull(visibleListings);
@@ -116,7 +100,6 @@ public class ListingControllerTest {
 
     @Test
     public void testAddToCart() {
-        // Arrange
         User currentUser = new User();
         currentUser.setId(1);
         when(authentication.getName()).thenReturn("user");
@@ -130,27 +113,22 @@ public class ListingControllerTest {
         CartItem cartItem = new CartItem();
         cartItem.setQuantity(5);
 
-        // Act
         String viewName = listingController.addToCart(cartItem, 1, model);
 
-        // Assert
         assertEquals("redirect:/listings", viewName);
         verify(shoppingCartService, times(1)).addListingToCart(listing, 5, 1);
     }
 
     @Test
     public void testShowAddListingForm() {
-        // Act
         String viewName = listingController.showAddListingForm(model);
 
-        // Assert
         assertEquals("add-listing", viewName);
         assertTrue(model.containsAttribute("listing"));
     }
 
     @Test
     public void testSaveListing() {
-        // Arrange
         User currentUser = new User();
         currentUser.setId(1);
         when(authentication.getName()).thenReturn("user");
@@ -160,31 +138,25 @@ public class ListingControllerTest {
         listing.setProduct_quantity(10);
         listing.setProduct_price(100.0f);
 
-        // Act
         String viewName = listingController.saveListing(listing, model);
 
-        // Assert
         assertEquals("redirect:/manage-listings", viewName);
         verify(listingService, times(1)).createListing(listing);
     }
 
     @Test
     public void testShowUpdateListingForm() {
-        // Arrange
         Listing listing = new Listing();
         when(listingService.getListingById(1L)).thenReturn(Optional.of(listing));
 
-        // Act
         String viewName = listingController.showUpdateListingForm(1, model);
 
-        // Assert
         assertEquals("update-listing", viewName);
         assertTrue(model.containsAttribute("listing"));
     }
 
     @Test
     public void testUpdateListing() {
-        // Arrange
         Listing listing = new Listing();
         listing.setProduct_id(1);
         when(listingService.getListingById(1L)).thenReturn(Optional.of(listing));
@@ -195,17 +167,14 @@ public class ListingControllerTest {
         updatedListing.setProduct_description("Updated Description");
         updatedListing.setProduct_price(200.0f);
 
-        // Act
         String viewName = listingController.updateListing(updatedListing, 1L, model);
 
-        // Assert
         assertEquals("redirect:/listings", viewName);
         verify(listingService, times(1)).updateListing(1L, listing);
     }
 
     @Test
     public void testManageListings() {
-        // Arrange
         User currentUser = new User();
         currentUser.setId(1);
         when(authentication.getName()).thenReturn("user");
@@ -214,52 +183,42 @@ public class ListingControllerTest {
         List<Listing> userListings = new ArrayList<>();
         when(listingService.getListingsBySellerId(1)).thenReturn(userListings);
 
-        // Act
         String viewName = listingController.manageListings(model);
 
-        // Assert
         assertEquals("manage-listings", viewName);
         assertTrue(model.containsAttribute("listings"));
     }
 
     @Test
     public void testDeleteListing() {
-        // Act
         String viewName = listingController.deleteListing(1L);
 
-        // Assert
         assertEquals("redirect:/manage-listings", viewName);
         verify(listingService, times(1)).deleteListing(1L);
     }
 
     @Test
     public void testShowProductDetails() {
-        // Arrange
         Listing listing = new Listing();
         when(listingService.getListingById(1L)).thenReturn(Optional.of(listing));
 
-        // Act
         String viewName = listingController.showProductDetails(1, model);
 
-        // Assert
         assertEquals("product", viewName);
         assertTrue(model.containsAttribute("listing"));
     }
 
     @Test
     public void testShowCart() {
-        // Mocking the authenticated user
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn("user123");
 
-        // Mocking user service
         User user = new User();
         user.setId(1);
         user.setUsername("user123");
         user.setBalance(BigDecimal.valueOf(1000));
         when(userService.getUserByUsername("user123")).thenReturn(user);
 
-        // Mocking cart items
         CartItem item1 = new CartItem();
         item1.setQuantity(2);
         item1.setListing(new Listing());
@@ -273,13 +232,10 @@ public class ListingControllerTest {
         List<CartItem> cartItems = Arrays.asList(item1, item2);
         when(shoppingCartService.getCartItemsByBuyerId(1)).thenReturn(cartItems);
 
-        // Mocking payment service
         when(paymentService.getLatestPaymentStatus(1)).thenReturn("APPROVED");
 
-        // Call the method under test
         String viewName = cartController.showCart(model, null);
 
-        // Assert the model attributes
         assertEquals("cart", viewName);
         assertEquals(cartItems, model.getAttribute("cartItems"));
         assertEquals(BigDecimal.valueOf(400.0), model.getAttribute("totalCost"));
@@ -288,6 +244,72 @@ public class ListingControllerTest {
     }
 
     @Test
+    void testFeatureListingGet() {
+        when(listingService.getListingById(any(Long.class))).thenReturn(Optional.of(new Listing()));
+
+        String result = listingController.showFeatureListingForm(1, model);
+
+        assertEquals("feature-listing", result);
+        verify(model).addAttribute(eq("listing"), any(Listing.class));
+    }
+
+    @Test
+    void testFeatureListingGetFail() {
+        when(listingService.getListingById(any(Long.class))).thenReturn(Optional.empty());
+
+        String result = listingController.showFeatureListingForm(1, model);
+
+        assertEquals("redirect:/listings", result);
+    }
+    @Test
+    void testFeatureListing() {
+        Listing featuredListing = new Listing();
+        featuredListing.setEnd_date(LocalDateTime.of(2024, 1, 1, 1, 1));
+
+        when(listingService.getListingById(any(Long.class))).thenReturn(Optional.of(new Listing()));
+
+        when(listingService.updateListing(eq(1L), any(Listing.class))).thenReturn(featuredListing);
+
+        String result = listingController.featureListing(featuredListing, 1L, model);
+
+        assertEquals("redirect:/listings", result);
+        verify(listingService).updateListing(eq(1L), any(Listing.class));
+    }
+
+    @Test
+    void testFeatureListingFail() {
+        when(listingService.getListingById(any(Long.class))).thenReturn(Optional.empty());
+
+        String result = listingController.featureListing(new Listing(), 1L, model);
+
+        assertEquals("redirect:/listings", result);
+        verify(listingService, never()).updateListing(anyLong(), any(Listing.class));
+    }
+
+    @Test
+    void testDeleteFeatureListing() {
+        Listing featuredListing = new Listing();
+        featuredListing.setEnd_date(LocalDateTime.of(2024, 1, 1, 1, 1));
+
+        when(listingService.getListingById(any(Long.class))).thenReturn(Optional.of(new Listing()));
+
+        when(listingService.updateListing(eq(1L), any(Listing.class))).thenReturn(featuredListing);
+
+        String result = listingController.deleteFeatureListing(new Listing(), 1L, model);
+
+        assertEquals("redirect:/listings", result);
+        verify(listingService).updateListing(eq(1L), any(Listing.class));
+    }
+
+    @Test
+    void testDeleteFeatureListingFail() {
+        when(listingService.getListingById(any(Long.class))).thenReturn(Optional.empty());
+
+        String result = listingController.deleteFeatureListing(new Listing(), 1L, model);
+
+        assertEquals("redirect:/listings", result);
+        verify(listingService, never()).updateListing(anyLong(), any(Listing.class));
+    }
     public void testAddToCartWithInvalidQuantity() {
         // Arrange
         User currentUser = new User();

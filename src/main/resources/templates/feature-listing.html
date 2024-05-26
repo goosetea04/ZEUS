@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Listing</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{nav :: nav}"></div>
+<div class="container">
+    <h1>Set Feature Listing Time</h1>
+    <!-- Update Listing Form -->
+    <div class="card-container">
+        <form id="featureListingForm" action="/feature-listing" method="post">
+            <input type="hidden" id="productId" name="id" th:value="${listing.id}" />
+            <div class="form-group">
+                <label for="endDate">Time:</label>
+                <input type="datetime-local" id="endDate" name="end_date" th:value="${listing.end_date}" required>
+            </div>
+            <div class="button-container">
+                <button type="submit" class="a-styled-button" style="width:25%">Set Time</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
