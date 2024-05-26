@@ -16,7 +16,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id") // Make sure this matches your database schema
+    @Column(name = "user_id")
     private Integer userId;
 
     @Column(name = "amount")
