@@ -6,8 +6,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import zeus.zeushop.model.TopUp;
+import zeus.zeushop.model.User;
 import zeus.zeushop.repository.TopUpRepository;
+import zeus.zeushop.repository.UserRepository;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -23,22 +26,57 @@ class TopUpServiceImplTest {
     @InjectMocks
     private TopUpServiceImpl topUpService;
 
+    @Mock
+    private UserRepository userRepository;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
     /*
     @Test
-    void createTopUp() {
-        TopUp topUp = new TopUp("user1", 100, "PENDING");
-        when(topUpRepository.save(any(TopUp.class))).thenReturn(topUp);
+    void testCreateSmallAmountTopUp() {
+        TopUp inputTopUp = new TopUp("user1", 5, "INITIAL");
+        User user = new User();
+        user.setUsername("user1");
+        user.setBalance(BigDecimal.ZERO);
 
-        TopUp savedTopUp = topUpService.createTopUp(topUp);
-        assertNotNull(savedTopUp);
-        verify(topUpRepository).save(topUp);
+        when(userRepository.findByUsername("user1")).thenReturn(user);
+        when(topUpRepository.save(any(TopUp.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        TopUp result = topUpService.createTopUp(inputTopUp);
+
+        assertEquals("APPROVED", result.getStatus());
+        assertEquals(BigDecimal.valueOf(5), user.getBalance());
+        verify(topUpRepository).save(result);
     }
 
      */
+
+    @Test
+    void testCreateBigAmountTopUp() {
+        TopUp inputTopUp = new TopUp("user2", 100, "INITIAL");
+        when(userRepository.findByUsername("user2")).thenReturn(new User());
+        when(topUpRepository.save(any(TopUp.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        TopUp result = topUpService.createTopUp(inputTopUp);
+
+        assertEquals("PENDING", result.getStatus());
+        verify(topUpRepository).save(result);
+    }
+    @Test
+    void testCreateTopUpWithNonExistentUser() {
+        TopUp inputTopUp = new TopUp("user3", 50, "INITIAL");
+        when(userRepository.findByUsername("user3")).thenReturn(null);  // No user found
+        when(topUpRepository.save(any(TopUp.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        TopUp result = topUpService.createTopUp(inputTopUp);
+
+        assertNotNull(result, "TopUp creation should succeed even if user is not found");
+        verify(topUpRepository).save(result);
+        verify(userRepository, never()).save(any(User.class));
+    }
+
 
     @Test
     void getUserTopUps() {
@@ -81,5 +119,26 @@ class TopUpServiceImplTest {
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
         verify(topUpRepository).findAll();
+    }
+
+    @Test
+    void cancelTopUp_WhenPending_TopUpCancelled() {
+        TopUp topUp = new TopUp();
+        topUp.setStatus("PENDING");
+        when(topUpRepository.findById("123")).thenReturn(Optional.of(topUp));
+        boolean result = topUpService.cancelTopUp("123");
+        assertTrue(result, "TopUp should be cancelled since it is PENDING");
+        assertEquals("CANCELLED", topUp.getStatus(), "Status should be updated to CANCELLED");
+        verify(topUpRepository).save(topUp);
+    }
+    @Test
+    void cancelTopUp_WhenNotPending_ReturnsFalse() {
+        TopUp topUp = new TopUp();
+        topUp.setStatus("APPROVED");
+        when(topUpRepository.findById("123")).thenReturn(Optional.of(topUp));
+        boolean result = topUpService.cancelTopUp("123");
+        assertFalse(result, "TopUp should not be cancelled as it is not PENDING");
+        assertEquals("APPROVED", topUp.getStatus(), "Status should not change from APPROVED");
+        verify(topUpRepository, never()).save(topUp);
     }
 }

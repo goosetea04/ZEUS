@@ -26,8 +26,8 @@ public class TopUpServiceImpl implements TopUpService {
 
 
     @Autowired
-    public TopUpServiceImpl(TopUpRepository topUpRepository) {
-
+    public TopUpServiceImpl(UserRepository userRepository, TopUpRepository topUpRepository) {
+        this.userRepository = userRepository;
         this.topUpRepository = topUpRepository;
     }
 
