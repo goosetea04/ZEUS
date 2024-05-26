@@ -16,7 +16,6 @@ import zeus.zeushop.service.strategies.ApprovePaymentStrategy;
 import zeus.zeushop.service.strategies.ApproveTopUpStrategy;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.mockito.Mockito.*;
@@ -32,8 +31,6 @@ public class StaffBoardServiceImplTest {
     private TopUpRepository topUpRepository;
     @Mock
     private PaymentRepository paymentRepository;
-    @Mock
-    private UserRepository userRepository;
 
     @Mock
     private ApproveTopUpStrategy approveTopUpStrategy;  // Mock the strategy
@@ -78,13 +75,6 @@ public class StaffBoardServiceImplTest {
         payment2.setAmount(new BigDecimal("600.00"));
         payment2.setStatus("PENDING");
     }
-//    @Test
-//    void testPositiveApproveTopUp() {
-//        //make test positive approve topup using approve strategy
-//        when(topUpRepository.findById("3L")).thenReturn(Optional.of(topUp1));
-//        when(userRepository.findById(1)).thenReturn(Optional.of(user1));
-//        when(approveTopUpStrategy.execute(topUp1)).thenReturn(true);
-//    }
     @Test
     void testNegativeApproveTopUp(){
         when(topUpRepository.findById("3L")).thenReturn(Optional.empty());
@@ -218,27 +208,6 @@ public class StaffBoardServiceImplTest {
         verify(paymentRepository).findById(paymentId);
         verify(approvePaymentStrategy).execute(payment);
     }
-//    @Test
-//    void testPositiveApprovePayment(){
-//        when(paymentRepository.findById(1L)).thenReturn(Optional.of(payment1));
-//        when(userRepository.findById(1)).thenReturn(Optional.of(user1));
-//
-//        assertTrue(staffBoardService.approvePayment(1L));
-//        assertEquals("APPROVED", payment1.getStatus());
-//        assertEquals(0, new BigDecimal("400.00").compareTo(user1.getBalance()));
-//        verify(paymentRepository).save(payment1);
-//    }
-
-//    @Test
-//    void testNegativeApprovePayment_InsufficientFunds(){
-//        when(paymentRepository.findById(2L)).thenReturn(Optional.of(payment2));
-//        when(userRepository.findById(1)).thenReturn(Optional.of(user1));
-//
-//        assertFalse(staffBoardService.approvePayment(2L));
-//        assertEquals("REJECTED", payment2.getStatus());
-//        assertEquals(0, new BigDecimal("500.00").compareTo(user1.getBalance())); // Balance should not change
-//        verify(paymentRepository).save(payment2);
-//    }
 
     @Test
     void testNegativeApprovePayment_NotFound(){

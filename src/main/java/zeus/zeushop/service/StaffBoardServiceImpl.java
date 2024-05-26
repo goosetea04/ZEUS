@@ -6,8 +6,6 @@ import zeus.zeushop.model.Payment;
 import zeus.zeushop.model.TopUp;
 import zeus.zeushop.repository.PaymentRepository;
 import zeus.zeushop.repository.TopUpRepository;
-import zeus.zeushop.repository.UserRepository;
-import zeus.zeushop.service.strategies.AdministrativeAction;
 import zeus.zeushop.service.strategies.ApprovePaymentStrategy;
 import zeus.zeushop.service.strategies.ApproveTopUpStrategy;
 
