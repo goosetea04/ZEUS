@@ -33,7 +33,7 @@ public class ListingServiceImplTest {
         when(listingRepository.findById(id)).thenReturn(Optional.of(listing));
         when(listingRepository.save(listing)).thenReturn(listing);
 
-        Listing updatedListing = listingService.updateListing(id.longValue(), listing);
+        Listing updatedListing = listingService.updateListing(id, listing);
 
         assertEquals(listing, updatedListing);
         verify(listingRepository, times(1)).findById(id);
@@ -46,7 +46,7 @@ public class ListingServiceImplTest {
         Listing listing = new Listing();
         when(listingRepository.findById(id)).thenReturn(Optional.empty());
 
-        Listing updatedListing = listingService.updateListing(id.longValue(), listing);
+        Listing updatedListing = listingService.updateListing(id, listing);
 
         assertNull(updatedListing);
         verify(listingRepository, times(1)).findById(id);
@@ -58,7 +58,7 @@ public class ListingServiceImplTest {
         Integer id = 1;
         doNothing().when(listingRepository).deleteById(id);
 
-        assertDoesNotThrow(() -> listingService.deleteListing(id.longValue()));
+        assertDoesNotThrow(() -> listingService.deleteListing(id));
         verify(listingRepository, times(1)).deleteById(id);
     }
 
@@ -67,7 +67,7 @@ public class ListingServiceImplTest {
         Integer id = 1;
         doThrow(RuntimeException.class).when(listingRepository).deleteById(id);
 
-        assertThrows(RuntimeException.class, () -> listingService.deleteListing(id.longValue()));
+        assertThrows(RuntimeException.class, () -> listingService.deleteListing(id));
         verify(listingRepository, times(1)).deleteById(id);
     }
 
@@ -77,7 +77,7 @@ public class ListingServiceImplTest {
         Listing listing = new Listing();
         when(listingRepository.findById(id)).thenReturn(Optional.of(listing));
 
-        Optional<Listing> result = listingService.getListingById(id.longValue());
+        Optional<Listing> result = listingService.getListingById(id);
 
         assertTrue(result.isPresent());
         assertEquals(listing, result.get());
@@ -89,7 +89,7 @@ public class ListingServiceImplTest {
         Integer id = 1;
         when(listingRepository.findById(id)).thenReturn(Optional.empty());
 
-        Optional<Listing> result = listingService.getListingById(id.longValue());
+        Optional<Listing> result = listingService.getListingById(id);
 
         assertFalse(result.isPresent());
         verify(listingRepository, times(1)).findById(id);

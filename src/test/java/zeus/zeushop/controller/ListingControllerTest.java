@@ -147,7 +147,7 @@ public class ListingControllerTest {
     @Test
     public void testShowUpdateListingForm() {
         Listing listing = new Listing();
-        when(listingService.getListingById(1L)).thenReturn(Optional.of(listing));
+        when(listingService.getListingById(1)).thenReturn(Optional.of(listing));
 
         String viewName = listingController.showUpdateListingForm(1, model);
 
@@ -159,7 +159,7 @@ public class ListingControllerTest {
     public void testUpdateListing() {
         Listing listing = new Listing();
         listing.setProduct_id(1);
-        when(listingService.getListingById(1L)).thenReturn(Optional.of(listing));
+        when(listingService.getListingById(1)).thenReturn(Optional.of(listing));
 
         Listing updatedListing = new Listing();
         updatedListing.setProduct_name("Updated Name");
@@ -167,10 +167,10 @@ public class ListingControllerTest {
         updatedListing.setProduct_description("Updated Description");
         updatedListing.setProduct_price(200.0f);
 
-        String viewName = listingController.updateListing(updatedListing, 1L, model);
+        String viewName = listingController.updateListing(updatedListing, 1, model);
 
         assertEquals("redirect:/listings", viewName);
-        verify(listingService, times(1)).updateListing(1L, listing);
+        verify(listingService, times(1)).updateListing(1, listing);
     }
 
     @Test
@@ -191,16 +191,16 @@ public class ListingControllerTest {
 
     @Test
     public void testDeleteListing() {
-        String viewName = listingController.deleteListing(1L);
+        String viewName = listingController.deleteListing(1);
 
         assertEquals("redirect:/manage-listings", viewName);
-        verify(listingService, times(1)).deleteListing(1L);
+        verify(listingService, times(1)).deleteListing(1);
     }
 
     @Test
     public void testShowProductDetails() {
         Listing listing = new Listing();
-        when(listingService.getListingById(1L)).thenReturn(Optional.of(listing));
+        when(listingService.getListingById(1)).thenReturn(Optional.of(listing));
 
         String viewName = listingController.showProductDetails(1, model);
 
@@ -245,7 +245,7 @@ public class ListingControllerTest {
 
     @Test
     void testFeatureListingGet() {
-        when(listingService.getListingById(any(Long.class))).thenReturn(Optional.of(new Listing()));
+        when(listingService.getListingById(any(Integer.class))).thenReturn(Optional.of(new Listing()));
 
         String result = listingController.showFeatureListingForm(1, model);
 
@@ -255,7 +255,7 @@ public class ListingControllerTest {
 
     @Test
     void testFeatureListingGetFail() {
-        when(listingService.getListingById(any(Long.class))).thenReturn(Optional.empty());
+        when(listingService.getListingById(any(Integer.class))).thenReturn(Optional.empty());
 
         String result = listingController.showFeatureListingForm(1, model);
 
@@ -266,24 +266,24 @@ public class ListingControllerTest {
         Listing featuredListing = new Listing();
         featuredListing.setEnd_date(LocalDateTime.of(2024, 1, 1, 1, 1));
 
-        when(listingService.getListingById(any(Long.class))).thenReturn(Optional.of(new Listing()));
+        when(listingService.getListingById(any(Integer.class))).thenReturn(Optional.of(new Listing()));
 
-        when(listingService.updateListing(eq(1L), any(Listing.class))).thenReturn(featuredListing);
+        when(listingService.updateListing(eq(1), any(Listing.class))).thenReturn(featuredListing);
 
-        String result = listingController.featureListing(featuredListing, 1L, model);
+        String result = listingController.featureListing(featuredListing, 1, model);
 
         assertEquals("redirect:/listings", result);
-        verify(listingService).updateListing(eq(1L), any(Listing.class));
+        verify(listingService).updateListing(eq(1), any(Listing.class));
     }
 
     @Test
     void testFeatureListingFail() {
-        when(listingService.getListingById(any(Long.class))).thenReturn(Optional.empty());
+        when(listingService.getListingById(any(Integer.class))).thenReturn(Optional.empty());
 
-        String result = listingController.featureListing(new Listing(), 1L, model);
+        String result = listingController.featureListing(new Listing(), 1, model);
 
         assertEquals("redirect:/listings", result);
-        verify(listingService, never()).updateListing(anyLong(), any(Listing.class));
+        verify(listingService, never()).updateListing(any(Integer.class), any(Listing.class));
     }
 
     @Test
@@ -291,24 +291,24 @@ public class ListingControllerTest {
         Listing featuredListing = new Listing();
         featuredListing.setEnd_date(LocalDateTime.of(2024, 1, 1, 1, 1));
 
-        when(listingService.getListingById(any(Long.class))).thenReturn(Optional.of(new Listing()));
+        when(listingService.getListingById(any(Integer.class))).thenReturn(Optional.of(new Listing()));
 
-        when(listingService.updateListing(eq(1L), any(Listing.class))).thenReturn(featuredListing);
+        when(listingService.updateListing(eq(1), any(Listing.class))).thenReturn(featuredListing);
 
-        String result = listingController.deleteFeatureListing(new Listing(), 1L, model);
+        String result = listingController.deleteFeatureListing(new Listing(), 1, model);
 
         assertEquals("redirect:/listings", result);
-        verify(listingService).updateListing(eq(1L), any(Listing.class));
+        verify(listingService).updateListing(eq(1), any(Listing.class));
     }
 
     @Test
     void testDeleteFeatureListingFail() {
-        when(listingService.getListingById(any(Long.class))).thenReturn(Optional.empty());
+        when(listingService.getListingById(any(Integer.class))).thenReturn(Optional.empty());
 
-        String result = listingController.deleteFeatureListing(new Listing(), 1L, model);
+        String result = listingController.deleteFeatureListing(new Listing(), 1, model);
 
         assertEquals("redirect:/listings", result);
-        verify(listingService, never()).updateListing(anyLong(), any(Listing.class));
+        verify(listingService, never()).updateListing(any(Integer.class), any(Listing.class));
     }
     public void testAddToCartWithInvalidQuantity() {
         // Arrange
@@ -383,7 +383,7 @@ public class ListingControllerTest {
         updatedListing.setProduct_price(200.0f);
 
         // Act
-        String viewName = listingController.updateListing(updatedListing, 1L, model);
+        String viewName = listingController.updateListing(updatedListing, 1, model);
 
         // Assert
         assertEquals("redirect:/update-listings", viewName);
@@ -512,7 +512,7 @@ public class ListingControllerTest {
     @Test
     public void testUpdateListingNotFound() {
         // Arrange
-        when(listingService.getListingById(1L)).thenReturn(Optional.empty());
+        when(listingService.getListingById(1)).thenReturn(Optional.empty());
 
         Listing updatedListing = new Listing();
         updatedListing.setProduct_name("Updated Name");
@@ -521,11 +521,11 @@ public class ListingControllerTest {
         updatedListing.setProduct_price(200.0f);
 
         // Act
-        String viewName = listingController.updateListing(updatedListing, 1L, model);
+        String viewName = listingController.updateListing(updatedListing, 1, model);
 
         // Assert
         assertEquals("redirect:/update-listings", viewName);
-        verify(listingService, never()).updateListing(anyLong(), any());
+        verify(listingService, never()).updateListing(any(Integer.class), any());
     }
 
     @Test

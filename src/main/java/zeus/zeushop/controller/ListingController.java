@@ -131,7 +131,7 @@ public class ListingController {
 
     @GetMapping("/update-listing")
     public String showUpdateListingForm(@RequestParam("id") Integer id, Model model) {
-        Listing listing = listingService.getListingById(Long.valueOf(id)).orElse(null);
+        Listing listing = listingService.getListingById(id).orElse(null);
         if (listing == null) {
             // Handle case where listing is not found
             return "redirect:/listings";
@@ -142,7 +142,7 @@ public class ListingController {
 
     @GetMapping("/feature-listing")
     public String showFeatureListingForm(@RequestParam("id") Integer id, Model model) {
-        Listing listing = listingService.getListingById(Long.valueOf(id)).orElse(null);
+        Listing listing = listingService.getListingById(id).orElse(null);
         if (listing == null) {
             return "redirect:/listings";
         }
@@ -151,7 +151,7 @@ public class ListingController {
     }
 
     @PostMapping("/feature-listing")
-    public String featureListing(@ModelAttribute Listing featuredListing, @RequestParam("id") Long id, Model model) {
+    public String featureListing(@ModelAttribute Listing featuredListing, @RequestParam("id") Integer id, Model model) {
         Listing listing = listingService.getListingById(id).orElse(null);
         if (listing == null) {
             return "redirect:/listings";
@@ -165,7 +165,7 @@ public class ListingController {
     }
 
     @GetMapping("/delete-feature-listing")
-    public String deleteFeatureListing(@ModelAttribute Listing featuredListing, @RequestParam("id") Long id, Model model) {
+    public String deleteFeatureListing(@ModelAttribute Listing featuredListing, @RequestParam("id") Integer id, Model model) {
         Listing listing = listingService.getListingById(id).orElse(null);
         if (listing == null) {
             return "redirect:/listings";
@@ -179,7 +179,7 @@ public class ListingController {
     }
 
     @PostMapping("/update-listing")
-    public String updateListing(@ModelAttribute Listing updatedListing, @RequestParam("id") Long id, Model model) {
+    public String updateListing(@ModelAttribute Listing updatedListing, @RequestParam("id") Integer id, Model model) {
         // Get the original listing from the database
         Listing originalListing = listingService.getListingById(id).orElse(null);
         if (originalListing == null) {
@@ -216,14 +216,14 @@ public class ListingController {
     }
 
     @PostMapping("/delete-listing")
-    public String deleteListing(@RequestParam("id") Long id) {
+    public String deleteListing(@RequestParam("id") Integer id) {
         listingService.deleteListing(id);
         return "redirect:/manage-listings";
     }
 
     @GetMapping("/product/{id}")
     public String showProductDetails(@PathVariable("id") Integer id, Model model) {
-        Optional<Listing> listingOptional = listingService.getListingById(id.longValue());
+        Optional<Listing> listingOptional = listingService.getListingById(id);
         if (listingOptional.isPresent()) {
             model.addAttribute("listing", listingOptional.get());
             model.addAttribute("cartItem", new CartItem());

@@ -55,13 +55,13 @@ public class Listing {
     public void setVisible(boolean visible){
         this.visible = visible;
     }
-    public Listing(Long id, String productName, int quantity, String description, double price, Long sellerId, boolean visible) {
-        this.product_id = id.intValue();
+    public Listing(Integer id, String productName, int quantity, String description, double price, Integer sellerId, boolean visible) {
+        this.product_id = id;
         this.product_name = productName;
         this.product_quantity = quantity;
         this.product_description = description;
         this.product_price = (float) price;
-        this.seller_id = sellerId.intValue();
+        this.seller_id = sellerId;
         this.visible = visible;
     }
 }

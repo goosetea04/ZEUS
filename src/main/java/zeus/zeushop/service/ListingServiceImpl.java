@@ -22,18 +22,18 @@ public class ListingServiceImpl implements ListingService {
     }
 
     @Override
-    public void deleteListing(Long id) {
-        listingRepository.deleteById(id.intValue());
+    public void deleteListing(Integer id) {
+        listingRepository.deleteById(id);
     }
 
     @Override
-    public Optional<Listing> getListingById(Long id) {
-        return listingRepository.findById(id.intValue());
+    public Optional<Listing> getListingById(Integer id) {
+        return listingRepository.findById(id);
     }
 
     @Override
-    public Listing updateListing(Long id, Listing listingDetails) {
-        Optional<Listing> optionalListing = listingRepository.findById(id.intValue());
+    public Listing updateListing(Integer id, Listing listingDetails) {
+        Optional<Listing> optionalListing = listingRepository.findById(id);
         if (optionalListing.isPresent()) {
             Listing existingListing = optionalListing.get();
             existingListing.setProduct_name(listingDetails.getProduct_name());

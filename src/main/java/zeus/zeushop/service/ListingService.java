@@ -7,9 +7,9 @@ import java.util.Optional;
 public interface ListingService {
     public Listing createListing(Listing listing);
     public List<Listing> getAllListings();
-    public Optional<Listing> getListingById(Long id);
-    public Listing updateListing(Long id, Listing listingDetails);
-    public void deleteListing(Long id);
+    public Optional<Listing> getListingById(Integer id);
+    public Listing updateListing(Integer id, Listing listingDetails);
+    public void deleteListing(Integer id);
 
     public List<Listing> getAllFeatured();
     List<Listing> getListingsBySellerId(Integer sellerId);
