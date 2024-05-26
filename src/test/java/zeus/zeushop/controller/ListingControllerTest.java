@@ -244,6 +244,16 @@ public class ListingControllerTest {
     }
 
     @Test
+    void testFeatureListingGet() {
+        when(listingService.getListingById(any(Long.class))).thenReturn(Optional.of(new Listing()));
+
+        String result = listingController.showFeatureListingForm(1, model);
+
+        assertEquals("feature-listing", result);
+        assertTrue(model.containsAttribute("listing"));
+    }
+
+    @Test
     void testFeatureListingGetFail() {
         when(listingService.getListingById(any(Long.class))).thenReturn(Optional.empty());
 
