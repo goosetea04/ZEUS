@@ -12,6 +12,7 @@
 <div th:replace="~{nav :: nav}"></div>
 <div class="container">
     <h1>My Orders</h1>
+    <a th:href="@{/orders/manage}" class="add-listing-link">Manage</a>
 
     <div th:if="${success}" class="success-message">
         <p th:text="${success}"></p>
