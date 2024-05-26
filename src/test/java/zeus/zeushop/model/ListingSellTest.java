@@ -24,6 +24,20 @@ class ListingSellTest {
     }
 
     @Test
+    void testDefaultConstructor() {
+        ListingSell defaultListingSell = new ListingSell();
+        assertNotNull(defaultListingSell);
+    }
+
+    @Test
+    void testParameterizedConstructor() {
+        ListingSell paramListingSell = new ListingSell("Product", LocalDateTime.now().plusDays(2));
+        assertNotNull(paramListingSell);
+        assertEquals("Product", paramListingSell.getProduct_name());
+        assertEquals(LocalDateTime.now().plusDays(2).withNano(0), paramListingSell.getEndDate().withNano(0));
+    }
+
+    @Test
     void testGetListingSellId() {
         assertEquals(1, this.listingSell.getProduct_id());
     }
@@ -64,9 +78,23 @@ class ListingSellTest {
     }
 
     @Test
+    void testIsFeaturedWhenEndDateIsNull() {
+        this.listingSell.setEndDate(null);
+        assertFalse(this.listingSell.isFeatured());
+    }
+
+    @Test
+    void testIsFeaturedWhenEndDateIsPast() {
+        this.listingSell.setEndDate(LocalDateTime.now().minusDays(1));
+        assertFalse(this.listingSell.isFeatured());
+    }
+
+    @Test
     void testSetVisible() {
         this.listingSell.setVisible(false);
         assertFalse(this.listingSell.isVisible());
+        this.listingSell.setVisible(true);
+        assertTrue(this.listingSell.isVisible());
     }
 
     @Test
@@ -104,4 +132,17 @@ class ListingSellTest {
         this.listingSell.setProduct_price(159000f);
         assertEquals(159000f, this.listingSell.getProduct_price());
     }
+
+    @Test
+    void testSetEndDate() {
+        LocalDateTime newEndDate = LocalDateTime.now().plusDays(3);
+        this.listingSell.setEndDate(newEndDate);
+        assertEquals(newEndDate, this.listingSell.getEndDate());
+    }
+
+    @Test
+    void testGetEndDate() {
+        assertEquals(LocalDateTime.now().plusDays(1).withNano(0), this.listingSell.getEndDate().withNano(0));
+    }
 }
+
