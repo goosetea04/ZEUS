@@ -21,6 +21,7 @@ public class Listing {
     private String product_description;
     private LocalDateTime end_date;
 
+
     public Listing() {
         // Default constructor required by JPA
     }

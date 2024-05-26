@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell List</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{nav :: nav}"></div>
+<div class="container">
+    <div class="title-container">
+        <h1>Sell List</h1>
+        <a th:href="@{/create-sell}" class="add-listing-link">Create Listing</a>
+    </div>
+
+    <!-- Display error message if any -->
+    <div th:if="${error}" class="error-message">
+        <p th:text="${error}" style="color: red;"></p>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>Listing Name</th>
+                <th>Description</th>
+                <th>Stock Amount</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Iterate over all listings -->
+            <tr th:each="list : ${listingSells}">
+                <td th:text="${list.product_name}"></td>
+                <td th:text="${list.product_description}"></td>
+                <td th:text="${list.product_quantity}"></td>
+                <td th:text="${list.product_price}"></td>
+                <td>
+                    <a th:href="@{/edit-sell/{id}(id=${list.product_id})}" class="styled-button">Edit</a>
+                    <form th:action="@{/delete-sell/{id}(id=${list.product_id})}" method="post" style="display: inline;">
+                        <input type="submit" value="Delete" class="styled-button" />
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
+
+

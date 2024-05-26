@@ -7,10 +7,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import zeus.zeushop.model.*;
 import zeus.zeushop.service.PaymentService;
 import zeus.zeushop.service.ShoppingCartService;
 import zeus.zeushop.service.UserService;
+import zeus.zeushop.service.OrderService;
 import zeus.zeushop.repository.CartItemRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -54,6 +57,8 @@ public class CartControllerTest {
 
     @InjectMocks
     private CartController cartController;
+    @Mock
+    private OrderService orderService;
 
     @BeforeEach
     public void setUp() {
@@ -140,5 +145,72 @@ public class CartControllerTest {
         java.lang.reflect.Method method = CartController.class.getDeclaredMethod("allItemsApproved", List.class);
         method.setAccessible(true);
         return (boolean) method.invoke(cartController, cartItems);
+    }
+
+    @Test
+    public void testCreateOrder() {
+        User user = new User();
+        user.setId(1);
+        user.setBalance(new BigDecimal("1000"));
+
+        CartItem cartItem = new CartItem();
+        Listing listing = new Listing();
+        listing.setProduct_price(100.0f);
+        cartItem.setListing(listing);
+        cartItem.setQuantity(2);
+        cartItem.setPrice(new BigDecimal("200.00"));
+
+        List<CartItem> cartItems = new ArrayList<>();
+        cartItems.add(cartItem);
+
+        when(authentication.getName()).thenReturn("user");
+        when(userService.getUserByUsername("user")).thenReturn(user);
+        when(shoppingCartService.getCartItemsByBuyerId(user.getId())).thenReturn(cartItems);
+
+        RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
+
+        String expectedView = cartController.createOrder(redirectAttributes);
+        assertEquals("redirect:/orders", expectedView);
+        verify(orderService).createOrder(any(Order.class));
+        verify(shoppingCartService).clearCartItemsByBuyerId(user.getId());
+        assertEquals("Order created successfully.", redirectAttributes.getFlashAttributes().get("success"));
+    }
+
+    @Test
+    public void testCreateOrderEmptyCart() {
+        User user = new User();
+        user.setId(1);
+
+        List<CartItem> cartItems = new ArrayList<>();
+
+        when(authentication.getName()).thenReturn("user");
+        when(userService.getUserByUsername("user")).thenReturn(user);
+        when(shoppingCartService.getCartItemsByBuyerId(user.getId())).thenReturn(cartItems);
+
+        RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
+
+        String expectedView = cartController.createOrder(redirectAttributes);
+        assertEquals("redirect:/cart", expectedView);
+        verify(orderService, never()).createOrder(any(Order.class));
+        assertEquals("Your cart is empty.", redirectAttributes.getFlashAttributes().get("error"));
+    }
+
+    @Test
+    public void testShowOrders() {
+        User user = new User();
+        user.setId(1);
+
+        List<Order> orders = new ArrayList<>();
+        Order order = new Order();
+        orders.add(order);
+
+        when(authentication.getName()).thenReturn("user");
+        when(userService.getUserByUsername("user")).thenReturn(user);
+        when(orderService.getOrdersByUserId(Long.valueOf(user.getId()))).thenReturn(orders);
+
+        Model model = mock(Model.class);
+        String expectedView = cartController.showOrders(model);
+        assertEquals("orders", expectedView);
+        verify(model).addAttribute("orders", orders);
     }
 }

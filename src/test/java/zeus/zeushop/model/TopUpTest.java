@@ -58,4 +58,21 @@ class TopUpTest {
         assertNotEquals(initialUpdatedAt, topUp.getUpdatedAt());
     }
 
+    @Test
+    void testFormattedCreatedAt() {
+        topUp = new TopUp("user123", 100, "PENDING");
+        assertNotNull(topUp.getCreatedAt());
+
+        String formattedDate = topUp.getFormattedCreatedAt();
+        assertNotNull(formattedDate);
+        assertFalse(formattedDate.isEmpty());
+
+        LocalDateTime testDate = LocalDateTime.of(2023, 10, 10, 15, 30);
+        topUp.setCreatedAt(testDate);
+        formattedDate = topUp.getFormattedCreatedAt();
+        assertEquals("10 Oct 2023 15:30", formattedDate);
+    }
+
+
+
 }
