@@ -6,17 +6,24 @@
     <title>Staff Dashboard</title>
     <!-- Include Bootstrap CSS from CDN -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
-<h1 class="my-4 text-center">Staff Dashboard</h1>
-
-<!-- Filter Payments by Status with Bootstrap styling -->
-<a href="staff/top-ups"><button class="btn btn-success">TopUps</button></a>
-<a href="staff/payments"><button class="btn btn-success">Payments</button></a>
+<div th:replace="~{nav :: nav}"></div>
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Staff Dashboard</h1>
+    <div class="text-center">
+        <!-- Navigation buttons with Bootstrap styling -->
+        <a href="staff/top-ups" class="btn btn-success mr-2">TopUps</a>
+        <a href="staff/payments" class="btn btn-success">Payments</a>
+    </div>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 </body>
 </html>
