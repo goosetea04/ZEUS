@@ -77,26 +77,20 @@ public class UserModelTest {
      */
     @Test
     public void testLoadByUsername_ExistingUser() {
-        // Setup
         User user = new User();
         user.setUsername("dummy");
 
-        // Mock the behavior of findByUsername to return a specific user when called with "dummy"
         when(userRepository.findByUsername(eq("dummy"))).thenReturn(user);
 
-        // Action
         User result = userDetailsServiceImpl.loadUserByUsername("dummy");
 
-        // Assertions
         assertEquals(user, result);
     }
 
     @Test
     public void testLoadByUsername_UserNotFound() {
-        // Setup the behavior of findByUsername to return null when the user is not found
         when(userRepository.findByUsername(any(String.class))).thenReturn(null);
 
-        // Action and Assertions
         assertThrows(UsernameNotFoundException.class, () -> {
             userDetailsServiceImpl.loadUserByUsername("dummy");
         });

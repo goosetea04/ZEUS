@@ -59,17 +59,14 @@ public class AuthControllerTest {
     }
     @Test
     public void testEditProfile_PasswordsDoNotMatch() {
-        // Arrange
         User user = new User();
         user.setPassword("password123");
         user.setConfirmPassword("password456");
 
         when(userService.verifyPassword(any(User.class))).thenReturn(false);
 
-        // Act
         String viewName = authController.editProfile(user, userDetails, model);
 
-        // Assert
         assertEquals("editprofile", viewName);
         verify(model, times(1)).addAttribute("passwordError", "Passwords do not match");
         verify(userService, times(1)).verifyPassword(any(User.class));
@@ -78,7 +75,6 @@ public class AuthControllerTest {
 
     @Test
     public void testEditProfile_PasswordsMatch_UserUpdateSuccess() {
-        // Arrange
         User user = new User();
         user.setPassword("password123");
         user.setConfirmPassword("password123");
@@ -89,15 +85,12 @@ public class AuthControllerTest {
         when(userService.verifyPassword(any(User.class))).thenReturn(true);
         when(userService.updateUser(anyString(), any(User.class))).thenReturn(updatedUser);
 
-        // Set up mock for userDetails
         when(userDetails.getUsername()).thenReturn("username");
         when(userDetails.getPassword()).thenReturn("password123");
         when(userDetails.getAuthorities()).thenReturn(null); // Adjust as necessary for your authorities
 
-        // Act
         String viewName = authController.editProfile(user, userDetails, model);
 
-        // Assert
         assertEquals("profile", viewName);
         verify(userService, times(1)).verifyPassword(any(User.class));
         verify(userService, times(1)).updateUser(eq("username"), any(User.class));
@@ -105,7 +98,6 @@ public class AuthControllerTest {
 
     @Test
     public void testEditProfile_PasswordsMatch_UserUpdateFailure() {
-        // Arrange
         User user = new User();
         user.setPassword("password123");
         user.setConfirmPassword("password123");
@@ -113,13 +105,10 @@ public class AuthControllerTest {
         when(userService.verifyPassword(any(User.class))).thenReturn(true);
         when(userService.updateUser(anyString(), any(User.class))).thenReturn(null);
 
-        // Set up mock for userDetails
         when(userDetails.getUsername()).thenReturn("username");
 
-        // Act
         String viewName = authController.editProfile(user, userDetails, model);
 
-        // Assert
         assertEquals("editprofile", viewName);
         verify(userService, times(1)).verifyPassword(any(User.class));
         verify(userService, times(1)).updateUser(eq("username"), any(User.class));
@@ -135,17 +124,14 @@ public class AuthControllerTest {
 
     @Test
     public void testRegister_PasswordsDoNotMatch() {
-        // Arrange
         User user = new User();
         user.setPassword("password123");
         user.setConfirmPassword("password456");
 
         when(userService.verifyPassword(any(User.class))).thenReturn(false);
 
-        // Act
         String viewName = authController.register(user, model);
 
-        // Assert
         assertEquals("register", viewName);
         verify(model, times(1)).addAttribute("passwordError", "Passwords do not match");
         verify(userService, times(1)).verifyPassword(any(User.class));
@@ -154,7 +140,6 @@ public class AuthControllerTest {
 
     @Test
     public void testRegister_PasswordsMatch() {
-        // Arrange
         User user = new User();
         user.setPassword("password123");
         user.setConfirmPassword("password123");
@@ -162,10 +147,8 @@ public class AuthControllerTest {
         when(userService.verifyPassword(any(User.class))).thenReturn(true);
         when(userService.createUser(any(User.class))).thenReturn(user);
 
-        // Act
         String viewName = authController.register(user, model);
 
-        // Assert
         assertEquals("redirect:/login", viewName);
         verify(userService, times(1)).verifyPassword(any(User.class));
         verify(userService, times(1)).createUser(any(User.class));
@@ -173,7 +156,6 @@ public class AuthControllerTest {
 
     @Test
     public void testRegister_UserCreationFails() {
-        // Arrange
         User user = new User();
         user.setPassword("password123");
         user.setConfirmPassword("password123");
@@ -181,10 +163,8 @@ public class AuthControllerTest {
         when(userService.verifyPassword(any(User.class))).thenReturn(true);
         when(userService.createUser(any(User.class))).thenReturn(null);
 
-        // Act
         String viewName = authController.register(user, model);
 
-        // Assert
         assertEquals("register", viewName);
         verify(userService, times(1)).verifyPassword(any(User.class));
         verify(userService, times(1)).createUser(any(User.class));
