@@ -51,4 +51,20 @@ tasks.test{
 
 tasks.jacocoTestReport{
     dependsOn(tasks.test)
+    reports {
+        html.required = true
+        xml.required = true
+        html.outputLocation.set(
+                layout.buildDirectory.dir("jacocoHtml")
+        )
+    }
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "goosetea04_ZEUS")
+        property("sonar.organization", "goosetea04")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.junit.reportPaths", "${project.buildDir}/test-results/test")
+    }
 }
