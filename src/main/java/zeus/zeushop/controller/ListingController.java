@@ -30,8 +30,12 @@ public class ListingController {
 
     private final ListingService listingService;
     @Autowired
-    public ListingController(ListingService listingService) {
+    public ListingController(ListingService listingService, ShoppingCartService shoppingCartService, ListingRepository listingRepository, CartItemRepository cartItemRepository, UserService userService) {
         this.listingService = listingService;
+        this.listingRepository = listingRepository;
+        this.cartItemRepository = cartItemRepository;
+        this.userService = userService;
+        this.shoppingCartService = shoppingCartService;
     }
     @Autowired
     private ListingRepository listingRepository;

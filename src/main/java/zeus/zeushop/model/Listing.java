@@ -43,6 +43,9 @@ public class Listing {
     public Integer getId() {
         return product_id;
     }
+    public void setId(Integer product_id) {
+        this.product_id = product_id;
+    }
 
     public boolean isVisible() {
         return visible;
@@ -55,6 +58,15 @@ public class Listing {
     }
 
     public void setVisible(boolean visible){
+        this.visible = visible;
+    }
+    public Listing(Long id, String productName, int quantity, String description, double price, Long sellerId, boolean visible) {
+        this.product_id = id.intValue(); // Convert Long to Integer
+        this.product_name = productName;
+        this.product_quantity = quantity;
+        this.product_description = description;
+        this.product_price = (float) price; // Convert double to Float
+        this.seller_id = sellerId.intValue(); // Convert Long to Integer
         this.visible = visible;
     }
 }

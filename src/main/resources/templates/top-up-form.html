@@ -4,65 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top Up Balance</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 40px;
-            background: #f4f4f4;
-            color: #333;
-        }
-        h1 {
-            color: #444;
-        }
-        form {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input[type="number"] {
-            width: 95%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #343A40;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        button:hover {
-            background-color: #545d66;
-        }
-        .error {
-            color: #D8000C;
-            background-color: #FFD2D2;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
-<h1>Top Up Your Balance</h1>
-<div th:if="${error}" class="error" th:text="${error}"></div>
-<form action="/topups" method="post">
-    <input type="hidden" id="userId" name="userId">
+<div class="container">
+    <div class="title-container"><h1>Top Up Your Balance</h1></div>
+    <div class="box-container">
+        <form action="/topups" method="post" class="styled-form">
+            <input type="hidden" id="userId" name="userId">
 
-    <label for="amount">Amount:</label><br>
-    <input type="number" id="amount" name="amount" required><br>
+            <div class="form-group">
+                <label for="amount">Amount:</label><br>
+                <input type="number" id="amount" name="amount" required><br>
+            </div>
 
-    <button type="submit">Submit Top Up</button>
-</form>
+            <button type="submit" class="a-styled-button">Submit Top Up</button>
+        </form>
+    </div>
+</div>
 </body>
-
 </html>
