@@ -68,12 +68,6 @@ public class StaffBoardControllerTest {
         when(userService.getUserByUsername("user")).thenReturn(user);
     }
 
-    private void setupAdminUser() {
-        User admin = new User();
-        admin.setRole("ADMIN");
-        when(authentication.getPrincipal()).thenReturn(admin);
-    }
-
     private void setupNonAdminUser() {
         User user = new User();
         user.setRole("USER");
