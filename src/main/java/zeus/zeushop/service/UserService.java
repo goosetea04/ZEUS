@@ -10,7 +10,8 @@ public interface UserService {
     public List<User> getAllUsers();
     public User getUserById(Integer id);
     public User getUserByUsername(String username);
-    public User updateUser(Integer id, User userDetails);
+    public User updateUser(String username, User userDetails);
     public void deleteUser(Integer id);
+    public Boolean verifyPassword(User user);
     User updateUserBalance(Integer id, BigDecimal newBalance);
 }

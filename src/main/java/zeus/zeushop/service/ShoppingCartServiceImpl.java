@@ -6,9 +6,6 @@ import zeus.zeushop.model.Listing;
 import zeus.zeushop.model.CartItem;
 import zeus.zeushop.repository.*;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -56,8 +53,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public List<CartItem> getAllCartItems() {
         // Implement logic to retrieve all cart items from the repository
         // This might involve fetching them from cartItemRepository
-        List<CartItem> cartItems = cartItemRepository.findAll();
-        return cartItems;
+        return cartItemRepository.findAll();
     }
 
     @Override

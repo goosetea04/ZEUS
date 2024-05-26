@@ -12,7 +12,7 @@
 
 <div th:replace="~{nav :: nav}"></div>
 <div class="container">
-    <h1>Listings</h1>
+    <h1>Featured Listings</h1>
 
     <!--
     <div th:if="${error}" class="error-message">
@@ -37,6 +37,61 @@
                 <th>STOCK</th>
                 <th>DESCRIPTION</th>
                 <th>PRICE</th>
+                <th th:block th:if="${admin}">ACTION</th>
+                <!-- <th>Add to Cart</th> -->
+                <!-- <th>Update</th> -->
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Iterate over visible listings -->
+            <tr th:each="listing : ${featured_listings}">
+                <!-- Check if listing is visible -->
+                <th:block th:if="${listing.visible}">
+                    <!-- Display listing information -->
+                    <!-- <td th:text="${listing.product_id}"></td> -->
+                    <td>
+                        <a th:href="@{/product/{id}(id=${listing.product_id})}" th:text="${listing.product_name}"></a>
+                    </td>
+                    <td th:text="${listing.product_quantity}"></td>
+                    <td th:text="${listing.product_description}"></td>
+                    <td th:text="${listing.product_price}"></td>
+                    <td>
+                        <a th:block th:if="${admin}" th:href="@{/feature-listing(id=${listing.product_id})}" th:text="Feature"></a>
+                        <a th:block th:if="${admin}" th:href="@{/delete-feature-listing(id=${listing.product_id})}" th:text="Delete"></a>
+                    </td>
+                    <!-- Form to add listing to cart -->
+                    <!--
+                    <td>
+                        <form action="/add-to-cart" method="post">
+                            <input type="hidden" name="listingId" th:value="${listing.product_id}" />
+                            <input type="hidden" name="maxQuantity" th:value="${listing.product_quantity}" />
+                            <input type="number" name="quantity" value="1" />
+                            <button type="button" onclick="addToCart(this)">Add to Cart</button>
+                        </form>
+                    </td> -->
+                    <!-- <td>
+                        <form action="/update-listing" method="get">
+                            <input type="hidden" name="id" th:value="${listing.product_id}" />
+                            <button type="submit">Update</button>
+                        </form>
+                    </td> -->
+                </th:block>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h1>Listings</h1>
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <!-- <th>ID</th> -->
+                <th>NAME</th>
+                <th>STOCK</th>
+                <th>DESCRIPTION</th>
+                <th>PRICE</th>
+                <th th:block th:if="${admin}">ACTION</th>
                 <!-- <th>Add to Cart</th> -->
                 <!-- <th>Update</th> -->
             </tr>
@@ -54,6 +109,10 @@
                     <td th:text="${listing.product_quantity}"></td>
                     <td th:text="${listing.product_description}"></td>
                     <td th:text="${listing.product_price}"></td>
+                    <!-- Add Feature Button -->
+                    <td>
+                        <a th:block th:if="${admin}" th:href="@{/feature-listing(id=${listing.product_id})}" th:text="Feature"></a>
+                    </td>
                     <!-- Form to add listing to cart -->
                     <!--
                     <td>

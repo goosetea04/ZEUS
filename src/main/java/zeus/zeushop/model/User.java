@@ -32,6 +32,9 @@ public class User implements UserDetails {
     @Column(name = "balance", nullable = false, precision = 10, scale = 2)
     private BigDecimal balance = BigDecimal.ZERO; // Default balance set to 0
 
+    @Transient
+    private String confirmPassword;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorityList = new ArrayList<>();

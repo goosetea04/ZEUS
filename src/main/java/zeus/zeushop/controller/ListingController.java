@@ -9,7 +9,7 @@ import zeus.zeushop.service.ShoppingCartService;
 import zeus.zeushop.service.ListingService;
 import zeus.zeushop.service.UserService;
 import java.time.LocalDateTime;
-import zeus.zeushop.service.ShoppingCartServiceFactory;
+
 import zeus.zeushop.repository.CartItemRepository;
 import zeus.zeushop.repository.ListingRepository;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +37,7 @@ public class ListingController {
         this.userService = userService;
         this.shoppingCartService = shoppingCartService;
     }
+
     @Autowired
     private ListingRepository listingRepository;
 
@@ -48,8 +49,19 @@ public class ListingController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userService.getUserByUsername(currentUsername);
-        List<Listing> allListings = listingService.getAllListings();
-        model.addAttribute("listings", allListings);
+        Boolean isAdmin = Objects.equals(currentUser.getRole(), "ADMIN");
+
+        List<Listing> visibleListings = listingService.getAllListings().stream()
+                .filter(listing -> listing.isVisible() && listing.getSellerId() != null && !listing.getSellerId().equals(currentUser.getId()))
+                .collect(Collectors.toList());
+
+        List<Listing> featuredListings = listingService.getAllFeatured().stream()
+                .filter(listing -> listing.isVisible() && listing.getSellerId() != null && !listing.getSellerId().equals(currentUser.getId()))
+                .collect(Collectors.toList());
+
+        model.addAttribute("admin", isAdmin);
+        model.addAttribute("listings", visibleListings);
+        model.addAttribute("featured_listings", featuredListings);
         model.addAttribute("cartItem", new CartItem()); // For adding listings to cart
         return "listings";
     }
@@ -61,7 +73,6 @@ public class ListingController {
                             Model model) {
         Listing listing = listingRepository.findById(listingId).orElse(null);
         if (listing == null) {
-            // Handle case where listing is not found
             return "redirect:/listings";
         }
 
@@ -71,33 +82,20 @@ public class ListingController {
             return "redirect:/listings";
         }
 
-        // Retrieve currently authenticated user's details
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userService.getUserByUsername(currentUsername);
 
-        // Set the buyerId to the ID of the currently authenticated user
 
         Listing storedListing = listingRepository.findById(listingId).orElse(null);
         if (storedListing != null && storedListing.getProduct_quantity() < quantity) {
             model.addAttribute("error", "Not enough stock available.");
             return "redirect:/listings";
         }
-
-        // Decrease the quantity of the listing
-        // storedListing.setProduct_quantity(storedListing.getProduct_quantity() - quantity);
-        // listingRepository.save(storedListing);
-
-        // Add the listing to the cart
         shoppingCartService.addListingToCart(listing, quantity, currentUser.getId());
 
         return "redirect:/listings";
     }
-
-
-
-
-
 
     @GetMapping("/add-listing")
     public String showAddListingForm(Model model) {
@@ -111,12 +109,10 @@ public class ListingController {
             return "add-listing";
         }
 
-        // Retrieve currently authenticated user's details
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
         User currentUser = userService.getUserByUsername(currentUsername);
 
-        // Set the seller_id to the ID of the currently authenticated user
         listing.setSellerId(currentUser.getId());
 
         // Set the visible column to true
@@ -144,13 +140,49 @@ public class ListingController {
         return "update-listing";
     }
 
+    @GetMapping("/feature-listing")
+    public String showFeatureListingForm(@RequestParam("id") Integer id, Model model) {
+        Listing listing = listingService.getListingById(Long.valueOf(id)).orElse(null);
+        if (listing == null) {
+            return "redirect:/listings";
+        }
+        model.addAttribute("listing", listing);
+        return "feature-listing";
+    }
+
+    @PostMapping("/feature-listing")
+    public String featureListing(@ModelAttribute Listing featuredListing, @RequestParam("id") Long id, Model model) {
+        Listing listing = listingService.getListingById(id).orElse(null);
+        if (listing == null) {
+            return "redirect:/listings";
+        }
+        listing.setEnd_date(featuredListing.getEnd_date());
+
+        // Save the updated listing
+        listingService.updateListing(id, listing);
+
+        return "redirect:/listings";
+    }
+
+    @GetMapping("/delete-feature-listing")
+    public String deleteFeatureListing(@ModelAttribute Listing featuredListing, @RequestParam("id") Long id, Model model) {
+        Listing listing = listingService.getListingById(id).orElse(null);
+        if (listing == null) {
+            return "redirect:/listings";
+        }
+        listing.setEnd_date(LocalDateTime.now());
+
+        // Save the updated listing
+        listingService.updateListing(id, listing);
+
+        return "redirect:/listings";
+    }
 
     @PostMapping("/update-listing")
     public String updateListing(@ModelAttribute Listing updatedListing, @RequestParam("id") Long id, Model model) {
         // Get the original listing from the database
         Listing originalListing = listingService.getListingById(id).orElse(null);
         if (originalListing == null) {
-            // Handle case where original listing is not found
             return "redirect:/update-listings";
         }
 
@@ -186,7 +218,7 @@ public class ListingController {
     @PostMapping("/delete-listing")
     public String deleteListing(@RequestParam("id") Long id) {
         listingService.deleteListing(id);
-        return "redirect:/manage-listings"; // Redirect to the manage-listings page after deletion
+        return "redirect:/manage-listings";
     }
 
     @GetMapping("/product/{id}")
