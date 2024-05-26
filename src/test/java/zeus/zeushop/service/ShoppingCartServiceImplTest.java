@@ -46,6 +46,30 @@ public class ShoppingCartServiceImplTest {
     }
 
     @Test
+    void testAddListingToCart_WithBuyerId_Positive() {
+        Listing listing = new Listing();
+        int quantity = 1;
+        int buyerId = 123;
+
+        shoppingCartService.addListingToCart(listing, quantity, buyerId);
+
+        verify(cartItemRepository, times(1)).save(any(CartItem.class));
+    }
+
+    @Test
+    void testAddListingToCart_WithBuyerId_Negative() {
+        Listing listing = null;
+        int quantity = 1;
+        int buyerId = 123;
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            shoppingCartService.addListingToCart(listing, quantity, buyerId);
+        });
+
+        verify(cartItemRepository, never()).save(any(CartItem.class));
+    }
+
+    @Test
     void testGetAllListings_Positive() {
         List<Listing> expectedListings = new ArrayList<>();
         // Mock behavior to return listings when findAll is called
@@ -81,5 +105,33 @@ public class ShoppingCartServiceImplTest {
 
         // Verify that save method is never called when listing is null
         verify(cartItemRepository, never()).save(any(CartItem.class));
+    }
+
+    @Test
+    void testGetCartItemsByBuyerId_Positive() {
+        Integer buyerId = 123;
+        List<CartItem> expectedCartItems = new ArrayList<>();
+        when(cartItemRepository.findByBuyerId(buyerId)).thenReturn(expectedCartItems);
+
+        List<CartItem> actualCartItems = shoppingCartService.getCartItemsByBuyerId(buyerId);
+
+        assertEquals(expectedCartItems, actualCartItems);
+        verify(cartItemRepository, times(1)).findByBuyerId(buyerId);
+    }
+
+    @Test
+    void testMarkItemsPending_Positive() {
+        List<CartItem> cartItems = new ArrayList<>();
+        CartItem cartItem1 = new CartItem();
+        CartItem cartItem2 = new CartItem();
+        cartItems.add(cartItem1);
+        cartItems.add(cartItem2);
+
+        shoppingCartService.markItemsPending(cartItems);
+
+        assertEquals("PENDING", cartItem1.getStatus());
+        assertEquals("PENDING", cartItem2.getStatus());
+        verify(cartItemRepository, times(1)).save(cartItem1);
+        verify(cartItemRepository, times(1)).save(cartItem2);
     }
 }
