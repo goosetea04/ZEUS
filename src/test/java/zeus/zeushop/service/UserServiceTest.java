@@ -60,20 +60,16 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUser_UserNotFound() {
-        // Arrange
         when(userRepository.findByUsername("nonexistent")).thenReturn(null);
 
-        // Act
         User result = userService.updateUser("nonexistent", new User());
 
-        // Assert
         assertNull(result);
         verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
     public void testUpdateUser_UpdateUsernameAndPassword() {
-        // Arrange
         User existingUser = new User();
         User updateUserDetails = new User();
         updateUserDetails.setUsername("newUsername");
@@ -83,10 +79,8 @@ public class UserServiceTest {
         when(passwordEncoder.encode("newPassword")).thenReturn("encodedPassword");
         when(userRepository.save(existingUser)).thenReturn(existingUser);
 
-        // Act
         User result = userService.updateUser("existingUser", updateUserDetails);
 
-        // Assert
         assertNotNull(result);
         assertEquals("newUsername", existingUser.getUsername());
         assertEquals("encodedPassword", existingUser.getPassword());
@@ -95,7 +89,6 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUser_OnlyUpdateUsername() {
-        // Arrange
         User existingUser = new User();
         User updateUserDetails = new User();
         updateUserDetails.setUsername("newUsername");
@@ -103,10 +96,8 @@ public class UserServiceTest {
         when(userRepository.findByUsername("existingUser")).thenReturn(existingUser);
         when(userRepository.save(existingUser)).thenReturn(existingUser);
 
-        // Act
         User result = userService.updateUser("existingUser", updateUserDetails);
 
-        // Assert
         assertNotNull(result);
         assertEquals("newUsername", existingUser.getUsername());
         verify(userRepository, times(1)).save(existingUser);
@@ -114,7 +105,6 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUser_OnlyUpdatePassword() {
-        // Arrange
         User existingUser = new User();
         User updateUserDetails = new User();
         updateUserDetails.setPassword("newPassword");
@@ -123,10 +113,8 @@ public class UserServiceTest {
         when(passwordEncoder.encode("newPassword")).thenReturn("encodedPassword");
         when(userRepository.save(existingUser)).thenReturn(existingUser);
 
-        // Act
         User result = userService.updateUser("existingUser", updateUserDetails);
 
-        // Assert
         assertNotNull(result);
         assertEquals("encodedPassword", existingUser.getPassword());
         verify(userRepository, times(1)).save(existingUser);
@@ -134,91 +122,72 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUser_Exception() {
-        // Arrange
         User updateUserDetails = new User();
         when(userRepository.findByUsername("existingUser")).thenThrow(new RuntimeException("Database error"));
 
-        // Act
         User result = userService.updateUser("existingUser", updateUserDetails);
 
-        // Assert
         assertNull(result);
         verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
     public void testVerifyPassword_PasswordsMatch() {
-        // Arrange
         User user = new User();
         user.setPassword("password123");
         user.setConfirmPassword("password123");
 
-        // Act
         Boolean result = userService.verifyPassword(user);
 
-        // Assert
         assertTrue(result);
     }
 
     @Test
     public void testVerifyPassword_PasswordsDoNotMatch() {
-        // Arrange
         User user = new User();
         user.setPassword("password123");
         user.setConfirmPassword("password456");
 
-        // Act
         Boolean result = userService.verifyPassword(user);
 
-        // Assert
         assertFalse(result);
     }
 
     @Test
     public void testVerifyPassword_NullPassword() {
-        // Arrange
         User user = new User();
         user.setPassword(null);
         user.setConfirmPassword("password456");
 
-        // Act
         Boolean result = userService.verifyPassword(user);
 
-        // Assert
         assertFalse(result);
     }
 
     @Test
     public void testVerifyPassword_NullConfirmPassword() {
-        // Arrange
         User user = new User();
         user.setPassword("password123");
         user.setConfirmPassword(null);
 
-        // Act
         Boolean result = userService.verifyPassword(user);
 
-        // Assert
         assertFalse(result);
     }
 
     @Test
     public void testVerifyPassword_BothNullPasswords() {
-        // Arrange
         User user = new User();
         user.setPassword(null);
         user.setConfirmPassword(null);
 
-        // Act
         Boolean result = userService.verifyPassword(user);
 
-        // Assert
-        assertTrue(result);  // Assuming null == null is considered matching
+        assertFalse(result);
     }
 
     @Test
     public void testGetAllUsers() {
-        // Create a list of users to simulate database contents
         User user1 = new User();
         User user2 = new User();
         user1.setUsername("dummy1");
@@ -227,71 +196,53 @@ public class UserServiceTest {
         users.add(user1);
         users.add(user2);
 
-        // Mock the findAll method to return the list of users
         when(userRepository.findAll()).thenReturn(users);
 
-        // Call the service method
         List<User> result = userService.getAllUsers();
 
-        // Assertions to check the correct data is returned
         assertNotNull(result);
         assertEquals(2, result.size());
         assertEquals("dummy1", result.getFirst().getUsername());
 
-        // Verify the interaction with userRepository
         verify(userRepository, times(1)).findAll();
     }
 
     @Test
     public void testGetUserById() {
-        // Create a user to simulate finding a user by ID
         User user = new User();
         user.setId(1);
         user.setUsername("dummy");
 
-        // Mock the findById method to return the user
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
-        // Call the service method
         Optional<User> result = userService.getUserById(1);
 
-        // Assertions to check the correct user is returned
         assertTrue(result.isPresent());
         assertEquals("dummy", result.get().getUsername());
 
-        // Verify the interaction with userRepository
         verify(userRepository, times(1)).findById(1);
     }
 
     @Test
     public void testGetUserByUsername() {
-        // Create a user to simulate finding a user by username
         User user = new User();
         user.setId(1);
         user.setUsername("dummy");
 
-        // Mock the findByUsername method to return the user
         when(userRepository.findByUsername("dummy")).thenReturn(user);
 
-        // Call the service method
         User result = userService.getUserByUsername("dummy");
 
-        // Assertions to check the correct user is returned
         assertNotNull(result);
         assertEquals("dummy", result.getUsername());
 
-        // Verify the interaction with userRepository
         verify(userRepository, times(1)).findByUsername("dummy");
     }
 
     @Test
     public void testDeleteUser() {
-        // This test will not return a value but will verify action was taken
-
-        // Call the delete method
         userService.deleteUser(1);
 
-        // Verify the interaction with userRepository
         verify(userRepository, times(1)).deleteById(1);
     }
 }
