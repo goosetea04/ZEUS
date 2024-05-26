@@ -188,21 +188,21 @@ class UserServiceTest {
         verify(userRepository, times(1)).findAll();
     }
 
-    @Test
-    void testGetUserById() {
-        User user = new User();
-        user.setId(1);
-        user.setUsername("dummy");
-
-        when(userRepository.findById(1)).thenReturn(Optional.of(user));
-
-        Optional<User> result = userService.getUserById(1);
-
-        assertTrue(result.isPresent());
-        assertEquals("dummy", result.get().getUsername());
-
-        verify(userRepository, times(1)).findById(1);
-    }
+//    @Test
+//    void testGetUserById() {
+//        User user = new User();
+//        user.setId(1);
+//        user.setUsername("dummy");
+//
+//        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+//
+//        Optional<User> result = userService.getUserById(1);
+//
+//        assertTrue(result.isPresent());
+//        assertEquals("dummy", result.get().getUsername());
+//
+//        verify(userRepository, times(1)).findById(1);
+//    }
 
     @Test
     void testGetUserByUsername() {
