@@ -286,4 +286,119 @@ public class ListingControllerTest {
         assertEquals(BigDecimal.valueOf(1000), model.getAttribute("balance"));
         assertEquals("APPROVED", model.getAttribute("paymentStatus"));
     }
+
+    @Test
+    public void testAddToCartWithInvalidQuantity() {
+        // Arrange
+        User currentUser = new User();
+        currentUser.setId(1);
+        when(authentication.getName()).thenReturn("user");
+        when(userService.getUserByUsername("user")).thenReturn(currentUser);
+
+        Listing listing = new Listing();
+        listing.setProduct_id(1);
+        listing.setProduct_quantity(10);
+        when(listingRepository.findById(1)).thenReturn(Optional.of(listing));
+
+        CartItem cartItem = new CartItem();
+        cartItem.setQuantity(0);
+
+        // Act
+        String viewName = listingController.addToCart(cartItem, 1, model);
+
+        // Assert
+        assertEquals("redirect:/listings", viewName);
+        assertEquals("Quantity must be a positive number.", model.getAttribute("error"));
+    }
+    @Test
+    public void testAddToCartWithInsufficientStock() {
+        // Arrange
+        User currentUser = new User();
+        currentUser.setId(1);
+        when(authentication.getName()).thenReturn("user");
+        when(userService.getUserByUsername("user")).thenReturn(currentUser);
+
+        Listing listing = new Listing();
+        listing.setProduct_id(1);
+        listing.setProduct_quantity(5);
+        when(listingRepository.findById(1)).thenReturn(Optional.of(listing));
+
+        CartItem cartItem = new CartItem();
+        cartItem.setQuantity(10);
+
+        // Act
+        String viewName = listingController.addToCart(cartItem, 1, model);
+
+        // Assert
+        assertEquals("redirect:/listings", viewName);
+        assertEquals("Not enough stock available.", model.getAttribute("error"));
+    }
+
+    @Test
+    public void testAddToCartWithListingNotFound() {
+        // Arrange
+        User currentUser = new User();
+        currentUser.setId(1);
+        when(authentication.getName()).thenReturn("user");
+        when(userService.getUserByUsername("user")).thenReturn(currentUser);
+
+        CartItem cartItem = new CartItem();
+        cartItem.setQuantity(5);
+
+        // Act
+        String viewName = listingController.addToCart(cartItem, 1, model);
+
+        // Assert
+        assertEquals("redirect:/listings", viewName);
+    }
+    @Test
+    public void testUpdateListingWithListingNotFound() {
+        // Arrange
+        Listing updatedListing = new Listing();
+        updatedListing.setProduct_name("Updated Name");
+        updatedListing.setProduct_quantity(5);
+        updatedListing.setProduct_description("Updated Description");
+        updatedListing.setProduct_price(200.0f);
+
+        // Act
+        String viewName = listingController.updateListing(updatedListing, 1L, model);
+
+        // Assert
+        assertEquals("redirect:/update-listings", viewName);
+    }
+
+    @Test
+    public void testGetAllListingsWithNullSellerId() {
+        // Arrange
+        User currentUser = new User();
+        currentUser.setId(1);
+        when(authentication.getName()).thenReturn("user");
+        when(userService.getUserByUsername("user")).thenReturn(currentUser);
+
+        Listing listing1 = new Listing();
+        listing1.setVisible(true);
+        listing1.setSellerId(2);
+
+        Listing listing2 = new Listing();
+        listing2.setVisible(true);
+        listing2.setSellerId(null);
+
+        List<Listing> listings = new ArrayList<>();
+        listings.add(listing1);
+        listings.add(listing2);
+
+        when(listingService.getAllListings()).thenReturn(listings);
+
+        // Act
+        String viewName = listingController.getAllListings(model);
+
+        // Assert
+        assertEquals("listings", viewName);
+        List<Listing> visibleListings = (List<Listing>) model.getAttribute("listings");
+        assertNotNull(visibleListings);
+        assertEquals(1, visibleListings.size());  // Only listing1 should be included
+    }
+
+
+
 }
