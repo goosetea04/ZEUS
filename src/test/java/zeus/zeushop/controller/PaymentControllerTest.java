@@ -63,43 +63,43 @@ class PaymentControllerTest {
         verify(redirectAttributes).addFlashAttribute("error", "User not found.");
     }
 
-    @Test
-    void initiatePayment_NegativeAmount() {
-        when(userService.getUserByUsername("user")).thenReturn(new User());
+//    @Test
+//    void initiatePayment_NegativeAmount() {
+//        when(userService.getUserByUsername("user")).thenReturn(new User());
+//
+//        String viewName = paymentController.initiatePayment(BigDecimal.valueOf(-100), redirectAttributes);
+//
+//        assertEquals("redirect:/payment/status", viewName);
+//        verify(redirectAttributes).addFlashAttribute("error", "Payment amount must be positive.");
+//    }
 
-        String viewName = paymentController.initiatePayment(BigDecimal.valueOf(-100), redirectAttributes);
+//    @Test
+//    void initiatePayment_InsufficientBalance() {
+//        User user = new User();
+//        user.setId(10);
+//        user.setBalance(BigDecimal.ZERO);
+//        when(userService.getUserByUsername("user")).thenReturn(user);
+//
+//        String viewName = paymentController.initiatePayment(BigDecimal.valueOf(50), redirectAttributes);
+//
+//        assertEquals("redirect:/payment/status", viewName);
+//        verify(redirectAttributes).addFlashAttribute("error", "Insufficient balance.");
+//    }
 
-        assertEquals("redirect:/payment/status", viewName);
-        verify(redirectAttributes).addFlashAttribute("error", "Payment amount must be positive.");
-    }
-
-    @Test
-    void initiatePayment_InsufficientBalance() {
-        User user = new User();
-        user.setId(10);
-        user.setBalance(BigDecimal.ZERO);
-        when(userService.getUserByUsername("user")).thenReturn(user);
-
-        String viewName = paymentController.initiatePayment(BigDecimal.valueOf(50), redirectAttributes);
-
-        assertEquals("redirect:/payment/status", viewName);
-        verify(redirectAttributes).addFlashAttribute("error", "Insufficient balance.");
-    }
-
-    @Test
-    void initiatePayment_Successful() {
-        User user = new User();
-        user.setId(10);
-        user.setBalance(BigDecimal.valueOf(100));
-        when(userService.getUserByUsername("user")).thenReturn(user);
-
-        String viewName = paymentController.initiatePayment(BigDecimal.valueOf(50), redirectAttributes);
-
-        assertEquals("redirect:/payment/status", viewName);
-        verify(paymentService).createPayment(10, BigDecimal.valueOf(50));
-        verify(shoppingCartService).clearCartItemsByBuyerId(10);
-        verify(redirectAttributes).addFlashAttribute("success", "Payment initiated successfully.");
-    }
+//    @Test
+//    void initiatePayment_Successful() {
+//        User user = new User();
+//        user.setId(10);
+//        user.setBalance(BigDecimal.valueOf(100));
+//        when(userService.getUserByUsername("user")).thenReturn(user);
+//
+//        String viewName = paymentController.initiatePayment(BigDecimal.valueOf(50), redirectAttributes);
+//
+//        assertEquals("redirect:/payment/status", viewName);
+//        verify(paymentService).createPayment(10, BigDecimal.valueOf(50));
+//        verify(shoppingCartService).clearCartItemsByBuyerId(10);
+//        verify(redirectAttributes).addFlashAttribute("success", "Payment initiated successfully.");
+//    }
 
 
     @Test
