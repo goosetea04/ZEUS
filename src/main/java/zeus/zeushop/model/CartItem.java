@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Getter @Setter
 @Entity
@@ -73,7 +72,4 @@ public class CartItem {
     public Integer getBuyerId() {
         return buyerId;
     }
-
-
-    // Other methods as needed
 }

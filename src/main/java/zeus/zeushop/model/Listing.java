@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Setter @Getter
 @Entity
@@ -57,12 +56,12 @@ public class Listing {
         this.visible = visible;
     }
     public Listing(Long id, String productName, int quantity, String description, double price, Long sellerId, boolean visible) {
-        this.product_id = id.intValue(); // Convert Long to Integer
+        this.product_id = id.intValue();
         this.product_name = productName;
         this.product_quantity = quantity;
         this.product_description = description;
-        this.product_price = (float) price; // Convert double to Float
-        this.seller_id = sellerId.intValue(); // Convert Long to Integer
+        this.product_price = (float) price;
+        this.seller_id = sellerId.intValue();
         this.visible = visible;
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ListingRepository extends JpaRepository<Listing, Integer> {
-    List<Listing> findByEndDateGreaterThanEqual(LocalDateTime endDate); //ok thanks
+    List<Listing> findByEndDateGreaterThanEqual(LocalDateTime endDate);
     @Query("SELECT l FROM Listing l WHERE l.seller_id = :sellerId")
     List<Listing> findBySellerId(Integer sellerId);
 }
