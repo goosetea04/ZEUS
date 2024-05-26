@@ -67,6 +67,6 @@ sonar {
         property("sonar.projectKey", "goosetea04_ZEUS")
         property("sonar.organization", "goosetea04")
         property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.junit.reportPaths", "${project.buildDirectory}/test-results/test")
+        property("sonar.junit.reportPaths", "${project.buildDir}/test-results/test")
     }
 }

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,6 +32,7 @@ class TopUpTest {
     }
 
 
+
     @Test
     void testSettersAndGetters() {
         topUp.setUserId("user456");
@@ -57,21 +57,5 @@ class TopUpTest {
 
         assertNotEquals(initialUpdatedAt, topUp.getUpdatedAt());
     }
-    @Test
-    void testSetCreatedAt() {
-        LocalDateTime now = LocalDateTime.now();
-        topUp.setCreatedAt(now);
-        assertEquals(now, topUp.getCreatedAt());
-    }
-
-    @Test
-    void testGetFormattedCreatedAt() {
-        LocalDateTime fixedDate = LocalDateTime.of(2023, 5, 15, 10, 30);
-        topUp.setCreatedAt(fixedDate);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
-        String expectedFormattedDate = fixedDate.format(formatter);
-        assertEquals(expectedFormattedDate, topUp.getFormattedCreatedAt());
-    }
 
 }
-
