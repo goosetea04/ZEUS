@@ -1,24 +1,18 @@
 package zeus.zeushop.controller;
-
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import zeus.zeushop.model.CartItem;
-import zeus.zeushop.model.Payment;
-import zeus.zeushop.model.User;
-import zeus.zeushop.service.PaymentService;
-import zeus.zeushop.service.ShoppingCartService;
+import zeus.zeushop.model.*;
+import zeus.zeushop.service.*;
 import zeus.zeushop.repository.CartItemRepository;
-import zeus.zeushop.repository.ListingRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
 import java.util.List;
-import zeus.zeushop.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
@@ -36,6 +30,9 @@ public class CartController {
 
     @Autowired
     private CartItemRepository cartItemRepository;
+
+    @Autowired
+    private OrderService orderService;
 
     @Autowired
     private PaymentService paymentService;
@@ -84,6 +81,55 @@ public class CartController {
         }
     }
 
+    @PostMapping("/create-order")
+    public String createOrder(RedirectAttributes redirectAttributes) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userService.getUserByUsername(currentUsername);
 
+        List<CartItem> cartItems = shoppingCartService.getCartItemsByBuyerId(currentUser.getId());
+
+        if (cartItems.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Your cart is empty.");
+            return "redirect:/cart";
+        }
+
+        // Create a new order
+        Order order = new Order();
+        order.setUser(currentUser);
+        order.setStatus("CREATED");
+
+        // Assuming all items in the cart are from the same seller for simplicity
+        Integer sellerId = cartItems.get(0).getListing().getSellerId();
+        User seller = userService.getUserById(sellerId); // Fetch the User entity based on sellerId
+        order.setSeller(seller);
+
+        for (CartItem cartItem : cartItems) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setListing(cartItem.getListing());
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItem.setPrice(cartItem.getListing().getProduct_price());
+            order.getItems().add(orderItem); // Ensure items are added to the initialized list
+        }
+
+        orderService.createOrder(order);
+        shoppingCartService.clearCartItemsByBuyerId(currentUser.getId());
+
+        redirectAttributes.addFlashAttribute("success", "Order created successfully.");
+        return "redirect:/orders";
+    }
+
+    @GetMapping("/orders")
+    public String showOrders(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userService.getUserByUsername(currentUsername);
+
+        List<Order> orders = orderService.getOrdersByUserId(currentUser.getId());
+        model.addAttribute("orders", orders);
+
+        return "orders";
+    }
 }
 

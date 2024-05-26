@@ -15,6 +15,7 @@ import java.util.Date;
 public class ListingSell {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "product_id") // Specify the column name in the database
     private Integer product_id;
     private boolean visible;
     private String product_name;
@@ -24,6 +25,9 @@ public class ListingSell {
     private LocalDateTime endDate;
     @Column(name = "seller_id")
     private Integer sellerId;
+//    @ManyToOne
+//    @JoinColumn(name = "seller_id")
+//    private User sellerId;
 
     public ListingSell() {
         // Default constructor required by JPA
@@ -41,6 +45,9 @@ public class ListingSell {
 
     public Integer getId() {
         return product_id;
+    }
+    public void setId(Integer product_id) {
+        this.product_id = product_id;
     }
 
     public boolean isVisible() {

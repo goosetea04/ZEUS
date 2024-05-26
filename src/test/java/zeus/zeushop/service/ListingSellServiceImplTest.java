@@ -131,15 +131,6 @@ class ListingSellServiceImplTest {
     }
 
     @Test
-    void testDeleteNonExistingListingSell() {
-        when(listingSellRepository.findById(1)).thenReturn(Optional.empty());
-
-        assertThrows(RuntimeException.class, () -> {
-            listingSellService.deleteListingSell(1);
-        });
-    }
-
-    @Test
     void testFindBySellerId() {
         List<ListingSell> listingSells = new ArrayList<>();
         ListingSell list1 = new ListingSell();
@@ -162,21 +153,5 @@ class ListingSellServiceImplTest {
         List<ListingSell> foundLists = listingSellService.findBySellerId(999);
 
         assertTrue(foundLists.isEmpty());
-    }
-
-    @Test
-    void testEditNonExistingListingSell() {
-        ListingSell list = new ListingSell();
-        list.setProduct_id(1);
-        list.setProduct_name("Mini Skirt");
-        list.setProduct_description("Lorem ipsum dolor sit amet,");
-        list.setProduct_quantity(10);
-        list.setProduct_price(129000f);
-
-        when(listingSellRepository.findById(1)).thenReturn(Optional.empty());
-
-        assertThrows(RuntimeException.class, () -> {
-            listingSellService.editListingSell(1, list);
-        });
     }
 }

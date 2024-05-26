@@ -21,6 +21,10 @@ public class Listing {
     private Integer seller_id;
     private String product_description;
 
+//    @ManyToOne
+//    @JoinColumn(name = "seller_id")
+//    private User seller_id;
+
     private LocalDateTime endDate;
 
     public Listing() {

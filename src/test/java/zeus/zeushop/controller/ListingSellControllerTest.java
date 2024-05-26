@@ -2,10 +2,9 @@ package zeus.zeushop.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,11 +22,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class ListingSellControllerTest {
-
-    @InjectMocks
-    private ListingSellController listingSellController;
 
     @Mock
     private ListingSellService listingSellService;
@@ -47,19 +42,14 @@ class ListingSellControllerTest {
     @Mock
     private RedirectAttributes redirectAttributes;
 
-    private ListingSell listingSell;
-    private User currentUser;
+    @InjectMocks
+    private ListingSellController listingSellController;
 
     @BeforeEach
     void setUp() {
-        listingSell = new ListingSell();
-        listingSell.setProduct_id(1);
-        listingSell.setProduct_name("Mini Skirt");
-        listingSell.setProduct_description("Lorem ipsum dolor sit amet,");
-        listingSell.setProduct_quantity(10);
-        listingSell.setProduct_price(129000f);
+        MockitoAnnotations.openMocks(this);
 
-        currentUser = new User();
+        User currentUser = new User();
         currentUser.setId(1);
         currentUser.setUsername("testUser");
 
@@ -71,16 +61,24 @@ class ListingSellControllerTest {
 
     @Test
     void testCreateListingSellPage() {
-        String viewName = listingSellController.createListingSellPage(model);
-        assertEquals("createListingSell", viewName);
-        verify(model).addAttribute("listingSell", new ListingSell());
+        String expectedViewName = "createListingSell";
+
+        String actualViewName = listingSellController.createListingSellPage(model);
+
+        assertEquals(expectedViewName, actualViewName);
+        verify(model).addAttribute(eq("listingSell"), any(ListingSell.class));
     }
 
     @Test
     void testCreateListingSellPost() {
+        ListingSell listingSell = new ListingSell();
         when(listingSellService.create(any(ListingSell.class))).thenReturn(listingSell);
-        String viewName = listingSellController.createListingSellPost(listingSell, redirectAttributes);
-        assertEquals("redirect:/sell-list", viewName);
+
+        String expectedViewName = "redirect:/sell-list";
+
+        String actualViewName = listingSellController.createListingSellPost(listingSell, redirectAttributes);
+
+        assertEquals(expectedViewName, actualViewName);
         verify(redirectAttributes).addFlashAttribute("successMessage", "Listing created successfully.");
         verify(listingSellService).create(listingSell);
     }
@@ -88,45 +86,63 @@ class ListingSellControllerTest {
     @Test
     void testListingSellPage() {
         List<ListingSell> listingSells = new ArrayList<>();
-        listingSells.add(listingSell);
+        listingSells.add(new ListingSell());
 
         when(listingSellService.findBySellerId(1)).thenReturn(listingSells);
 
-        String viewName = listingSellController.listingSellPage(model);
+        String expectedViewName = "sell";
 
-        assertEquals("sell", viewName);
+        String actualViewName = listingSellController.listingSellPage(model);
+
+        assertEquals(expectedViewName, actualViewName);
         verify(model).addAttribute("listingSells", listingSells);
     }
 
     @Test
     void testDeleteListingSell() {
-        doNothing().when(listingSellService).deleteListingSell(1);
-        String viewName = listingSellController.deleteListingSell(1, redirectAttributes);
-        assertEquals("redirect:/sell-list", viewName);
+        String expectedViewName = "redirect:/sell-list";
+
+        String actualViewName = listingSellController.deleteListingSell(1, redirectAttributes);
+
+        assertEquals(expectedViewName, actualViewName);
         verify(redirectAttributes).addFlashAttribute("successMessage", "Listing deleted successfully.");
         verify(listingSellService).deleteListingSell(1);
     }
 
     @Test
     void testEditListingSellPage() {
+        ListingSell listingSell = new ListingSell();
         when(listingSellService.findById(1)).thenReturn(Optional.of(listingSell));
-        String viewName = listingSellController.editListingSellPage(1, model);
-        assertEquals("editListingSell", viewName);
+
+        String expectedViewName = "editListingSell";
+
+        String actualViewName = listingSellController.editListingSellPage(1, model);
+
+        assertEquals(expectedViewName, actualViewName);
         verify(model).addAttribute("listingSell", listingSell);
     }
 
     @Test
     void testEditListingSellPageNotFound() {
         when(listingSellService.findById(1)).thenReturn(Optional.empty());
-        String viewName = listingSellController.editListingSellPage(1, model);
-        assertEquals("redirect:/sell-list", viewName);
+
+        String expectedViewName = "redirect:/sell-list";
+
+        String actualViewName = listingSellController.editListingSellPage(1, model);
+
+        assertEquals(expectedViewName, actualViewName);
     }
 
     @Test
     void testEditListingSellPost() {
+        ListingSell listingSell = new ListingSell();
         when(listingSellService.editListingSell(eq(1), any(ListingSell.class))).thenReturn(listingSell);
-        String viewName = listingSellController.editListingSellPost(1, listingSell, redirectAttributes);
-        assertEquals("redirect:/sell-list", viewName);
+
+        String expectedViewName = "redirect:/sell-list";
+
+        String actualViewName = listingSellController.editListingSellPost(1, listingSell, redirectAttributes);
+
+        assertEquals(expectedViewName, actualViewName);
         verify(redirectAttributes).addFlashAttribute("successMessage", "Listing updated successfully.");
         verify(listingSellService).editListingSell(1, listingSell);
     }
