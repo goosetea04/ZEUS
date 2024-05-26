@@ -22,6 +22,7 @@ public class ListingSell {
     private Integer product_quantity;
     private Float product_price;
     private String product_description;
+    @Column(name = "end_date")
     private LocalDateTime endDate;
     @Column(name = "seller_id")
     private Integer sellerId;
