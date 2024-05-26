@@ -69,12 +69,7 @@ public class UserModelTest {
         User user = new User();
         assertTrue(user.isEnabled());
     }
-    /*
-    @Override
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByUsername(username);
-    }
-     */
+
     @Test
     public void testLoadByUsername_ExistingUser() {
         User user = new User();
