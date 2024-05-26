@@ -389,38 +389,38 @@ public class ListingControllerTest {
         assertEquals("redirect:/update-listings", viewName);
     }
 
-//    @Test
-//    public void testGetAllListingsWithNullSellerId() {
-//        // Arrange
-//        User currentUser = new User();
-//        currentUser.setId(1);
-//        when(authentication.getName()).thenReturn("user");
-//        when(userService.getUserByUsername("user")).thenReturn(currentUser);
-//
-//        Listing listing1 = new Listing();
-//        listing1.setVisible(true);
-//        listing1.setSellerId(2);
-//
-//        Listing listing2 = new Listing();
-//        listing2.setVisible(true);
-//        listing2.setSellerId(null);
-//
-//        List<Listing> listings = new ArrayList<>();
-//        listings.add(listing1);
-//        listings.add(listing2);
-//
-//        when(listingService.getAllListings()).thenReturn(listings);
-//
-//        // Act
-//        String viewName = listingController.getAllListings(model);
-//
-//        // Assert
-//        assertEquals("listings", viewName);
-//        List<Listing> visibleListings = (List<Listing>) model.getAttribute("listings");
-//        assertNotNull(visibleListings);
-//        assertEquals(1, visibleListings.size());  // Only listing1 should be included
-//
-//    }
+    @Test
+    public void testGetAllListingsWithNullSellerId() {
+        // Arrange
+        User currentUser = new User();
+        currentUser.setId(1);
+        when(authentication.getName()).thenReturn("user");
+        when(userService.getUserByUsername("user")).thenReturn(currentUser);
+
+        Listing listing1 = new Listing();
+        listing1.setVisible(true);
+        listing1.setSellerId(2);
+
+        Listing listing2 = new Listing();
+        listing2.setVisible(true);
+        listing2.setSellerId(null);
+
+        List<Listing> listings = new ArrayList<>();
+        listings.add(listing1);
+        listings.add(listing2);
+
+        when(listingService.getAllListings()).thenReturn(listings);
+
+        // Act
+        String viewName = listingController.getAllListings(model);
+
+        // Assert
+        assertEquals("listings", viewName);
+        List<Listing> visibleListings = (List<Listing>) model.getAttribute("listings");
+        assertNotNull(visibleListings);
+        assertEquals(1, visibleListings.size());  // Only listing1 should be included
+
+    }
     @Test
     public void testSaveListingWithNegativeStockOrPrice() {
         // Arrange
