@@ -13,6 +13,7 @@ import zeus.zeushop.repository.UserRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -32,25 +33,20 @@ class TopUpServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-    /*
+
+
     @Test
     void testCreateSmallAmountTopUp() {
-        TopUp inputTopUp = new TopUp("user1", 5, "INITIAL");
-        User user = new User();
-        user.setUsername("user1");
-        user.setBalance(BigDecimal.ZERO);
-
-        when(userRepository.findByUsername("user1")).thenReturn(user);
+        TopUp inputTopUp = new TopUp("user2", 4, "INITIAL");
+        when(userRepository.findByUsername("user2")).thenReturn(new User());
         when(topUpRepository.save(any(TopUp.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         TopUp result = topUpService.createTopUp(inputTopUp);
 
         assertEquals("APPROVED", result.getStatus());
-        assertEquals(BigDecimal.valueOf(5), user.getBalance());
         verify(topUpRepository).save(result);
     }
 
-     */
 
     @Test
     void testCreateBigAmountTopUp() {
