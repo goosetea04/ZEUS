@@ -58,7 +58,6 @@ public class UserServiceImpl implements UserService {
             }
             return userRepository.save(user);
         } catch (Exception e) {
-            System.out.println("Error updating user: " + e.getMessage());
             return null;
         }
     }
@@ -68,7 +67,10 @@ public class UserServiceImpl implements UserService {
     }
 
     public Boolean verifyPassword(User user) {
-        return user.getPassword().equals(user.getConfirmPassword());
+        if (user.getPassword() != null && user.getConfirmPassword() != null) {
+            return user.getPassword().equals(user.getConfirmPassword());
+        }
+        return false;
     }
 
     public User updateUserBalance(Integer id, BigDecimal newBalance) {
