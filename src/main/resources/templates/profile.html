@@ -1,15 +1,27 @@
 <!DOCTYPE>
-<html lang=en xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
     <title>Edit Profile</title>
 </head>
 <body>
-<div sec:authorize="isAuthenticated()">
-    Username <span sec:authentication="name"></span>
-    Password <span sec:authentication="principal.password"></span>
-    Role <span sec:authentication="authorities"></span>
+<div th:replace="~{nav :: nav}"></div>
+<div class="container">
+    <div class="title-container">
+        <h1>Profile</h1>
+        <a th:href="@{/editprofile}" class="add-listing-link">Edit Profile</a>
+    </div>
+    <div class="balance-display" style="font-size: larger">
+        <strong>Username:</strong> <span th:text="${user.username}"></span>
+    </div>
+    <div class="balance-display" style="font-size: larger">
+        <strong>Role:</strong> <span th:text="${user.role}"></span>
+    </div>
 </div>
 </body>
 </html>

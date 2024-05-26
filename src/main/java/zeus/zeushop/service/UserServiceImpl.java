@@ -23,10 +23,10 @@ public class UserServiceImpl implements UserService {
     }
 
     public User createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         if(user.getUsername() == null || user.getPassword() == null) {
             return null;
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return user;
     }
@@ -43,20 +43,33 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
-    public User updateUser(Integer id, User userDetails) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            User existingUser = user.get();
-            existingUser.setUsername(userDetails.getUsername());
-            existingUser.setPassword(passwordEncoder.encode(userDetails.getPassword()));
-            return userRepository.save(existingUser);
+    public User updateUser(String username, User userDetails) {
+        try {
+            User user = userRepository.findByUsername(username);
+            if (user == null) {
+                return null;
+            }
+            if (userDetails.getUsername() != null && !userDetails.getUsername().isBlank()) {
+                user.setUsername(userDetails.getUsername());
+            }
+            if (userDetails.getPassword() != null && !userDetails.getPassword().isBlank()) {
+                user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+            }
+            return userRepository.save(user);
+        } catch (Exception e) {
+            System.out.println("Error updating user: " + e.getMessage());
+            return null;
         }
-        return null;
     }
 
     public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }
+
+    public Boolean verifyPassword(User user) {
+        return user.getPassword().equals(user.getConfirmPassword());
+    }
+
     public User updateUserBalance(Integer id, BigDecimal newBalance) {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {

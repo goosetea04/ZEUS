@@ -32,7 +32,11 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute("user") User user) {
+    public String register(@ModelAttribute("user") User user, Model model) {
+        if (!userService.verifyPassword(user)) {
+            model.addAttribute("passwordError", "Passwords do not match");
+            return "register";
+        }
         User newUser = userService.createUser(user);
         return newUser != null ? "redirect:/login" : "register";
     }
@@ -43,8 +47,9 @@ public class AuthController {
     }
 
     @GetMapping("/profile")
-    public String getProfilePage(Model model) {
-        model.addAttribute("user", new User());
+    public String getProfilePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userDetailsServiceImpl.loadUserByUsername(userDetails.getUsername());
+        model.addAttribute("user", user);
         return "profile";
     }
 
@@ -56,12 +61,12 @@ public class AuthController {
     }
 
     @PostMapping("/editprofile")
-    public String editProfile(@ModelAttribute("user") User user, @AuthenticationPrincipal UserDetails userDetails) {
-        User oldUser = userDetailsServiceImpl.loadUserByUsername(userDetails.getUsername());
-        Integer id = oldUser.getId();
-
-        user.setId(id);
-        User updateUser = userService.updateUser(user.getId(), user);
+    public String editProfile(@ModelAttribute("user") User user, @AuthenticationPrincipal UserDetails userDetails, Model model) {
+        if (!userService.verifyPassword(user)) {
+            model.addAttribute("passwordError", "Passwords do not match");
+            return "editprofile";
+        }
+        User updateUser = userService.updateUser(userDetails.getUsername(), user);
 
         Authentication auth = new UsernamePasswordAuthenticationToken(updateUser, userDetails.getPassword(), userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);

@@ -59,51 +59,161 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testUpdateUser() {
-        User existingUser = new User();
-        existingUser.setId(1);
-        existingUser.setUsername("oldUsername");
+    public void testUpdateUser_UserNotFound() {
+        // Arrange
+        when(userRepository.findByUsername("nonexistent")).thenReturn(null);
 
-        User updatedUser = new User();
-        updatedUser.setId(1);
-        updatedUser.setUsername("newUsername");
+        // Act
+        User result = userService.updateUser("nonexistent", new User());
 
-        when(userRepository.findById(eq(1))).thenReturn(Optional.of(existingUser));
-
-        when(userRepository.save(any(User.class))).thenReturn(updatedUser);
-
-        User resultUser = userService.updateUser(1, updatedUser);
-
-        assertNotNull(resultUser);
-        assertEquals("newUsername", resultUser.getUsername());
-
-        verify(userRepository, times(1)).findById(eq(1));
-
-        verify(userRepository, times(1)).save(any(User.class));
+        // Assert
+        assertNull(result);
+        verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
-    public void testUpdateUser_UserDoesNotExist() {
-        // Create a user to simulate the updated user details
-        User updatedUser = new User();
-        updatedUser.setId(1);
-        updatedUser.setUsername("newUsername");
-        updatedUser.setPassword("newPassword");
+    public void testUpdateUser_UpdateUsernameAndPassword() {
+        // Arrange
+        User existingUser = new User();
+        User updateUserDetails = new User();
+        updateUserDetails.setUsername("newUsername");
+        updateUserDetails.setPassword("newPassword");
 
-        // Mock the userRepository.findById to return an empty Optional, simulating that the user does not exist
-        when(userRepository.findById(eq(1))).thenReturn(Optional.empty());
+        when(userRepository.findByUsername("existingUser")).thenReturn(existingUser);
+        when(passwordEncoder.encode("newPassword")).thenReturn("encodedPassword");
+        when(userRepository.save(existingUser)).thenReturn(existingUser);
 
-        // Perform the update operation
-        User resultUser = userService.updateUser(1, updatedUser);
+        // Act
+        User result = userService.updateUser("existingUser", updateUserDetails);
 
-        // Assert that the result is null since no user was found to update
-        assertNull(resultUser);
+        // Assert
+        assertNotNull(result);
+        assertEquals("newUsername", existingUser.getUsername());
+        assertEquals("encodedPassword", existingUser.getPassword());
+        verify(userRepository, times(1)).save(existingUser);
+    }
 
-        // Verify the userRepository.findById was called correctly
-        verify(userRepository, times(1)).findById(eq(1));
+    @Test
+    public void testUpdateUser_OnlyUpdateUsername() {
+        // Arrange
+        User existingUser = new User();
+        User updateUserDetails = new User();
+        updateUserDetails.setUsername("newUsername");
 
-        // Verify that userRepository.save was never called, as there was no user to update
+        when(userRepository.findByUsername("existingUser")).thenReturn(existingUser);
+        when(userRepository.save(existingUser)).thenReturn(existingUser);
+
+        // Act
+        User result = userService.updateUser("existingUser", updateUserDetails);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("newUsername", existingUser.getUsername());
+        verify(userRepository, times(1)).save(existingUser);
+    }
+
+    @Test
+    public void testUpdateUser_OnlyUpdatePassword() {
+        // Arrange
+        User existingUser = new User();
+        User updateUserDetails = new User();
+        updateUserDetails.setPassword("newPassword");
+
+        when(userRepository.findByUsername("existingUser")).thenReturn(existingUser);
+        when(passwordEncoder.encode("newPassword")).thenReturn("encodedPassword");
+        when(userRepository.save(existingUser)).thenReturn(existingUser);
+
+        // Act
+        User result = userService.updateUser("existingUser", updateUserDetails);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("encodedPassword", existingUser.getPassword());
+        verify(userRepository, times(1)).save(existingUser);
+    }
+
+    @Test
+    public void testUpdateUser_Exception() {
+        // Arrange
+        User updateUserDetails = new User();
+        when(userRepository.findByUsername("existingUser")).thenThrow(new RuntimeException("Database error"));
+
+        // Act
+        User result = userService.updateUser("existingUser", updateUserDetails);
+
+        // Assert
+        assertNull(result);
         verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    public void testVerifyPassword_PasswordsMatch() {
+        // Arrange
+        User user = new User();
+        user.setPassword("password123");
+        user.setConfirmPassword("password123");
+
+        // Act
+        Boolean result = userService.verifyPassword(user);
+
+        // Assert
+        assertTrue(result);
+    }
+
+    @Test
+    public void testVerifyPassword_PasswordsDoNotMatch() {
+        // Arrange
+        User user = new User();
+        user.setPassword("password123");
+        user.setConfirmPassword("password456");
+
+        // Act
+        Boolean result = userService.verifyPassword(user);
+
+        // Assert
+        assertFalse(result);
+    }
+
+    @Test
+    public void testVerifyPassword_NullPassword() {
+        // Arrange
+        User user = new User();
+        user.setPassword(null);
+        user.setConfirmPassword("password456");
+
+        // Act
+        Boolean result = userService.verifyPassword(user);
+
+        // Assert
+        assertFalse(result);
+    }
+
+    @Test
+    public void testVerifyPassword_NullConfirmPassword() {
+        // Arrange
+        User user = new User();
+        user.setPassword("password123");
+        user.setConfirmPassword(null);
+
+        // Act
+        Boolean result = userService.verifyPassword(user);
+
+        // Assert
+        assertFalse(result);
+    }
+
+    @Test
+    public void testVerifyPassword_BothNullPasswords() {
+        // Arrange
+        User user = new User();
+        user.setPassword(null);
+        user.setConfirmPassword(null);
+
+        // Act
+        Boolean result = userService.verifyPassword(user);
+
+        // Assert
+        assertTrue(result);  // Assuming null == null is considered matching
     }
 
     @Test
