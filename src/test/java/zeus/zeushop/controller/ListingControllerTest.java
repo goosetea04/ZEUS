@@ -398,7 +398,128 @@ public class ListingControllerTest {
         assertNotNull(visibleListings);
         assertEquals(1, visibleListings.size());  // Only listing1 should be included
     }
+    @Test
+    public void testSaveListingWithNegativeStockOrPrice() {
+        // Arrange
+        Listing listing = new Listing();
+        listing.setProduct_quantity(-1); // Set invalid stock
+        listing.setProduct_price(100.0f);
 
+        // Act
+        String viewName = listingController.saveListing(listing, model);
 
+        // Assert
+        assertEquals("add-listing", viewName);
+        assertTrue(model.containsAttribute("error"));
+        assertEquals("Stock and price cannot be negative.", model.getAttribute("error"));
+
+        // Test for negative price
+        listing.setProduct_quantity(10);
+        listing.setProduct_price(-100.0f); // Set invalid price
+
+        viewName = listingController.saveListing(listing, model);
+
+        assertEquals("add-listing", viewName);
+        assertTrue(model.containsAttribute("error"));
+        assertEquals("Stock and price cannot be negative.", model.getAttribute("error"));
+    }
+
+    @Test
+    public void testAddToCartListingNotFound() {
+        // Arrange
+        when(listingRepository.findById(1)).thenReturn(Optional.empty());
+
+        CartItem cartItem = new CartItem();
+        cartItem.setQuantity(5);
+        // Act
+        String viewName = listingController.addToCart(cartItem, 1, model);
+
+        // Assert
+        assertEquals("redirect:/listings", viewName);
+        verify(shoppingCartService, never()).addListingToCart(any(), anyInt(), anyInt());
+    }
+
+    @Test
+    public void testAddToCartInvalidQuantity() {
+        // Arrange
+        Listing listing = new Listing();
+        listing.setProduct_id(1);
+        listing.setProduct_quantity(10);
+        when(listingRepository.findById(1)).thenReturn(Optional.of(listing));
+
+        CartItem cartItem = new CartItem();
+        cartItem.setQuantity(0); // Invalid quantity
+
+        // Act
+        String viewName = listingController.addToCart(cartItem, 1, model);
+
+        // Assert
+        assertEquals("redirect:/listings", viewName);
+        assertTrue(model.containsAttribute("error"));
+        assertEquals("Quantity must be a positive number.", model.getAttribute("error"));
+        verify(shoppingCartService, never()).addListingToCart(any(), anyInt(), anyInt());
+    }
+
+    @Test
+    public void testAddToCartInsufficientStock() {
+        // Arrange
+        User currentUser = new User();
+        currentUser.setId(1);
+        when(authentication.getName()).thenReturn("user");
+        when(userService.getUserByUsername("user")).thenReturn(currentUser);
+
+        Listing listing = new Listing();
+        listing.setProduct_id(1);
+        listing.setProduct_quantity(5); // Set stock less than requested quantity
+        when(listingRepository.findById(1)).thenReturn(Optional.of(listing));
+
+        CartItem cartItem = new CartItem();
+        cartItem.setQuantity(10); // Requested quantity more than stock
+
+        // Act
+        String viewName = listingController.addToCart(cartItem, 1, model);
+
+        // Assert
+        assertEquals("redirect:/listings", viewName);
+        assertTrue(model.containsAttribute("error"));
+        assertEquals("Not enough stock available.", model.getAttribute("error"));
+        verify(shoppingCartService, never()).addListingToCart(any(), anyInt(), anyInt());
+    }
+
+    @Test
+    public void testUpdateListingNotFound() {
+        // Arrange
+        when(listingService.getListingById(1L)).thenReturn(Optional.empty());
+
+        Listing updatedListing = new Listing();
+        updatedListing.setProduct_name("Updated Name");
+        updatedListing.setProduct_quantity(5);
+        updatedListing.setProduct_description("Updated Description");
+        updatedListing.setProduct_price(200.0f);
+
+        // Act
+        String viewName = listingController.updateListing(updatedListing, 1L, model);
+
+        // Assert
+        assertEquals("redirect:/update-listings", viewName);
+        verify(listingService, never()).updateListing(anyLong(), any());
+    }
+
+    @Test
+    public void testShowCartEmpty() {
+        // Arrange
+        User currentUser = new User();
+        currentUser.setId(1);
+        when(authentication.getName()).thenReturn("user");
+        when(userService.getUserByUsername("user")).thenReturn(currentUser);
+
+        when(shoppingCartService.getCartItemsByBuyerId(1)).thenReturn(new ArrayList<>());
+
+        // Act
+        String viewName = listingController.showCart();
+
+        // Assert
+        assertEquals("cart", viewName);
+    }
 
 }
