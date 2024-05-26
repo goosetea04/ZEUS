@@ -42,7 +42,7 @@ public class StaffBoardController {
     }
 
     @PostMapping("/payments/approve/{id}")
-    public String approveTopUp(@PathVariable Long id) {
+    public String approvePayment(@PathVariable Long id) {
         User admin = userService.getUserByUsername(SecurityContextHolder
                 .getContext()
                 .getAuthentication()
