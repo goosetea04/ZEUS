@@ -70,6 +70,11 @@ public class User implements UserDetails {
             user = new User();
         }
 
+        public Builder withId(Integer id) {
+            user.setId(id);
+            return this;
+        }
+
         public Builder withUsername(String username) {
             user.setUsername(username);
             return this;

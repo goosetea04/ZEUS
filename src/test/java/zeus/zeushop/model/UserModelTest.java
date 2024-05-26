@@ -40,6 +40,7 @@ public class UserModelTest {
     @Test
     public void testUserBuilder() {
         User user = new User.Builder()
+                .withId(1)
                 .withUsername("john")
                 .withPassword("password")
                 .withRole("ADMIN")
