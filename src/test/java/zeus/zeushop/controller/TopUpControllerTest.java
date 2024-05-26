@@ -19,13 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TopUpControllerTest {
+class TopUpControllerTest {
 
     @Mock
     private TopUpService topUpService;
-
-    @Mock
-    private UserService userService;
 
     @InjectMocks
     private TopUpController topUpController;
@@ -70,20 +67,6 @@ public class TopUpControllerTest {
         assertEquals("redirect:/topups/new", redirect);
         verify(redirectAttributes).addFlashAttribute("error", "Top up amount cannot be negative.");
     }
-
-//    @Test
-//    void testGetUserTopUps() {
-//        List<TopUp> userTopUps = new ArrayList<>();
-//        User user = new User();
-//        user.setBalance(BigDecimal.valueOf(1000));
-//        when(userService.getUserByUsername("user")).thenReturn(user);
-//        when(topUpService.getUserTopUps("user")).thenReturn(userTopUps);
-//        String viewName = topUpController.getUserTopUps(model);
-//        assertEquals("user-top-ups", viewName);
-//        verify(model).addAttribute("topUps", userTopUps);
-//        verify(model).addAttribute("balance", BigDecimal.valueOf(1000));
-//    }
-
 
     @Test
     void testDeleteTopUp_Success() {

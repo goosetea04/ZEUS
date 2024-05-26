@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import zeus.zeushop.model.User;
-import zeus.zeushop.model.Payment;
 import zeus.zeushop.service.PaymentService;
 import zeus.zeushop.service.ShoppingCartService;
 import zeus.zeushop.service.UserService;
