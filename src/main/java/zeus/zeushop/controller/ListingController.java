@@ -87,11 +87,6 @@ public class ListingController {
         return "redirect:/listings";
     }
 
-
-
-
-
-
     @GetMapping("/add-listing")
     public String showAddListingForm(Model model) {
         model.addAttribute("listing", new Listing());

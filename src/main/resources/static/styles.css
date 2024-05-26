@@ -178,6 +178,12 @@ form textarea {
     resize: vertical;
 }
 
+#form-editprofile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 /* Button styling */
 
 
