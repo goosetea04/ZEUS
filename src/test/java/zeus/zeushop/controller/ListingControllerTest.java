@@ -250,7 +250,7 @@ public class ListingControllerTest {
         String result = listingController.showFeatureListingForm(1, model);
 
         assertEquals("feature-listing", result);
-        verify(model).addAttribute(eq("listing"), any(Listing.class));
+        assertTrue(model.containsAttribute("listing"));
     }
 
     @Test
