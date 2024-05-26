@@ -57,7 +57,6 @@ public class UserServiceImpl implements UserService {
             }
             return userRepository.save(user);
         } catch (Exception e) {
-            System.out.println("Error updating user: " + e.getMessage());
             return null;
         }
     }

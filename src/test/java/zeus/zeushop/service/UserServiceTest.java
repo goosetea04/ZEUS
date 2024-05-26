@@ -1,5 +1,8 @@
 package zeus.zeushop.service;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import zeus.zeushop.model.User;
 import zeus.zeushop.repository.UserRepository;
@@ -15,9 +18,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @SpringBootTest
-public class UserServiceTest {
+class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -29,7 +33,7 @@ public class UserServiceTest {
 
 
     @Test
-    public void testRegisterUserSuccess() {
+    void testRegisterUserSuccess() {
         User user = new User();
         user.setUsername("dummy");
         user.setPassword("asdf");
@@ -47,7 +51,7 @@ public class UserServiceTest {
 
 
     @Test
-    public void testRegisterUserFailure() {
+    void testRegisterUserFailure() {
         User user = new User();
         user.setUsername(null);
         user.setPassword(null);
@@ -59,7 +63,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testUpdateUser_UserNotFound() {
+    void testUpdateUser_UserNotFound() {
         when(userRepository.findByUsername("nonexistent")).thenReturn(null);
 
         User result = userService.updateUser("nonexistent", new User());
@@ -69,7 +73,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testUpdateUser_UpdateUsernameAndPassword() {
+    void testUpdateUser_UpdateUsernameAndPassword() {
         User existingUser = new User();
         User updateUserDetails = new User();
         updateUserDetails.setUsername("newUsername");
@@ -88,7 +92,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testUpdateUser_OnlyUpdateUsername() {
+    void testUpdateUser_OnlyUpdateUsername() {
         User existingUser = new User();
         User updateUserDetails = new User();
         updateUserDetails.setUsername("newUsername");
@@ -104,7 +108,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testUpdateUser_OnlyUpdatePassword() {
+    void testUpdateUser_OnlyUpdatePassword() {
         User existingUser = new User();
         User updateUserDetails = new User();
         updateUserDetails.setPassword("newPassword");
@@ -121,7 +125,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testUpdateUser_Exception() {
+    void testUpdateUser_Exception() {
         User updateUserDetails = new User();
         when(userRepository.findByUsername("existingUser")).thenThrow(new RuntimeException("Database error"));
 
@@ -132,7 +136,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testVerifyPassword_PasswordsMatch() {
+    void testVerifyPassword_PasswordsMatch() {
         User user = new User();
         user.setPassword("password123");
         user.setConfirmPassword("password123");
@@ -142,52 +146,29 @@ public class UserServiceTest {
         assertTrue(result);
     }
 
-    @Test
-    public void testVerifyPassword_PasswordsDoNotMatch() {
+    @ParameterizedTest
+    @MethodSource("provideInvalidPasswords")
+    void testVerifyPassword_InvalidPasswords(String password, String confirmPassword) {
         User user = new User();
-        user.setPassword("password123");
-        user.setConfirmPassword("password456");
+        user.setPassword(password);
+        user.setConfirmPassword(confirmPassword);
 
         Boolean result = userService.verifyPassword(user);
 
         assertFalse(result);
     }
 
-    @Test
-    public void testVerifyPassword_NullPassword() {
-        User user = new User();
-        user.setPassword(null);
-        user.setConfirmPassword("password456");
-
-        Boolean result = userService.verifyPassword(user);
-
-        assertFalse(result);
+    private static Stream<Arguments> provideInvalidPasswords() {
+        return Stream.of(
+                Arguments.of("password123", "password456"),
+                Arguments.of(null, "password456"),
+                Arguments.of("password123", null),
+                Arguments.of(null, null)
+        );
     }
 
     @Test
-    public void testVerifyPassword_NullConfirmPassword() {
-        User user = new User();
-        user.setPassword("password123");
-        user.setConfirmPassword(null);
-
-        Boolean result = userService.verifyPassword(user);
-
-        assertFalse(result);
-    }
-
-    @Test
-    public void testVerifyPassword_BothNullPasswords() {
-        User user = new User();
-        user.setPassword(null);
-        user.setConfirmPassword(null);
-
-        Boolean result = userService.verifyPassword(user);
-
-        assertFalse(result);
-    }
-
-    @Test
-    public void testGetAllUsers() {
+    void testGetAllUsers() {
         User user1 = new User();
         User user2 = new User();
         user1.setUsername("dummy1");
@@ -208,7 +189,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUserById() {
+    void testGetUserById() {
         User user = new User();
         user.setId(1);
         user.setUsername("dummy");
@@ -224,7 +205,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUserByUsername() {
+    void testGetUserByUsername() {
         User user = new User();
         user.setId(1);
         user.setUsername("dummy");
@@ -240,7 +221,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testDeleteUser() {
+    void testDeleteUser() {
         userService.deleteUser(1);
 
         verify(userRepository, times(1)).deleteById(1);
