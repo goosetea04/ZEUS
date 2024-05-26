@@ -63,6 +63,10 @@
   </tr>
   </tbody>
 </table></div>
+  <br>
+  <div th:if="${#lists.isEmpty(cartItems)}" style="text-align: center;">
+    <strong>Your cart is empty.</strong>
+  </div>
 </div>
 </body>
 <script>

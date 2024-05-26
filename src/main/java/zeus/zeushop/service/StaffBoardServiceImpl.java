@@ -2,57 +2,66 @@ package zeus.zeushop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import zeus.zeushop.model.Payment;
 import zeus.zeushop.model.TopUp;
-import zeus.zeushop.model.User;
+import zeus.zeushop.repository.PaymentRepository;
 import zeus.zeushop.repository.TopUpRepository;
 import zeus.zeushop.repository.UserRepository;
+import zeus.zeushop.service.strategies.AdministrativeAction;
+import zeus.zeushop.service.strategies.ApprovePaymentStrategy;
+import zeus.zeushop.service.strategies.ApproveTopUpStrategy;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class StaffBoardServiceImpl implements StaffBoardService {
-    private final TopUpService topUpService;
-
-    private final UserRepository userRepository;
-    private final TopUpRepository topUpRepository;
-
+    @Autowired
+    private ApprovePaymentStrategy approvePaymentStrategy;
+    @Autowired
+    private ApproveTopUpStrategy approveTopUpStrategy;
 
     @Autowired
-    public StaffBoardServiceImpl(TopUpService topUpService, UserRepository userRepository, TopUpRepository topUpRepository) {
-        this.topUpService = topUpService;
-        this.userRepository = userRepository;
-        this.topUpRepository = topUpRepository;
-    }
+    private TopUpService topUpService;
+    @Autowired
+    private PaymentRepository paymentRepository;
+    @Autowired
+    private TopUpRepository topUpRepository;
 
     @Override
     public boolean approveTopUp(String topUpId) {
-        Optional<TopUp> topUpOptional = topUpRepository.findById(topUpId);
-        if (topUpOptional.isPresent()) {
-            TopUp topUp = topUpOptional.get();
-            if ("PENDING".equals(topUp.getStatus())) {
-                topUp.setStatus("APPROVED");
-                User user = userRepository.findByUsername(topUp.getUserId());
-                if (user != null) {
-                    user.setBalance(user.getBalance().add(BigDecimal.valueOf(topUp.getAmount())));
-                    userRepository.save(user);
-                }
-                topUpRepository.save(topUp);
-                return true;
-            }
+        TopUp topUp = topUpRepository.findById(topUpId).orElse(null);
+        if (topUp != null) {
+            return approveTopUpStrategy.execute(topUp);
         }
         return false;
     }
 
-
+    @Override
+    public boolean approvePayment(Long paymentId) {
+        Payment payment = paymentRepository.findById(paymentId).orElse(null);
+        if (payment != null) {
+            return approvePaymentStrategy.execute(payment);
+        }
+        return false;
+    }
 
     @Override
     public List<TopUp> getTopUpsByStatus(String status) {
         return topUpService.getAllTopUps().stream()
                 .filter(topUp -> topUp.getStatus().equalsIgnoreCase(status))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Payment> getAllPayments() {
+        return paymentRepository.findAll();
+    }
+
+    @Override
+    public List<Payment> getPaymentsByStatus(String status) {
+        return paymentRepository.findAll().stream()
+                .filter(payment -> payment.getStatus().equalsIgnoreCase(status))
                 .collect(Collectors.toList());
     }
 
